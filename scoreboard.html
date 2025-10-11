@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المحكات الرقمية</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        
+        :root {
+            --primary-color: #6a5acd;
+            --background-gradient: linear-gradient(135deg, #74EBD5 0%, #9FACE6 100%);
+            --container-bg: #ffffff;
+            --text-color: #333;
+            --gold: #ffc107;
+            --silver: #ced4da;
+            --bronze: #cd7f32;
+            --green: #28a745;
+            --red: #dc3545;
+            --blue: #0d6efd;
+            --dark-slate: #343a40;
+            --info-blue: #0dcaf0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--background-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .container {
+            background: var(--container-bg); border-radius: 24px; padding: 20px;
+            width: 100%; max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2); margin: 20px 0;
+            transition: max-width 0.4s ease;
+        }
+
+        h1 { text-align: center; color: var(--text-color); margin-bottom: 20px; font-size: 2.2em; font-weight: 900; }
+        h2 { text-align: center; font-weight: 700; color: #555; margin-bottom: 25px; font-size: 1.5em; }
+
+        .screen { display: none; }
+        .screen.active { display: block; }
+        
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input[type="text"] { flex-grow: 1; padding: 14px; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; font-family: inherit; transition: all 0.3s ease; }
+        input[type="text"]:focus { border-color: var(--primary-color); box-shadow: 0 0 8px rgba(106, 90, 205, 0.2); outline: none; }
+        button { border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; font-family: inherit; }
+        .btn-add { background: var(--primary-color); color: white; padding: 0 25px; }
+        .btn-add:hover { background: #5a4acd; }
+        .btn-main { width: 100%; background: var(--green); color: white; padding: 18px; font-size: 18px; margin-top: 20px; }
+        .btn-main:disabled { background: #ccc; cursor: not-allowed; }
+        .players-box { background: #f8f9fa; padding: 10px; border-radius: 12px; min-height: 70px; }
+        .player-tag { display: inline-flex; align-items: center; background: var(--primary-color); color: white; padding: 8px 12px; border-radius: 20px; margin: 5px; font-weight: 700; }
+        .player-tag .remove-btn { background: rgba(0,0,0,0.2); width: 20px; height: 20px; border-radius: 50%; margin-left: 8px; cursor: pointer; line-height: 20px; text-align: center; padding: 0; font-size: 14px; }
+        
+        .table-wrapper { overflow-x: auto; border: 1px solid #ddd; border-radius: 16px; }
+        .scoreboard-table { width: 100%; border-collapse: collapse; min-width: 400px; }
+
+        .scoreboard-table th, .scoreboard-table td {
+            padding: 8px; text-align: center; vertical-align: middle;
+            border-left: 1px solid #eee; border-bottom: 1px solid #eee;
+            transition: background-color 0.3s ease;
+        }
+
+        .scoreboard-table thead th {
+            padding: 12px 8px; font-size: 1.1em; background-color: #f8f9fa;
+            position: sticky; top: 0; z-index: 2;
+        }
+        
+        .scoreboard-table th:first-child,
+        .scoreboard-table td:first-child {
+            font-weight: 900; font-size: 1.1em;
+            background-color: #f8f9fa;
+            position: sticky;
+            right: 0;
+            z-index: 1;
+            border-left: 1px solid #ddd;
+        }
+        
+        .scoreboard-table thead th:first-child { z-index: 3; }
+        .scoreboard-table tfoot td { font-size: 1.2em; font-weight: 900; }
+        
+        .score-controls { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .score-display {
+            background: var(--blue); color: white; width: 40px; height: 40px;
+            border-radius: 10px; display: grid; place-items: center; font-size: 1.1em; font-weight: 900;
+        }
+        .btn-score {
+            width: 38px; height: 38px; border-radius: 50%; font-size: 20px;
+            line-height: 38px; padding: 0; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn-score:active { transform: scale(0.9); box-shadow: none; }
+        .btn-plus { background: var(--green); }
+        .btn-minus { background: var(--red); }
+
+        .scoreboard-table th.rank-1, .scoreboard-table td.rank-1 { background-color: var(--gold); border-color: #e0ac00; }
+        .scoreboard-table th.rank-2, .scoreboard-table td.rank-2 { background-color: var(--silver); border-color: #b9bec2; }
+        .scoreboard-table th.rank-3, .scoreboard-table td.rank-3 { background-color: var(--bronze); color: white; border-color: #b0702c; }
+        .scoreboard-table td.rank-3 .score-display { border: 2px solid white; }
+
+        .actions-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 30px; }
+        .actions-footer button { padding: 15px 5px; font-size: 1.0em; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .actions-footer button:active { transform: scale(0.95); box-shadow: none; }
+        .btn-winner { background: var(--gold); color: var(--text-color); }
+        .btn-edit { background: var(--info-blue); color: white; }
+        .btn-reset { background: var(--dark-slate); color: white; }
+
+        @media (min-width: 768px) {
+            .container { max-width: 960px; }
+            h1 { font-size: 2.8em; }
+            .btn-score { width: 42px; height: 42px; line-height: 42px; font-size: 22px; }
+            .score-display { width: 45px; height: 45px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Screen 1: Add Players -->
+        <div id="setupScreen" class="screen">
+            <h1>لوحة المحكات الرقمية</h1>
+            <div class="input-group">
+                <input type="text" id="nameInput" placeholder="اسم المتسابق أو المجموعة">
+                <button class="btn-add" onclick="addPlayer()">أضف</button>
+            </div>
+            <div class="players-box" id="playersSetupBox"></div>
+            <button class="btn-main" id="startGameBtn" onclick="startGame()" disabled>بدء التسجيل ▶️</button>
+        </div>
+
+        <!-- Screen 2: Scoreboard -->
+        <div id="gameScreen" class="screen">
+            <h1>لوحة المحكات الرقمية</h1>
+            <h2>سجل النقاط</h2>
+            <div id="scoreboardArea"></div>
+            <div class="actions-footer">
+                 <button class="btn-winner" onclick="declareWinners()">إعلان الفائزين 🥇</button>
+                 <button class="btn-edit" onclick="editPlayers()">تعديل اللاعبين ✏️</button>
+                 <button class="btn-reset" onclick="resetGame()">لعبة جديدة 🔄</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let players = [];
+        const criteria = ["الأنشطة", "التعاون", "الانضباط"];
+        let isSorted = false;
+        let gameInProgress = false;
+
+        const setupScreen = document.getElementById('setupScreen');
+        const gameScreen = document.getElementById('gameScreen');
+        const nameInput = document.getElementById('nameInput');
+        const playersSetupBox = document.getElementById('playersSetupBox');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const scoreboardArea = document.getElementById('scoreboardArea');
+        
+        document.addEventListener('DOMContentLoaded', loadState);
+        nameInput.addEventListener('keypress', (event) => { if (event.key === 'Enter') addPlayer(); });
+
+        function saveState() { localStorage.setItem('tableScoreboardState', JSON.stringify({ players, gameInProgress })); }
+
+        function loadState() {
+            const savedState = localStorage.getItem('tableScoreboardState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                players = state.players || [];
+                gameInProgress = state.gameInProgress || false;
+                if (gameInProgress && players.length > 0) startGame();
+                else { showScreen(setupScreen); renderSetupList(); }
+            } else { showScreen(setupScreen); renderSetupList(); }
+        }
+
+        function showScreen(screenToShow) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            screenToShow.classList.add('active');
+        }
+
+        function addPlayer() {
+            const name = nameInput.value.trim();
+            if (!name) return;
+            if (players.some(p => p.name === name)) { alert('هذا الاسم موجود بالفعل.'); return; }
+            const newPlayer = { name: name, scores: {} };
+            criteria.forEach(c => { newPlayer.scores[c] = 0; });
+            players.push(newPlayer);
+            nameInput.value = ''; nameInput.focus();
+            renderSetupList();
+            if(gameInProgress) saveState();
+        }
+        
+        function removePlayer(nameToRemove) {
+            players = players.filter(p => p.name !== nameToRemove);
+            renderSetupList();
+            if(gameInProgress) {
+                saveState();
+                if(gameScreen.classList.contains('active')) renderScoreboard();
+            }
+        }
+        
+        function renderSetupList() {
+            if (players.length === 0) {
+                playersSetupBox.innerHTML = '<p style="text-align: center; color: #999;">أضف متسابقين لبدء اللعبة...</p>';
+                startGameBtn.disabled = true;
+                startGameBtn.textContent = 'بدء التسجيل ▶️';
+            } else {
+                playersSetupBox.innerHTML = players.map(p => 
+                    `<span class="player-tag"><button class="remove-btn" onclick="removePlayer('${p.name}')">✕</button>${p.name}</span>`
+                ).join('');
+                startGameBtn.disabled = false;
+                startGameBtn.textContent = gameInProgress ? 'العودة للعبة ↩️' : 'بدء التسجيل ▶️';
+            }
+        }
+        
+        function startGame() {
+            gameInProgress = true; isSorted = false;
+            renderScoreboard();
+            showScreen(gameScreen);
+            saveState();
+        }
+
+        function editPlayers() { renderSetupList(); showScreen(setupScreen); }
+        
+        function calculateTotalScore(player) { return Object.values(player.scores).reduce((sum, current) => sum + current, 0); }
+
+        function renderScoreboard() {
+            players.forEach(p => p.totalScore = calculateTotalScore(p));
+            const playersToRender = isSorted ? [...players].sort((a, b) => b.totalScore - a.totalScore) : players;
+
+            const ranks = {};
+            if (isSorted) {
+                let currentRank = 0; let lastScore = -Infinity;
+                playersToRender.forEach((p, index) => {
+                    if (p.totalScore !== lastScore) { currentRank = index + 1; lastScore = p.totalScore; }
+                    ranks[p.name] = currentRank;
+                });
+            }
+
+            let tableHTML = `<div class="table-wrapper"><table class="scoreboard-table">`;
+            tableHTML += '<thead><tr><th>المحك</th>';
+            playersToRender.forEach(p => {
+                const rankClass = isSorted ? getRankClass(ranks[p.name]) : '';
+                tableHTML += `<th class="${rankClass}">${p.name}</th>`;
+            });
+            tableHTML += '</tr></thead>';
+
+            tableHTML += '<tbody>';
+            criteria.forEach(criterion => {
+                tableHTML += `<tr><td>${criterion}</td>`;
+                playersToRender.forEach(p => {
+                    const rankClass = isSorted ? getRankClass(ranks[p.name]) : '';
+                    tableHTML += `<td class="${rankClass}"><div class="score-controls">
+                        <button class="btn-score btn-minus" onclick="updateScore('${p.name}', '${criterion}', -1)">-</button>
+                        <span class="score-display" data-player-name="${p.name}" data-criterion="${criterion}">${p.scores[criterion]}</span>
+                        <button class="btn-score btn-plus" onclick="updateScore('${p.name}', '${criterion}', 1)">+</button>
+                    </div></td>`;
+                });
+                tableHTML += '</tr>';
+            });
+            tableHTML += '</tbody>';
+
+            tableHTML += '<tfoot><tr><td>المجموع</td>';
+            playersToRender.forEach(p => {
+                const rankClass = isSorted ? getRankClass(ranks[p.name]) : '';
+                tableHTML += `<td class="total-score-cell ${rankClass}" data-player-total="${p.name}">${p.totalScore}</td>`;
+            });
+            tableHTML += '</tr></tfoot>';
+            tableHTML += '</table></div>';
+            scoreboardArea.innerHTML = tableHTML;
+        }
+        
+        function updateScore(playerName, criterion, amount) {
+            const player = players.find(p => p.name === playerName);
+            if (!player) return;
+
+            player.scores[criterion] = Math.max(0, player.scores[criterion] + amount);
+            
+            if (isSorted) {
+                renderScoreboard();
+            } else {
+                const scoreDisplay = scoreboardArea.querySelector(`.score-display[data-player-name="${playerName}"][data-criterion="${criterion}"]`);
+                const totalDisplay = scoreboardArea.querySelector(`.total-score-cell[data-player-total="${playerName}"]`);
+                if (scoreDisplay) scoreDisplay.textContent = player.scores[criterion];
+                if (totalDisplay) totalDisplay.textContent = calculateTotalScore(player);
+            }
+            saveState();
+        }
+
+        function declareWinners() { isSorted = true; renderScoreboard(); }
+        
+        function getRankClass(rank) {
+            if (rank === 1) return 'rank-1';
+            if (rank === 2) return 'rank-2';
+            if (rank === 3) return 'rank-3';
+            return '';
+        }
+        
+        function resetGame() {
+            if (confirm('هل أنت متأكد؟ سيتم حذف جميع المتسابقين والنقاط لبدء لعبة جديدة.')) {
+                players = []; isSorted = false; gameInProgress = false;
+                localStorage.removeItem('tableScoreboardState');
+                renderSetupList(); showScreen(setupScreen);
+            }
+        }
+    </script>
+</body>
+</html>

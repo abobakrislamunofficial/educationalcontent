@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جلسة علاجية: أساسيات التوابع</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 41, 77, 0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            padding: 40px;
+            display: none; /* All slides are hidden by default */
+        }
+
+        .slide.active {
+            display: block; /* Only the active slide is shown */
+        }
+
+        .slide-header h1 {
+            font-size: 2.2em;
+            color: #2c3e50;
+            text-align: center;
+            margin: 0 0 10px 0;
+        }
+        
+        .slide-content {
+            font-size: 1.3em;
+            line-height: 1.8;
+        }
+        
+        .slide-content ul {
+            list-style: none;
+            padding-right: 0;
+        }
+
+        .slide-content li {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-right: 5px solid #3498db;
+        }
+        
+        .slide-content .highlight {
+            color: #d9534f;
+            font-weight: 700;
+        }
+
+        .key-title {
+            font-size: 1.8em;
+            color: #0275d8;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .key-example {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .badal-types h3 {
+            font-size: 1.1em; color: #333; margin-top: 15px; margin-bottom: 5px;
+        }
+        .badal-types p {
+            font-size: 1em; margin-top: 0;
+        }
+        .badal-types .highlight {
+             background-color: #fff3cd; padding: 0 5px; border-radius: 4px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .summary-item {
+            background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-bottom: 4px solid #3498db; text-align: center;
+        }
+        .summary-item h3 {
+            margin: 0 0 10px 0; color: #2c3e50;
+        }
+        .summary-item p {
+            margin: 0; font-size: 1.2em; color: #d9534f; font-weight: 700;
+        }
+        
+        /* Interactive Quiz Styles */
+        .quiz-question { font-size: 1.4em; font-weight: 600; margin-bottom: 25px; text-align: center; line-height: 1.6; }
+        .quiz-question .highlight { background-color: #fff3cd; padding: 2px 8px; border-radius: 5px; }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .quiz-options .option { background-color: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 18px; font-size: 1.2em; text-align: center; cursor: pointer; transition: all 0.2s ease-in-out; }
+        .quiz-options .option:hover { background-color: #e9ecef; border-color: #007bff; }
+        .correct { background-color: #d4edda !important; border-color: #c3e6cb !important; }
+        .incorrect { background-color: #f8d7da !important; border-color: #f5c6cb !important; }
+        #quiz-feedback { text-align: center; font-size: 1.2em; font-weight: 600; margin-top: 20px; padding: 10px; border-radius: 5px; }
+
+        .navigation {
+            display: flex; justify-content: space-between; padding: 20px 40px; background-color: #ecf0f1; border-top: 1px solid #bdc3c7;
+        }
+        .nav-button {
+            background-color: #3498db; color: white; border: none; padding: 10px 25px; border-radius: 8px; font-size: 1.1em; font-family: 'Tajawal', sans-serif; cursor: pointer; transition: background-color 0.2s;
+        }
+        .nav-button:hover { background-color: #2980b9; }
+        .nav-button:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+        
+        .title-slide { text-align: center; padding-top: 60px; padding-bottom: 60px; }
+        .title-slide h1 { font-size: 3.5em; margin-bottom: 20px; }
+        .title-slide p { font-size: 1.8em; color: #555; margin: 0; }
+
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>التوابع</h1>
+            <p>(النعت - العطف - التوكيد - البدل)</p>
+        </div>
+
+        <!-- Slide 2: Main Principle -->
+        <div class="slide">
+            <div class="slide-content" style="padding-top: 20px;">
+                <p>التابع هو اسم يتبع ما قبله (المتبوع) في الحالة الإعرابية.</p>
+                <ul>
+                    <li>جاء طالبٌ <span class="highlight">مجتهدٌ</span> (كلاهما مرفوع)</li>
+                    <li>رأيتُ طالبًا <span class="highlight">مجتهدًا</span> (كلاهما منصوب)</li>
+                    <li>مررتُ بطالبٍ <span class="highlight">مجتهدٍ</span> (كلاهما مجرور)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Slide 3: Noun (Na't) -->
+        <div class="slide">
+            <div class="key-title">1. النعت (الصفة)</div>
+            <div class="slide-content">
+                <p><strong>مفتاح تمييزه:</strong> <span class="highlight">الوصف</span>.</p>
+                <p>للتأكد اسأل نفسك: هل هذه الكلمة تصف التي قبلها؟</p>
+                <div class="key-example">هذا بيتٌ <strong>واسعٌ</strong>.</div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: Conjunction (Atf) -->
+        <div class="slide">
+            <div class="key-title">2. العطف</div>
+            <div class="slide-content">
+                <p><strong>مفتاح تمييزه:</strong> <span class="highlight">وجود حرف رابط</span>.</p>
+                <p>ابحث عن حرف عطف بين الكلمتين (مثل: و، ف، ثم).</p>
+                <div class="key-example">وصل القطارُ <strong>فالحافلةُ</strong>.</div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Emphasis (Tawkeed) -->
+        <div class="slide">
+            <div class="key-title">3. التوكيد</div>
+            <div class="slide-content">
+                <p><strong>مفتاح تمييزه:</strong> <span class="highlight">التكرار أو استخدام لفظ مخصص</span>.</p>
+                <p>ابحث عن تكرار اللفظ، أو كلمة من (كل، نفس، جميع).</p>
+                <div class="key-example">أكلتُ التفاحةَ <strong>كلها</strong>.</div>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Apposition (Badal) -->
+        <div class="slide">
+            <div class="key-title">4. البدل (أنواعه)</div>
+            <div class="slide-content badal-types">
+                <p style="margin-top:0;"><strong>مفتاح تمييزه العام:</strong> أن التابع هو <span class="highlight">نفس</span> المتبوع أو <span class="highlight">جزء منه</span>.</p>
+                <div>
+                    <h3>1. بدل كل من كل (هو نفسه تمامًا):</h3>
+                    <p>جاء المهندسُ <span class="highlight">خالدٌ</span>. (خالد هو نفسه المهندس)</p>
+                </div>
+                <div>
+                    <h3>2. بدل بعض من كل (جزء حقيقي ومادي):</h3>
+                    <p>قرأتُ الكتابَ <span class="highlight">نصفَهُ</span>. (النصف جزء حقيقي من الكتاب)</p>
+                </div>
+                <div>
+                    <h3>3. بدل اشتمال (شيء مرتبط به معنويًا):</h3>
+                    <p>أعجبني الطالبُ <span class="highlight">اجتهادُهُ</span>. (الاجتهاد ليس جزءًا ماديًا، بل مما يشتمل عليه الطالب)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Summary -->
+        <div class="slide">
+            <div class="slide-header"><h1>خلاصة العلامات الفارقة</h1></div>
+            <div class="summary-grid">
+                <div class="summary-item"><h3>النعت</h3><p>الوصف</p></div>
+                <div class="summary-item"><h3>معطوف</h3><p>حرف رابط</p></div>
+                <div class="summary-item"><h3>التوكيد</h3><p>تكرار / لفظ مخصص</p></div>
+                <div class="summary-item"><h3>البدل</h3><p>هو نفسه / جزء منه</p></div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Interactive Quiz (Updated) -->
+        <div class="slide">
+            <div class="slide-header"><h1>التقويم الختامي</h1></div>
+            <div id="quiz-game">
+                <div class="quiz-question" id="quiz-question-text"></div>
+                <div class="quiz-options" id="quiz-options-container"></div>
+                <p id="quiz-feedback"></p>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button id="prevBtn" class="nav-button" onclick="changeSlide(-1)" disabled>السابق</button>
+            <button id="nextBtn" class="nav-button" onclick="changeSlide(1)">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+        
+        // --- Interactive Quiz Logic (Updated) ---
+        const quizQuestions = [
+            { question: "في جملة: (هذا كتابٌ <span class='highlight'>مفيدٌ</span>)، ما نوع التابع؟", options: ["نعت", "بدل", "توكيد", "معطوف"], answer: "نعت", explanation: "صحيح! العلامة هي الوصف." },
+            { question: "في جملة: (رأيتُ الطلابَ <span class='highlight'>جميعَهم</span>)، ما نوع التابع؟", options: ["معطوف", "توكيد", "بدل", "نعت"], answer: "توكيد", explanation: "ممتاز! العلامة هي استخدام لفظ مخصص." },
+            { question: "في جملة: (قرأتُ الكتابَ <span class='highlight'>والقصةَ</span>)، ما نوع التابع؟", options: ["بدل", "نعت", "معطوف", "توكيد"], answer: "معطوف", explanation: "أحسنت! العلامة هي وجود حرف رابط." },
+            { question: "في جملة: (أعجبني الطالبُ <span class='highlight'>اجتهادُهُ</span>)، ما نوع التابع؟", options: ["توكيد", "بدل", "نعت", "معطوف"], answer: "بدل", explanation: "صحيح! لأنه شيء معنوي مما يشتمل عليه الطالب." },
+            { question: "في جملة: (قابلتُ الوزيرَ <span class='highlight'>نفسَهُ</span>)، ما نوع التابع؟", options: ["بدل", "توكيد", "نعت", "معطوف"], answer: "توكيد", explanation: "ممتاز! العلامة هي استخدام لفظ مخصص (نفس)." },
+            { question: "في جملة: (أكلتُ الرغيفَ <span class='highlight'>نصفَهُ</span>)، ما نوع التابع؟", options: ["توكيد", "نعت", "بدل", "معطوف"], answer: "بدل", explanation: "أحسنت! لأنه جزء حقيقي ومادي من الرغيف." },
+            { question: "في جملة: (رأيتُ رجلاً <span class='highlight'>كريمًا</span>)، ما نوع التابع؟", options: ["نعت", "معطوف", "بدل", "توكيد"], answer: "نعت", explanation: "صحيح! لأن كلمة (كريمًا) تصف الرجل." },
+            { question: "في جملة: (دخل المديرُ <span class='highlight'>ثم المعلمُ</span>)، ما نوع التابع؟", options: ["توكيد", "بدل", "معطوف", "نعت"], answer: "معطوف", explanation: "ممتاز! العلامة هي وجود حرف رابط (ثم)." },
+            { question: "في جملة: (الحقُ <span class='highlight'>الحقُ</span> منتصرٌ)، ما نوع التابع؟", options: ["بدل", "نعت", "توكيد", "معطوف"], answer: "توكيد", explanation: "أحسنت! العلامة هي تكرار اللفظ نفسه." },
+            { question: "في جملة: (وصل الفاروقُ <span class='highlight'>عمرُ</span>)، ما نوع التابع؟", options: ["نعت", "بدل", "معطوف", "توكيد"], answer: "بدل", explanation: "صحيح! لأن عمر هو نفسه الفاروق (كل من كل)." }
+        ];
+        
+        let currentQuizQuestionIndex = 0;
+        const quizQuestionText = document.getElementById('quiz-question-text');
+        const quizOptionsContainer = document.getElementById('quiz-options-container');
+        const quizFeedback = document.getElementById('quiz-feedback');
+
+        function loadQuizQuestion() {
+            if (currentQuizQuestionIndex >= quizQuestions.length) {
+                quizQuestionText.innerHTML = "رائع! لقد أتقنت التقويم الختامي.";
+                quizOptionsContainer.innerHTML = '';
+                quizFeedback.innerText = '';
+                return;
+            }
+            const currentQuestion = quizQuestions[currentQuizQuestionIndex];
+            quizQuestionText.innerHTML = currentQuestion.question;
+            quizOptionsContainer.innerHTML = '';
+            quizFeedback.innerText = '';
+            quizFeedback.style.backgroundColor = '';
+
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.classList.add('option');
+                button.onclick = () => selectQuizAnswer(button, option, currentQuestion);
+                quizOptionsContainer.appendChild(button);
+            });
+        }
+
+        function selectQuizAnswer(button, selectedOption, question) {
+             const isCorrect = selectedOption === question.answer;
+            if (isCorrect) {
+                button.classList.add('correct');
+                quizFeedback.innerText = question.explanation;
+                quizFeedback.style.color = '#155724';
+                quizFeedback.style.backgroundColor = '#d4edda';
+                
+                Array.from(quizOptionsContainer.children).forEach(btn => btn.disabled = true);
+
+                setTimeout(() => {
+                    currentQuizQuestionIndex++;
+                    loadQuizQuestion();
+                }, 2500);
+            } else {
+                button.classList.add('incorrect');
+                quizFeedback.innerText = "إجابة غير صحيحة. حاول مرة أخرى.";
+                quizFeedback.style.color = '#721c24';
+                quizFeedback.style.backgroundColor = '#f8d7da';
+            }
+        }
+        
+        // Initialize first slide and first quiz question
+        showSlide(currentSlide);
+        loadQuizQuestion();
+    </script>
+
+</body>
+</html>
