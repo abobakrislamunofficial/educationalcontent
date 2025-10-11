@@ -507,7 +507,8 @@
             const currentQuestion = gameState.questions[gameState.currentIndex];
             
             const gameImage = document.getElementById('game-image');
-            gameImage.src = `${imageFolderName}/${currentQuestion.imageNumber}${imageExtension}`;
+            // ✅ *** التعديل الأول هنا ***
+            gameImage.src = `/Educationalcontent/${imageFolderName}/${currentQuestion.imageNumber}${imageExtension}`;
             gameImage.alt = `صورة الحرف ${currentQuestion.letter}`;
             
             gameImage.onerror = function() {
@@ -576,7 +577,8 @@
         function preloadImages() {
             questionsData.forEach(q => {
                 const img = new Image();
-                img.src = `${imageFolderName}/${q.imageNumber}${imageExtension}`;
+                // ✅ *** التعديل الثاني هنا ***
+                img.src = `/Educationalcontent/${imageFolderName}/${q.imageNumber}${imageExtension}`;
             });
         }
 
