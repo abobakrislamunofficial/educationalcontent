@@ -415,7 +415,8 @@
         ];
 
         const imageFolderName = 'alphabet_game_images';
-        const imageExtension = '.png';
+        // ✅ *** تم تصحيح الخطأ هنا ***
+        const imageExtension = '.PNG';
 
         const screens = {
             start: document.getElementById('start-screen'),
@@ -457,34 +458,12 @@
 
         function getDistractors(correctLetter) {
             const similarLetters = {
-                'ا': ['ء', 'ل'],
-                'ء': ['ا', 'ع'],
-                'ج': ['ح', 'خ'], 
-                'ح': ['ج', 'خ'], 
-                'خ': ['ج', 'ح'],
-                'س': ['ش', 'ص'], 
-                'ش': ['س', 'ص'], 
-                'ص': ['ض', 'س'],
-                'د': ['ذ', 'ر'], 
-                'ذ': ['د', 'ر'], 
-                'ر': ['ز', 'د'],
-                'ز': ['ر', 'د'], 
-                'ط': ['ظ', 'ص'], 
-                'ظ': ['ط', 'ص'],
-                'ع': ['غ', 'ح'], 
-                'غ': ['ع', 'خ'],
-                'ب': ['ت', 'ث'], 
-                'ت': ['ب', 'ث'], 
-                'ث': ['ب', 'ت'],
-                'ف': ['ق', 'ك'], 
-                'ق': ['ف', 'ك'], 
-                'ك': ['ق', 'ل'],
-                'م': ['ن', 'و'], 
-                'ن': ['م', 'ي'], 
-                'ه‍': ['و', 'ي'],
-                'و': ['م', 'ي'], 
-                'ي': ['ن', 'و'], 
-                'ل': ['ك', 'م']
+                'ا': ['ء', 'ل'], 'ء': ['ا', 'ع'], 'ج': ['ح', 'خ'], 'ح': ['ج', 'خ'], 'خ': ['ج', 'ح'],
+                'س': ['ش', 'ص'], 'ش': ['س', 'ص'], 'ص': ['ض', 'س'], 'د': ['ذ', 'ر'], 'ذ': ['د', 'ر'],
+                'ر': ['ز', 'د'], 'ز': ['ر', 'د'], 'ط': ['ظ', 'ص'], 'ظ': ['ط', 'ص'], 'ع': ['غ', 'ح'],
+                'غ': ['ع', 'خ'], 'ب': ['ت', 'ث'], 'ت': ['ب', 'ث'], 'ث': ['ب', 'ت'], 'ف': ['ق', 'ك'],
+                'ق': ['ف', 'ك'], 'ك': ['ق', 'ل'], 'م': ['ن', 'و'], 'ن': ['م', 'ي'], 'ه‍': ['و', 'ي'],
+                'و': ['م', 'ي'], 'ي': ['ن', 'و'], 'ل': ['ك', 'م']
             };
 
             let distractors = [];
@@ -498,16 +477,14 @@
                     distractors.push(randomLetter);
                 }
             }
-
             return shuffleArray(distractors.slice(0, 2));
         }
 
         function displayQuestion() {
             gameState.isLocked = false;
             const currentQuestion = gameState.questions[gameState.currentIndex];
-            
             const gameImage = document.getElementById('game-image');
-            // ✅ *** التعديل الأول هنا ***
+            
             gameImage.src = `/Educationalcontent/${imageFolderName}/${currentQuestion.imageNumber}${imageExtension}`;
             gameImage.alt = `صورة الحرف ${currentQuestion.letter}`;
             
@@ -577,7 +554,6 @@
         function preloadImages() {
             questionsData.forEach(q => {
                 const img = new Image();
-                // ✅ *** التعديل الثاني هنا ***
                 img.src = `/Educationalcontent/${imageFolderName}/${q.imageNumber}${imageExtension}`;
             });
         }
