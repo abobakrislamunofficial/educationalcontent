@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض تقديمي: درس المنادى</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            padding: 30px 40px 40px 40px;
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide-header {
+            font-size: 2.4em;
+            font-weight: 800;
+            color: #0d6efd;
+            text-align: center;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #0d6efd;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        th, td {
+            border: 1px solid #e0e6ed;
+            padding: 16px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 700;
+            color: #555;
+        }
+        
+        .member-card {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-right: 5px solid #0d6efd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .member-card p { margin: 5px 0; font-size: 1.2em; }
+        .member-card .key { font-weight: 700; color: #333; }
+        .member-card .example { font-style: normal; color: #d9534f; font-weight: 500; }
+        
+        .sorting-instruction {
+            font-size: 1.3em;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .sorting-container { display: flex; gap: 20px; margin-top: 20px; align-items: stretch; }
+        .sorting-box { flex: 1; border: 1px solid #dee2e6; border-radius: 12px; overflow: hidden; background-color: #fafafa;}
+        .box-header { padding: 15px; font-size: 1.3em; font-weight: 700; color: white; }
+        .box-content { padding: 15px; }
+        .built-box .box-header { background-color: #198754; }
+        .inflected-box .box-header { background-color: #dc3545; }
+        .answer-dots { font-size: 1.2em; letter-spacing: 2px; color: #aaa; margin: 20px 0; padding-bottom: 15px; border-bottom: 2px dotted #ccc;}
+
+        /* Quiz Styles */
+        #quiz-container { text-align: center; }
+        .quiz-question { font-size: 1.5em; font-weight: 500; margin-bottom: 30px; line-height: 1.7; }
+        .quiz-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .quiz-option { background-color: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 18px; font-size: 1.2em; cursor: pointer; transition: all 0.2s ease-in-out; }
+        .quiz-option:hover { background-color: #e9ecef; border-color: #0d6efd; }
+        .correct { background-color: #d1e7dd !important; border-color: #198754 !important; }
+        .incorrect { background-color: #f8d7da !important; border-color: #dc3545 !important; animation: shake 0.5s; }
+        #feedback { font-size: 1.2em; font-weight: 500; margin-top: 25px; padding: 12px; border-radius: 5px; }
+        #next-q-btn { display: none; margin: 20px auto 0 auto; background-color: #198754; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        .navigation { display: flex; justify-content: space-between; padding: 20px 40px; background-color: #f8f9fa; border-top: 1px solid #dee2e6; }
+        .nav-button { background-color: #0d6efd; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1.1em; font-family: 'Tajawal', sans-serif; cursor: pointer; transition: background-color 0.2s; }
+        .nav-button:hover { background-color: #0b5ed7; }
+        .nav-button:disabled { background-color: #6c757d; cursor: not-allowed; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1: أدوات النداء -->
+        <div class="slide active">
+            <h1 class="slide-header">أدوات النداء واستخداماتها</h1>
+            <table>
+                <thead>
+                    <tr><th>للقريب فقط</th><th>للبعيد فقط</th><th>للقريب والبعيد معًا</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>الهمزة</td><td>أيا</td><td rowspan="2" style="font-size:1.8em; font-weight:bold; vertical-align: middle;">يا</td></tr>
+                    <tr><td>أي</td><td>هيا</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Slide 2: تحديد أنواع المنادى -->
+        <div class="slide">
+            <h1 class="slide-header">تحديد أنواع المنادى الخمسة</h1>
+            <div class="member-card"><p><span class="key">1. العلم المفرد:</span> اسم علم على شخص أو بلد (كلمة واحدة). <span class="example">مثال: يا <strong>محمدُ</strong></span></p></div>
+            <div class="member-card"><p><span class="key">2. المضاف:</span> كلمتان (الأولى بدون تنوين). <span class="example">مثال: يا <strong>طالبَ العلمِ</strong></span></p></div>
+            <div class="member-card"><p><span class="key">3. الشبيه بالمضاف:</span> كلمتان (الأولى عليها تنوين). <span class="example">مثال: يا <strong>طالبًا للعلمِ</strong></span></p></div>
+            <div class="member-card"><p><span class="key">4. النكرة غير المقصودة:</span> اسم نكرة عليه تنوين فتح. <span class="example">مثال: يا <strong>رجلاً</strong></span></p></div>
+            <div class="member-card"><p><span class="key">5. النكرة المقصودة:</span> اسم نكرة عليه ضمة. <span class="example">مثال: يا <strong>رجلُ</strong></span></p></div>
+        </div>
+        
+        <!-- Slide 3: إعراب المنادى -->
+        <div class="slide">
+            <h1 class="slide-header">إعراب المنادى</h1>
+            <p class="sorting-instruction">صنّف أنواع المنادى الخمسة في الجدول التالي:</p>
+            <div class="sorting-container">
+                <div class="sorting-box inflected-box">
+                    <div class="box-header">المنادى المعرب (المنصوب)<br><small>(وعلامته الفتحة على آخره أو ما ينوب عنها)</small></div>
+                    <div class="box-content">
+                        <p class="answer-dots">. 1 ...............................</p>
+                        <p class="answer-dots">. 2 ...............................</p>
+                        <p class="answer-dots">. 3 ...............................</p>
+                    </div>
+                </div>
+                <div class="sorting-box built-box">
+                    <div class="box-header">المنادى المبني<br><small>(على ما يرفع به في محل نصب)</small></div>
+                    <div class="box-content">
+                        <p class="answer-dots">. 1 ...............................</p>
+                        <p class="answer-dots">. 2 ...............................</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: ورقة عمل الإعراب -->
+        <div class="slide">
+             <h1 class="slide-header">ورقة عمل (الإعراب)</h1>
+             <table>
+                <thead>
+                    <tr><th>المثال</th><th>إعراب المنادى</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>يا <strong>محمدُ</strong> ذاكر</td><td><p class="answer-dots">..................................................</p></td></tr>
+                    <tr><td>يا <strong>رجلُ</strong> قل الحق</td><td><p class="answer-dots">..................................................</p></td></tr>
+                    <tr><td>يا <strong>طالبَ</strong> العلم اجتهد</td><td><p class="answer-dots">..................................................</p></td></tr>
+                    <tr><td>يا <strong>طالبًا</strong> للعلم اعمل بعلمك</td><td><p class="answer-dots">..................................................</p></td></tr>
+                    <tr><td>يا <strong>رجلاً</strong> ساعدني</td><td><p class="answer-dots">..................................................</p></td></tr>
+                </tbody>
+             </table>
+        </div>
+        
+        <!-- Slide 5: التقويم التكويني -->
+        <div class="slide">
+            <h1 class="slide-header">تقويم تكويني</h1>
+            <div id="quiz-container">
+                <div id="quiz-question" class="quiz-question"></div>
+                <div id="quiz-options" class="quiz-options"></div>
+                <p id="feedback"></p>
+                <button id="next-q-btn" class="nav-button" onclick="nextQuestion()">السؤال التالي</button>
+            </div>
+             <div id="result-screen" style="display:none;">
+                <h2 style="color: #198754;">أحسنت! لقد أكملت التقويم بنجاح.</h2>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button id="prevBtn" class="nav-button" onclick="changeSlide(-1)" disabled>السابق</button>
+            <button id="nextBtn" class="nav-button" onclick="changeSlide(1)">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Presentation Navigation Logic ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+
+        // --- Interactive Quiz Logic ---
+        const quizQuestions = [
+            { q: "يا <strong>محمدُ</strong>، أقبل.", o: ["علم مفرد", "مضاف", "نكرة مقصودة"], a: "علم مفرد", exp: "إجابة صحيحة! العلامة: لأنه اسم علم (اسم شخص)." },
+            { q: "يا <strong>طالبَ</strong> العلمِ، اجتهد.", o: ["شبيه بالمضاف", "مضاف", "نكرة غير مقصودة"], a: "مضاف", exp: "إجابة صحيحة! العلامة: لأنه كلمتان والأولى غير منونة." },
+            { q: "يا <strong>سائقًا</strong>، تمهل.", o: ["نكرة مقصودة", "شبيه بالمضاف", "نكرة غير مقصودة"], a: "نكرة غير مقصودة", exp: "إجابة صحيحة! العلامة: لأنه كلمة واحدة وعليها تنوين فتح." },
+            { q: "يا <strong>رجلُ</strong>، اتق الله.", o: ["علم مفرد", "نكرة مقصودة", "نكرة غير مقصودة"], a: "نكرة مقصودة", exp: "إجابة صحيحة! العلامة: لأنه كلمة واحدة مقصودة وعليها ضمة." },
+            { q: "يا <strong>قارئًا</strong> للكفِ، كذبت.", o: ["مضاف", "شبيه بالمضاف", "علم مفرد"], a: "شبيه بالمضاف", exp: "إجابة صحيحة! العلامة: لأنه كلمتان والأولى منونة." }
+        ];
+
+        let currentQIndex = 0;
+        const questionEl = document.getElementById('quiz-question');
+        const optionsEl = document.getElementById('quiz-options');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtnQ = document.getElementById('next-q-btn');
+
+        function loadQuestion() {
+            if (currentQIndex >= quizQuestions.length) {
+                document.getElementById('quiz-container').style.display = 'none';
+                document.getElementById('result-screen').style.display = 'block';
+                return;
+            }
+            const currentQ = quizQuestions[currentQIndex];
+            questionEl.innerHTML = currentQ.q;
+            optionsEl.innerHTML = "";
+            feedbackEl.innerText = "";
+            nextBtnQ.style.display = 'none';
+
+            currentQ.o.forEach(optionText => {
+                const optionBtn = document.createElement('div');
+                optionBtn.innerText = optionText;
+                optionBtn.classList.add('quiz-option');
+                optionBtn.onclick = () => selectAnswer(optionBtn, optionText, currentQ.a, currentQ.exp);
+                optionsEl.appendChild(optionBtn);
+            });
+        }
+
+        function selectAnswer(btn, selected, correct, explanation) {
+            if (selected === correct) {
+                btn.classList.add('correct');
+                feedbackEl.innerText = explanation;
+                feedbackEl.style.color = '#0f5132';
+                feedbackEl.style.backgroundColor = '#d1e7dd';
+                nextBtnQ.style.display = 'inline-block';
+                Array.from(optionsEl.children).forEach(b => b.onclick = null);
+            } else {
+                btn.classList.add('incorrect');
+                feedbackEl.innerText = "حاول مرة أخرى.";
+                feedbackEl.style.color = '#842029';
+                feedbackEl.style.backgroundColor = '#f8d7da';
+                btn.onclick = null;
+            }
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            loadQuestion();
+        }
+        
+        showSlide(currentSlide);
+        loadQuestion();
+    </script>
+
+</body>
+</html>
