@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض تقديمي: تشخيص أسلوب الاستثناء</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            padding: 40px;
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide-header {
+            font-size: 2.4em;
+            font-weight: 800;
+            color: #0d6efd;
+            text-align: center;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #0d6efd;
+        }
+
+        .step-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the title */
+            color: #333;
+        }
+        
+        .step-icon {
+            margin-left: 15px;
+            font-size: 1.5em;
+        }
+        
+        .question-text {
+            font-size: 1.4em;
+            font-weight: 500;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-right: 5px solid #0d6efd;
+            text-align: center;
+        }
+
+        .flow-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .flow-box {
+            flex-basis: 45%;
+        }
+        
+        .flow-arrow {
+            font-size: 3em;
+            color: #0d6efd;
+            margin-top: 30px;
+        }
+        
+        .diagnosis-card {
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+        
+        .positive-diag { background-color: #d1e7dd; border: 1px solid #a3cfbb; }
+        .negative-diag { background-color: #fff3cd; border: 1px solid #ffeeba; }
+        .final-diag-1 { background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        .final-diag-2 { background-color: #cfe2ff; border: 1px solid #b6d4fe; }
+
+        .example-text {
+            font-size: 1.2em;
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .strikethrough { text-decoration: line-through; color: #6c757d; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 700;
+        }
+        
+        .treatment-table th { font-weight: 500; font-size: 1.1em; }
+        .treatment-table td { font-size: 1.2em; font-weight: 700; }
+        .treatment-1 { color: #dc3545; }
+        .treatment-2 { color: #198754; }
+        .treatment-3 { color: #0d6efd; }
+        
+        /* Quiz Styles */
+        #quiz-container { text-align: center; }
+        .quiz-question { font-size: 1.5em; font-weight: 500; margin-bottom: 30px; line-height: 1.7; }
+        .quiz-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .quiz-option { background-color: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 18px; font-size: 1.2em; cursor: pointer; transition: all 0.2s ease-in-out; }
+        .quiz-option:hover { background-color: #e9ecef; border-color: #0d6efd; }
+        .correct { background-color: #d1e7dd !important; border-color: #198754 !important; }
+        .incorrect { background-color: #f8d7da !important; border-color: #dc3545 !important; animation: shake 0.5s; }
+        #feedback { font-size: 1.2em; font-weight: 500; margin-top: 25px; padding: 12px; border-radius: 5px; }
+        #next-q-btn { display: none; margin: 20px auto 0 auto; background-color: #198754; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+
+        .navigation { display: flex; justify-content: space-between; padding: 20px 40px; background-color: #f8f9fa; border-top: 1px solid #dee2e6; }
+        .nav-button { background-color: #0d6efd; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1.1em; font-family: 'Tajawal', sans-serif; cursor: pointer; transition: background-color 0.2s; }
+        .nav-button:hover { background-color: #0b5ed7; }
+        .nav-button:disabled { background-color: #6c757d; cursor: not-allowed; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1: الفحص الأول -->
+        <div class="slide active">
+            <h1 class="slide-header">🔬 تحديد نوع الاستثناء</h1>
+            <h2 class="step-title">الخطوة (1)</h2>
+            <p class="question-text">هل بدأت الجملة بأداة نفي (ما، لا، لم)؟</p>
+            <div class="flow-container">
+                <div class="flow-box">
+                    <h3>لا (مثبتة)</h3>
+                    <div class="flow-arrow">↓</div>
+                    <div class="diagnosis-card positive-diag">
+                        <p>التشخيص فوري:<br><strong>تام مثبت</strong></p>
+                    </div>
+                </div>
+                <div class="flow-box">
+                    <h3>نعم (منفية)</h3>
+                    <div class="flow-arrow">↓</div>
+                    <div class="diagnosis-card negative-diag">
+                        <p>التشخيص غير مؤكد<br><strong>(ننتقل للفحص التالي)</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: الفحص الثاني -->
+        <div class="slide">
+            <h1 class="slide-header">تحديد نوع الاستثناء</h1>
+            <h2 class="step-title"><span class="step-icon"></span>الخطوة (2) (للجمل المنفية)</h2>
+            <p class="question-text">نحذف أداة الاستثناء وما بعدها. هل الجملة المتبقية تامة المعنى؟</p>
+            <div>
+                <p class="example-text"><strong>مثال أ:</strong> "ما غاب أحدٌ <span class="strikethrough">إلا محمداً</span>" ← (ما غاب أحدٌ) ✅ <strong>تامة</strong></p>
+                <p class="example-text"><strong>مثال ب:</strong> "ما غاب <span class="strikethrough">إلا محمدٌ</span>" ← (ما غاب) ❌ <strong>ناقصة</strong></p>
+            </div>
+            <div class="flow-container">
+                <div class="flow-box">
+                    <h3>نعم (تامة)</h3>
+                    <div class="flow-arrow">↓</div>
+                    <div class="diagnosis-card final-diag-1">
+                        <p>التشخيص النهائي:<br><strong>تام منفي</strong></p>
+                    </div>
+                </div>
+                <div class="flow-box">
+                    <h3>لا (ناقصة)</h3>
+                    <div class="flow-arrow">↓</div>
+                    <div class="diagnosis-card final-diag-2">
+                        <p>التشخيص النهائي:<br><strong>ناقص منفي</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: تطبيق عملي -->
+        <div class="slide">
+            <h1 class="slide-header">تطبيق عملي</h1>
+            <table>
+                 <thead>
+                    <tr><th>الجملة</th><th>الفحص (1)</th><th>الفحص (2)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>حضر الطلابُ إلا طالبًا</td><td>مثبت</td><td>—</td></tr>
+                    <tr><td>ما نجح الطلابُ إلا طالبًا</td><td>منفي</td><td>تام</td></tr>
+                    <tr><td>ما نجح إلا طالبٌ</td><td>منفي</td><td>ناقص</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Slide 4: وصف العلاج -->
+        <div class="slide">
+            <h1 class="slide-header">وصف العلاج (الحكم الإعرابي)</h1>
+            <table class="treatment-table">
+                <thead>
+                    <tr><th>التشخيص<br>(نوع الاستثناء)</th><th>الحكم الإعرابي<br>للمستثنى</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>تام مثبت</td><td class="treatment-1">واجب النصب</td></tr>
+                    <tr><td>تام منفي</td><td class="treatment-2">يجوز النصب أو الإبدال</td></tr>
+                    <tr><td>ناقص منفي</td><td class="treatment-3">يعرب حسب موقعه في الجملة</td></tr>
+                </tbody>
+             </table>
+        </div>
+
+        <!-- Slide 5: نموذج إعرابي -->
+        <div class="slide">
+            <h1 class="slide-header">نموذج إعرابي</h1>
+            <table>
+                 <thead>
+                    <tr><th>الجملة</th><th>إعراب المستثنى</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>حضر الطلابُ إلا <strong>طالبًا</strong>.</td><td>مستثنى منصوب وعلامة نصبه الفتحة.</td></tr>
+                    <tr><td>ما نجح الطلابُ إلا <strong>طالبًا/طالبٌ</strong>.</td><td><strong>طالبًا:</strong> مستثنى منصوب.<br><strong>طالبٌ:</strong> بدل مرفوع.</td></tr>
+                    <tr><td>ما نجح إلا <strong>طالبٌ</strong>.</td><td>فاعل مرفوع وعلامة رفعه الضمة.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Slide 6: التقويم البنائي -->
+        <div class="slide">
+            <h1 class="slide-header">تقويم بنائي</h1>
+            <div id="quiz-container">
+                <div id="quiz-question" class="quiz-question"></div>
+                <div id="quiz-options" class="quiz-options"></div>
+                <p id="feedback"></p>
+                <button id="next-q-btn" class="nav-button" onclick="nextQuestion()">السؤال التالي</button>
+            </div>
+             <div id="result-screen" style="display:none;">
+                <h2 style="color: #198754;">أحسنت! لقد أكملت التقويم بنجاح.</h2>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <button id="prevBtn" class="nav-button" onclick="changeSlide(-1)" disabled>السابق</button>
+            <button id="nextBtn" class="nav-button" onclick="changeSlide(1)">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+
+        // --- Quiz Logic (Updated with 6 questions) ---
+        const quizQuestions = [
+            { q: "ما نوع الاستثناء في: (فهمتُ الدروسَ إلا درسًا)؟", o: ["تام مثبت", "تام منفي", "ناقص منفي"], a: "تام مثبت", exp: "إجابة صحيحة! التشخيص: لأن الجملة مثبتة (لا يوجد نفي)." },
+            { q: "ما نوع الاستثناء في: (ما حضر المسؤولون إلا المديرَ)؟", o: ["تام مثبت", "تام منفي", "ناقص منفي"], a: "تام منفي", exp: "إجابة صحيحة! التشخيص: لأن الجملة منفية، وبعد الحذف (ما حضر المسؤولون) تبقى تامة المعنى." },
+            { q: "ما نوع الاستثناء في: (لا أعبد إلا اللهَ)؟", o: ["تام مثبت", "تام منفي", "ناقص منفي"], a: "ناقص منفي", exp: "إجابة صحيحة! التشخيص: لأن الجملة منفية، وبعد الحذف (لا أعبد) تصبح ناقصة المعنى." },
+            { q: "ما نوع الاستثناء في: (قرأ القومُ الكتبَ إلا كتابًا)؟", o: ["تام مثبت", "تام منفي", "ناقص منفي"], a: "تام مثبت", exp: "إجابة صحيحة! التشخيص: الجملة مثبتة والمستثنى منه (الكتب) مذكور." },
+            { q: "ما نوع الاستثناء في: (لم أقل إلا الحقَّ)؟", o: ["تام مثبت", "تام منفي", "ناقص منفي"], a: "ناقص منفي", exp: "إجابة صحيحة! التشخيص: الجملة منفية، وبعد الحذف (لم أقل) تصبح ناقصة المعنى." },
+            { q: "ما نوع الاستثناء في: (لا ينجح الطلابُ إلا المجتهدَ)؟", o: ["تام مثبت", "تام منفي", "ناقص منفي"], a: "تام منفي", exp: "إجابة صحيحة! التشخيص: الجملة منفية، وبعد الحذف (لا ينجح الطلابُ) تبقى تامة المعنى." }
+        ];
+
+        let currentQIndex = 0;
+        const questionEl = document.getElementById('quiz-question');
+        const optionsEl = document.getElementById('quiz-options');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtnQ = document.getElementById('next-q-btn');
+
+        function loadQuestion() {
+            if (currentQIndex >= quizQuestions.length) {
+                document.getElementById('quiz-container').style.display = 'none';
+                document.getElementById('result-screen').style.display = 'block';
+                return;
+            }
+            const currentQ = quizQuestions[currentQIndex];
+            questionEl.innerHTML = currentQ.q;
+            optionsEl.innerHTML = "";
+            feedbackEl.innerText = "طبّق خطوات التشخيص: هل الجملة منفية أولاً؟";
+            feedbackEl.style.color = '#6c757d';
+            feedbackEl.style.backgroundColor = 'transparent';
+            nextBtnQ.style.display = 'none';
+
+            currentQ.o.forEach(optionText => {
+                const optionBtn = document.createElement('div');
+                optionBtn.innerText = optionText;
+                optionBtn.classList.add('quiz-option');
+                optionBtn.onclick = () => selectAnswer(optionBtn, optionText, currentQ.a, currentQ.exp);
+                optionsEl.appendChild(optionBtn);
+            });
+        }
+
+        function selectAnswer(btn, selected, correct, explanation) {
+            if (selected === correct) {
+                btn.classList.add('correct');
+                feedbackEl.innerText = explanation;
+                feedbackEl.style.color = '#0f5132';
+                feedbackEl.style.backgroundColor = '#d1e7dd';
+                nextBtnQ.style.display = 'inline-block';
+                Array.from(optionsEl.children).forEach(b => b.onclick = null);
+            } else {
+                btn.classList.add('incorrect');
+                feedbackEl.innerText = "إجابة غير دقيقة. حاول مرة أخرى بتطبيق خطوات التشخيص.";
+                feedbackEl.style.color = '#842029';
+                feedbackEl.style.backgroundColor = '#f8d7da';
+                btn.onclick = null;
+            }
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            loadQuestion();
+        }
+        
+        showSlide(currentSlide);
+        loadQuestion();
+    </script>
+
+</body>
+</html>
