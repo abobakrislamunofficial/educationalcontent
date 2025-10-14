@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض تقديمي: أعراف الكتابة</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f0f2f5;
+            color: #2c3e50;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 950px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            padding: 40px;
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        .slide-header {
+            font-size: 2.4em;
+            font-weight: 800;
+            color: #0d6efd;
+            text-align: center;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #0d6efd;
+        }
+        
+        .comparison-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .text-box {
+            flex: 1;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: #f8f9fa;
+        }
+        .text-box h3 {
+            margin-top: 0;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+        .raw-text h3 { color: #dc3545; }
+        .organized-text h3 { color: #198754; }
+        .text-box p, .text-box li { font-size: 1em; line-height: 1.8; }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        .tool-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e6ed;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .tool-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.4em;
+            color: #0d6efd;
+        }
+        .tool-card p {
+            margin: 0;
+            font-size: 1.1em;
+            line-height: 1.7;
+        }
+        
+        /* Quiz Styles */
+        #quiz-container { text-align: center; }
+        .quiz-question { font-size: 1.5em; font-weight: 500; margin-bottom: 30px; line-height: 1.7; }
+        .quiz-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .quiz-option { background-color: #f8f9fa; border: 2px solid #dee2e6; border-radius: 8px; padding: 18px; font-size: 1.2em; cursor: pointer; transition: all 0.2s ease-in-out; }
+        .quiz-option:hover { background-color: #e9ecef; border-color: #0d6efd; }
+        .correct { background-color: #d1e7dd !important; border-color: #198754 !important; }
+        .incorrect { background-color: #f8d7da !important; border-color: #dc3545 !important; animation: shake 0.5s; }
+        #feedback { font-size: 1.2em; font-weight: 500; margin-top: 25px; padding: 12px; border-radius: 5px; }
+        #next-q-btn { display: none; margin: 20px auto 0 auto; background-color: #198754; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+
+        .navigation { display: flex; justify-content: space-between; padding: 20px 40px; background-color: #f8f9fa; border-top: 1px solid #dee2e6; }
+        .nav-button { background-color: #0d6efd; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1.1em; font-family: 'Tajawal', sans-serif; cursor: pointer; transition: background-color 0.2s; }
+        .nav-button:hover { background-color: #0b5ed7; }
+        .nav-button:disabled { background-color: #6c757d; cursor: not-allowed; }
+        
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <!-- Slide 1: التهيئة -->
+        <div class="slide active">
+            <h1 class="slide-header">التهيئة: أهمية أعراف الكتابة</h1>
+            <p style="font-size: 1.3em; text-align: center; margin-bottom: 20px;">تأمل النصين التاليين، ثم أجب: أيهما أسهل في القراءة والفهم؟ ولماذا؟</p>
+            <div class="comparison-container">
+                <div class="text-box raw-text">
+                    <h3>نص خام</h3>
+                    <p>عرف العصر الجاهلي لونين من القصائد المطولات وهي قصائد طويلة يُعنى الشاعر بتنقيحها وتهذيبها قبل أن يعرضها على الرواة أو يلقيها في محافل العرب وأسواقهم، ومن أشهرها المعلقات العشر. وعادة ما تتكون القصيدة المطولة من: مقدمة طللية، والغزل، ووصف الراحلة...إلخ</p>
+                </div>
+                <div class="text-box organized-text">
+                    <h3>نص منظم</h3>
+                    <p><strong>أولاً: المطولات:</strong></p>
+                    <p>وهي قصائد طويلة... ومن أشهرها المعلقات العشر. وتتكون من:</p>
+                    <ol><li>مقدمة طللية.</li><li>الغزل.</li><li>وصف الراحلة...</li></ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: الأعراف التنظيمية الأساسية -->
+        <div class="slide">
+            <h1 class="slide-header">الأعراف التنظيمية الأساسية</h1>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3><span style="font-size: 1.5em; margin-left: 10px;">🏷️</span>العناوين</h3>
+                    <p><strong>الوظيفة:</strong> إرشاد القارئ وإعطاؤه فكرة سريعة عن محتوى كل جزء من النص.</p>
+                </div>
+                <div class="tool-card">
+                    <h3><span style="font-size: 1.5em; margin-left: 10px;">¶</span>الكتابة في فقرات</h3>
+                    <p><strong>الوظيفة:</strong> تقسيم النص الطويل إلى وحدات فكرية قصيرة، مما يمنع الملل ويساعد على التركيز.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: أعراف إبراز المعلومات -->
+        <div class="slide">
+            <h1 class="slide-header">أعراف إبراز المعلومات</h1>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <h3><span style="font-size: 1.5em; margin-left: 10px;">🎨</span>الإبراز</h3>
+                    <p><strong>وظيفته:</strong> لفت انتباه القارئ إلى الكلمات والمصطلحات والمفاهيم الرئيسية في النص.</p>
+                </div>
+                <div class="tool-card">
+                    <h3><span style="font-size: 1.5em; margin-left: 10px;">🔢</span>التعداد</h3>
+                    <p><strong>وظيفته:</strong> تنظيم عرض الجزئيات المتعددة في شكل قائمة لتسهيل استيعابها.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: التطبيق العملي -->
+        <div class="slide">
+            <h1 class="slide-header">تطبيق عملي: تنظيم نص</h1>
+            <div class="comparison-container">
+                <div class="text-box raw-text" onclick="showOrganizedText()">
+                    <h3>النص قبل التنظيم (انقر هنا لترى الحل)</h3>
+                    <p>"هو أبو عثمان عمرو بن بحر بن محبوب الكناني، وقد لُقِّب بالجاحظ... وُلِد بالبصرة... استقى ثقافته من مصادر عدة منها: الأخذ عن الرجال المتخصصين. ابن المقفع. دكاكين الوراقين..."</p>
+                </div>
+                <div id="organized-solution" class="text-box organized-text" style="visibility: hidden;">
+                    <h3>النص بعد التنظيم</h3>
+                    <p><strong><span style="text-decoration: underline;">أولاً: نسبه ومولده:</span></strong></p>
+                    <p>هو أبو عثمان عمرو بن بحر بن محبوب الكناني، وقد لُقِّب <strong>بالجاحظ</strong>... وُلِد بالبصرة...</p>
+                    <p><strong><span style="text-decoration: underline;">ثانيًا: مصادر ثقافته:</span></strong></p>
+                    <p>استقى ثقافته من مصادر عدة، منها:</p>
+                    <ul><li>الأخذ عن الرجال المتخصصين.</li><li>ابن المقفع.</li><li>دكاكين الوراقين.</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: التقويم البنائي -->
+        <div class="slide">
+            <h1 class="slide-header">تقويم بنائي</h1>
+            <div id="quiz-container">
+                <div id="quiz-question" class="quiz-question"></div>
+                <div id="quiz-options" class="quiz-options"></div>
+                <p id="feedback"></p>
+                <button id="next-q-btn" class="nav-button" onclick="nextQuestion()">السؤال التالي</button>
+            </div>
+             <div id="result-screen" style="display:none;">
+                <h2 style="color: #198754;">أحسنت! لقد أتقنت توظيف أعراف الكتابة.</h2>
+            </div>
+        </div>
+        
+        <!-- Slide 6: الغلق -->
+        <div class="slide">
+            <h1 class="slide-header">خلاصة الدرس</h1>
+            <p style="font-size: 1.4em; text-align: center; margin-bottom: 25px;">أعراف الكتابة هي أدوات أساسية لجعل النص واضحًا ومنظمًا وسهل الفهم على القارئ.</p>
+            <div class="tools-grid">
+                <div class="tool-card" style="border-color: #0d6efd;">
+                    <h3>الأعراف التنظيمية</h3>
+                    <p>العناوين والفقرات لتنظيم هيكل النص.</p>
+                </div>
+                 <div class="tool-card" style="border-color: #0d6efd;">
+                    <h3>أعراف الإبراز</h3>
+                    <p>الإبراز والتعداد لتسهيل قراءة المحتوى.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="navigation">
+            <button id="prevBtn" class="nav-button" onclick="changeSlide(-1)" disabled>السابق</button>
+            <button id="nextBtn" class="nav-button" onclick="changeSlide(1)">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+
+        function showOrganizedText() {
+            document.getElementById('organized-solution').style.visibility = 'visible';
+        }
+
+        // --- Quiz Logic ---
+        const quizQuestions = [
+            { q: "إذا كان النص طويلاً ويبدو ككتلة واحدة، ما العرف الكتابي الأنسب لحل هذه المشكلة؟", o: ["الكتابة في فقرات", "الإبراز", "العناوين"], a: "الكتابة في فقرات", exp: "صحيح! الفقرات تقسم النص الطويل وتمنع الملل." },
+            { q: "لإرشاد القارئ حول موضوع كل جزء من النص، نستخدم:", o: ["التعداد", "العناوين الجانبية", "الإبراز"], a: "العناوين الجانبية", exp: "ممتاز! العناوين تعمل كاللافتات الإرشادية." },
+            { q: "للفت انتباه القارئ إلى مصطلح مهم أو تعريف رئيسي، نستخدم:", o: ["الإبراز (بالتلوين)", "الفقرات", "العنوان الرئيس"], a: "الإبراز (بالتلوين)", exp: "أحسنت! الإبراز يلفت الانتباه للمعلومات الهامة." },
+            { q: "لعرض قائمة من الأسباب أو الأنواع بشكل منظم، نستخدم:", o: ["فقرة طويلة", "التعداد", "خطًا عريضًا"], a: "التعداد", exp: "صحيح! التعداد ينظم القوائم ويسهل استيعابها." }
+        ];
+
+        let currentQIndex = 0;
+        const questionEl = document.getElementById('quiz-question');
+        const optionsEl = document.getElementById('quiz-options');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtnQ = document.getElementById('next-q-btn');
+
+        function loadQuestion() {
+            if (currentQIndex >= quizQuestions.length) {
+                document.getElementById('quiz-container').style.display = 'none';
+                document.getElementById('result-screen').style.display = 'block';
+                return;
+            }
+            const currentQ = quizQuestions[currentQIndex];
+            questionEl.innerHTML = currentQ.q;
+            optionsEl.innerHTML = "";
+            feedbackEl.innerText = "";
+            nextBtnQ.style.display = 'none';
+
+            currentQ.o.forEach(optionText => {
+                const optionBtn = document.createElement('div');
+                optionBtn.innerText = optionText;
+                optionBtn.classList.add('quiz-option');
+                optionBtn.onclick = () => selectAnswer(optionBtn, optionText, currentQ.a, currentQ.exp);
+                optionsEl.appendChild(optionBtn);
+            });
+        }
+
+        function selectAnswer(btn, selected, correct, explanation) {
+            if (selected === correct) {
+                btn.classList.add('correct');
+                feedbackEl.innerText = explanation;
+                feedbackEl.style.color = '#0f5132';
+                feedbackEl.style.backgroundColor = '#d1e7dd';
+                nextBtnQ.style.display = 'inline-block';
+                Array.from(optionsEl.children).forEach(b => b.onclick = null);
+            } else {
+                btn.classList.add('incorrect');
+                feedbackEl.innerText = "إجابة غير دقيقة. حاول مرة أخرى.";
+                feedbackEl.style.color = '#842029';
+                feedbackEl.style.backgroundColor = '#f8d7da';
+                btn.onclick = null;
+            }
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            loadQuestion();
+        }
+        
+        showSlide(currentSlide);
+        loadQuestion();
+    </script>
+
+</body>
+</html>
