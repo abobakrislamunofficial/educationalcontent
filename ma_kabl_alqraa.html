@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض تقديمي: أسئلة ما قبل القراءة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --success-color: #198754;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --white-color: #ffffff;
+            --dark-color: #212529;
+            --bg-color: #e9ecef;
+            --border-radius: 0.75rem;
+            --shadow: 0 4px D12px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--white-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-bar-container { width: 100%; background-color: #dee2e6; }
+        .progress-bar { height: 8px; width: 0%; background-color: var(--primary-color); transition: width 0.4s ease; }
+
+        .slides-container {
+            padding: 2.5rem 2rem;
+            min-height: 500px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .slide.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-icon { font-size: 3.5em; color: var(--primary-color); margin-bottom: 1.5rem; }
+        .slide h1 { font-size: 2.5em; color: var(--primary-color); margin: 0 0 0.75rem; }
+        .slide h2 { font-size: 2em; color: var(--dark-color); margin: 0 0 1rem; }
+        
+        /* New class for detailed content */
+        .slide-details {
+            font-size: 1.15em;
+            line-height: 1.8;
+            color: #495057;
+            text-align: right;
+            margin-top: 1.5rem;
+        }
+
+        .slide-details ul {
+            list-style-type: none;
+            padding-right: 0;
+        }
+
+        .slide-details li {
+            background-color: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .slide-details li .fa-check {
+            color: var(--success-color);
+            margin-left: 10px;
+        }
+        
+        .controls {
+            display: flex; justify-content: space-between; padding: 1.25rem 2rem; background-color: var(--light-color); border-top: 1px solid #dee2e6;
+        }
+
+        .btn {
+            background-color: var(--primary-color); color: #fff; padding: 0.75rem 2rem; border: none; border-radius: 0.5rem; font-size: 1.1em; font-family: 'Cairo', sans-serif; cursor: pointer; transition: all 0.2s;
+        }
+        .btn:hover:not(:disabled) { background-color: #0b5ed7; transform: translateY(-2px); }
+        .btn:disabled { background-color: #6c757d; cursor: not-allowed; }
+
+        /* --- Quiz Styles --- */
+        #quiz-container { width: 100%; text-align: right; }
+        .question-text { font-size: 1.3em; font-weight: 600; margin-bottom: 1.5rem; }
+        .options-container { display: flex; flex-direction: column; gap: 0.75rem; }
+        .option {
+            width: 100%; padding: 1rem; border: 2px solid #ced4da; border-radius: 0.5rem; background-color: #fff; text-align: right; cursor: pointer; transition: all 0.2s ease; font-size: 1.1em; box-sizing: border-box;
+        }
+        .option:hover:not(.disabled) { border-color: var(--primary-color); background-color: #f0f6ff; }
+        .option.correct { border-color: var(--success-color); background-color: #d1e7dd; font-weight: bold; }
+        .option.incorrect { border-color: var(--danger-color); background-color: #f8d7da; }
+        .option.disabled { cursor: not-allowed; opacity: 0.8; }
+        .feedback { margin-top: 1rem; padding: 0.75rem; border-radius: 0.5rem; font-size: 1em; display: none; }
+        .feedback.correct { background-color: #d1e7dd; color: #0f5132; }
+        .feedback.incorrect { background-color: #f8d7da; color: #842029; }
+        #score-text { font-size: 1.4em; }
+        #score { font-size: 3em; color: var(--primary-color); font-weight: bold; margin-top: 0.5rem; }
+        
+        /* New style for next question button */
+        .next-question-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="slides-container">
+            
+            <div class="slide active">
+                <i class="fas fa-book-open slide-icon"></i>
+                <h1>أسئلة ما قبل القراءة</h1>
+                <p style="font-size: 1.25em; color: #495057;">دليلك لتكون قارئاً واعياً ومخططاً</p>
+            </div>
+
+            <div class="slide">
+                <i class="fas fa-route slide-icon" style="color:#6c757d;"></i>
+                <h2>القراءة كـالرحلة تماماً!</h2>
+                <div class="slide-details">
+                    <p>القراءة رحلة معرفية تحتاج إلى تخطيط مسبق لتكون ممتعة ومثمرة. فالقارئ الذي يخطط لرحلته يصل إلى وجهته (الفهم والاستيعاب) بشكل أسرع وأكثر متعة.</p>
+                </div>
+            </div>
+
+            <div class="slide">
+                <i class="fas fa-bullseye slide-icon"></i>
+                <h2>1. ما الهدف من القراءة؟</h2>
+                <div class="slide-details">
+                    <ul>
+                        <li><i class="fas fa-check"></i><b>للمتعة والتسلية:</b> مثل قراءة رواية أو قصة قصيرة.</li>
+                        <li><i class="fas fa-check"></i><b>للمذاكرة والاستعداد لاختبار:</b> يتطلب تركيزاً على المفاهيم الأساسية.</li>
+                        <li><i class="fas fa-check"></i><b>للبحث عن معلومة محددة:</b> مثل البحث في موسوعة أو مقال علمي.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide">
+                <i class="fas fa-brain slide-icon"></i>
+                <h2>2. ماذا أعرف عن الموضوع؟</h2>
+                 <div class="slide-details">
+                    <p>هذه الخطوة تنشط ذاكرتك وتبني جسراً بين ما تعرفه وما ستتعلمه. اسأل نفسك:</p>
+                     <ul>
+                        <li><i class="fas fa-check"></i>ما هي المعلومات أو التجارب الشخصية التي أملكها حول الموضوع؟</li>
+                        <li><i class="fas fa-check"></i>ماذا درستُ أو سمعتُ عنه في السابق؟</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide">
+                <i class="fas fa-magnifying-glass slide-icon"></i>
+                <h2>3. أين سأجد ما أبحث عنه؟</h2>
+                <div class="slide-details">
+                    <p>بدلاً من القراءة العشوائية، كن قارئاً ذكياً وتصفح:</p>
+                     <ul>
+                        <li><i class="fas fa-check"></i><b>الفهرس:</b> فهو خريطة الكتاب.</li>
+                        <li><i class="fas fa-check"></i><b>المقدمة:</b> فهي تلخص هدف الكتاب وأفكاره الرئيسية.</li>
+                        <li><i class="fas fa-check"></i><b>العناوين الرئيسية والفرعية:</b> فهي ترشدك للأقسام الهامة.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="slide">
+                <i class="fas fa-pencil-alt slide-icon"></i>
+                <h2>4. ما الذي أحتاج إليه؟</h2>
+                <div class="slide-details">
+                    <p>تجهيز بيئة وأدوات القراءة يزيد من تركيزك وفهمك:</p>
+                     <ul>
+                        <li><i class="fas fa-check"></i><b>بيئة مناسبة:</b> مكان هادئ وإضاءة جيدة.</li>
+                        <li><i class="fas fa-check"></i><b>أدوات مساعدة:</b> قلم تحديد، دفتر ملاحظات، أو تطبيق لتدوين الأفكار.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide">
+                <i class="fas fa-check-double slide-icon"></i>
+                <h2>5. كيف سأتأكد من فهمي؟</h2>
+                <div class="slide-details">
+                    <p>الفهم الحقيقي يتطلب التحقق. خطط مسبقاً لكيفية قياس استيعابك عبر:</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i><b>الإجابة عن أسئلة:</b> سواء التي في الكتاب أو التي تضعها أنت.</li>
+                        <li><i class="fas fa-check"></i><b>التلخيص:</b> إعادة صياغة الأفكار الرئيسية بأسلوبك الخاص.</li>
+                        <li><i class="fas fa-check"></i><b>الشرح للآخرين:</b> أفضل طريقة لتثبيت المعلومة.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="slide">
+                <i class="fas fa-flag-checkered slide-icon"></i>
+                <h2>حان وقت اختبار معلوماتك!</h2>
+                <p style="font-size: 1.25em; color: #495057;">أنت الآن جاهز للتقويم. اضغط "التالي" للبدء.</p>
+            </div>
+
+            <div class="slide" id="quiz-slide">
+                <div id="quiz-container"></div>
+            </div>
+
+            <div class="slide">
+                 <i class="fas fa-award slide-icon" style="color: #ffc107;"></i>
+                <h2>النتيجة النهائية</h2>
+                <div id="quiz-results">
+                    <p id="score-text">لقد أكملت التقويم بنجاح. نتيجتك هي:</p>
+                    <p id="score">0 / 10</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="prevBtn" disabled>السابق</button>
+            <button class="btn" id="nextBtn">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const progressBar = document.getElementById('progressBar');
+        const quizContainer = document.getElementById('quiz-container');
+        const quizSlide = document.getElementById('quiz-slide');
+
+        let currentSlideIndex = 0;
+        let score = 0;
+        let currentQuestionIndex = 0;
+
+        const quizData = [ /* The quiz data is the same as the previous version */ 
+            {
+                question: "أي من التالي ليس من أسئلة ما قبل القراءة الخمسة؟",
+                options: ["ماذا أعرف عن الموضوع؟", "ما هو رأي الكاتب؟", "ما الهدف من القراءة؟", "أين سأجد المعلومة؟"],
+                correctAnswer: 1,
+                feedback: "رائع! 'ما هو رأي الكاتب؟' هو سؤال يُطرح أثناء القراءة أو بعدها لتحليل النص، وليس قبلها."
+            },
+            {
+                question: "سؤال 'ماذا أعرف عن الموضوع؟' يهدف إلى...",
+                options: ["اختبار معلوماتك قبل القراءة.", "ربط معرفتك السابقة بالمعلومات الجديدة.", "تلخيص النص بشكل سريع.", "تحديد مكان وجود المعلومة."],
+                correctAnswer: 1,
+                feedback: "أحسنت! هذا السؤال ينشط الذاكرة ويبني جسراً بين ما تعرفه وما ستتعلمه، مما يسهل الفهم."
+            },
+            {
+                question: "عندما تنظر إلى الفهرس والعناوين قبل القراءة، فأنت تجيب عن سؤال:",
+                options: ["ما الهدف من القراءة؟", "ماذا أعرف عن الموضوع؟", "أين سأجد ما أبحث عنه؟", "كيف سأتأكد من فهمي؟"],
+                correctAnswer: 2,
+                feedback: "صحيح! الفهرس والعناوين هما بمثابة خريطة للكتاب تساعدك في تحديد مكان المعلومات التي تبحث عنها."
+            },
+            {
+                question: "تحديد الهدف من القراءة (للمتعة، للمذاكرة) يساعدك على:",
+                options: ["إنهاء القراءة بشكل أسرع.", "تحديد طريقة القراءة المناسبة وتركيز الجهد.", "معرفة كل شيء عن الكاتب.", "حفظ النص كلمة بكلمة."],
+                correctAnswer: 1,
+                feedback: "ممتاز! القراءة للمتعة تختلف عن القراءة للمذاكرة. تحديد الهدف يجعلك قارئاً أكثر فعالية."
+            },
+            {
+                question: "التفكير في 'هل سأحتاج إلى قلم لتحديد الأفكار؟' هو جزء من الإجابة عن سؤال:",
+                options: ["ما الهدف من القراءة؟", "ماذا أعرف عن الموضوع؟", "ما الذي أحتاج إليه لأستوعب بصورة أفضل؟", "كيف سأتأكد من فهمي؟"],
+                correctAnswer: 2,
+                feedback: "إجابة دقيقة! هذا السؤال يتعلق بتجهيز بيئة وأدوات القراءة المناسبة لك."
+            },
+            {
+                question: "'بعد القراءة، سأحاول شرح الفكرة لأخي الصغير'. هذا التخطيط يجيب عن سؤال:",
+                options: ["أين سأجد ما أبحث عنه؟", "كيف سأتأكد من فهمي للموضوع؟", "ما الهدف من القراءة؟", "ماذا أعرف عن الموضوع؟"],
+                correctAnswer: 1,
+                feedback: "صحيح! شرح ما قرأته للآخرين هو من أفضل الطرق للتأكد من استيعابك الكامل للمعلومات."
+            },
+            {
+                question: "ما هي أول خطوة في استراتيجية أسئلة ما قبل القراءة؟",
+                options: ["البدء في قراءة المقدمة.", "تصفح الفهرس.", "تحديد الهدف من القراءة.", "تلخيص الموضوع."],
+                correctAnswer: 2,
+                feedback: "بالضبط! قبل أي شيء، يجب أن تعرف لماذا ستقرأ هذا النص."
+            },
+            {
+                question: "تطبيق استراتيجية أسئلة ما قبل القراءة يجعل القراءة:",
+                options: ["أبطأ وأكثر مللاً.", "أكثر وعياً ومنهجية وتركيزاً.", "صعبة ومعقدة.", "مقتصرة على الكتب الدراسية فقط."],
+                correctAnswer: 1,
+                feedback: "هذا هو جوهر الدرس! هذه الاستراتيجية تحول القراءة من نشاط عشوائي إلى عملية منظمة وفعالة."
+            },
+            {
+                question: "عند قراءة رواية للمتعة، أي سؤال من أسئلة ما قبل القراءة قد يكون أقل أهمية؟",
+                options: ["ما الهدف من القراءة؟", "ماذا أعرف عن القصة؟", "أين سأجد معلومة محددة؟", "ما الذي أحتاجه للاستمتاع (مكان هادئ)؟"],
+                correctAnswer: 2,
+                feedback: "تحليل دقيق! عند قراءة رواية للمتعة، غالباً لا تبحث عن معلومة محددة، بل تستمتع بتتابع الأحداث."
+            },
+            {
+                question: "سؤال 'كيف سأتأكد من فهمي؟' يُعتبر خطوة...",
+                options: ["اختيارية يمكن تجاهلها دائماً.", "مهمة لقياس مدى الاستفادة من القراءة.", "خاصة بالمعلمين فقط.", "تستخدم فقط عند قراءة النصوص العلمية."],
+                correctAnswer: 1,
+                feedback: "أحسنت! هذه الخطوة تحول القراءة من مجرد استقبال للمعلومات إلى عملية تعلم حقيقية."
+            }
+        ];
+        
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            
+            const progress = ((index + 1) / slides.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+
+            if (slides[index] === quizSlide) {
+                nextBtn.style.display = 'none'; // Hide main next button during quiz
+                prevBtn.style.display = 'none'; // Hide main prev button during quiz
+                renderQuiz();
+            } else {
+                 nextBtn.style.display = 'inline-block';
+                 prevBtn.style.display = 'inline-block';
+            }
+        }
+
+        function renderQuiz() {
+            const q = quizData[currentQuestionIndex];
+            quizContainer.innerHTML = `
+                <p class="question-text">${currentQuestionIndex + 1}. ${q.question}</p>
+                <div class="options-container">
+                    ${q.options.map((opt, i) => `<div class="option" data-index="${i}">${opt}</div>`).join('')}
+                </div>
+                <div class="feedback"></div>
+                <div id="quiz-nav"></div>
+            `;
+            
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', handleOptionClick);
+            });
+        }
+
+        function handleOptionClick(event) {
+            const selectedOption = event.target;
+            // Prevent clicking again if an answer was already selected
+            if (quizContainer.querySelector('.option.disabled')) return;
+
+            const selectedIndex = parseInt(selectedOption.dataset.index);
+            const questionData = quizData[currentQuestionIndex];
+            const feedbackDiv = quizContainer.querySelector('.feedback');
+            const quizNavDiv = quizContainer.querySelector('#quiz-nav');
+            
+            const allOptions = quizContainer.querySelectorAll('.option');
+            allOptions.forEach(opt => opt.classList.add('disabled'));
+
+            if (selectedIndex === questionData.correctAnswer) {
+                selectedOption.classList.add('correct');
+                feedbackDiv.textContent = `إجابة صحيحة! ${questionData.feedback}`;
+                feedbackDiv.classList.add('correct');
+                score++;
+            } else {
+                selectedOption.classList.add('incorrect');
+                allOptions[questionData.correctAnswer].classList.add('correct');
+                feedbackDiv.textContent = `إجابة خاطئة. ${questionData.feedback}`;
+                feedbackDiv.classList.add('incorrect');
+            }
+            feedbackDiv.style.display = 'block';
+
+            // Create and show the "Next Question" button
+            const nextQuestionButton = document.createElement('button');
+            nextQuestionButton.className = 'btn next-question-btn';
+            
+            if (currentQuestionIndex < quizData.length - 1) {
+                nextQuestionButton.textContent = 'السؤال التالي';
+                nextQuestionButton.onclick = () => {
+                    currentQuestionIndex++;
+                    renderQuiz();
+                };
+            } else {
+                nextQuestionButton.textContent = 'عرض النتيجة';
+                nextQuestionButton.onclick = () => {
+                    currentSlideIndex++;
+                    showSlide(currentSlideIndex);
+                };
+            }
+            quizNavDiv.appendChild(nextQuestionButton);
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlideIndex < slides.length - 1) {
+                currentSlideIndex++;
+                showSlide(currentSlideIndex);
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                showSlide(currentSlideIndex);
+            }
+        });
+
+        // Initial call
+        showSlide(currentSlideIndex);
+    </script>
+</body>
+</html>
