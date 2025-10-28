@@ -9,18 +9,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* --- الأنماط والتصميم (CSS) - بجودة بصرية محسنة --- */
+        /* --- Nano Banana Inspired Visual Theme --- */
         :root {
-            --primary-color: #3182CE;
+            --primary-color: #FFD60A; /* Vibrant Banana Yellow */
+            --bg-color: #1A202C; /* Charcoal Background */
+            --card-bg-color: #2D3748; /* Lighter Charcoal for cards */
+            --text-color: #F7FAFC; /* Off-white text */
+            --subtle-text-color: #A0AEC0; /* Lighter gray for less important text */
             --success-color: #38A169;
             --danger-color: #E53E3E;
-            --bg-color: #F7FAFC;
-            --card-bg-color: #FFFFFF;
-            --text-color: #2D3748;
-            --subtle-text-color: #718096;
-            --border-color: #E2E8F0;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --border-radius: 12px;
+            --border-color: #4A5568;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --border-radius: 16px;
         }
         body {
             font-family: 'Tajawal', sans-serif;
@@ -43,48 +43,45 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            border: 1px solid var(--border-color);
         }
-        .progress-bar-container { width: 100%; background-color: var(--border-color); }
-        .progress-bar { height: 8px; width: 0%; background: linear-gradient(90deg, #4299E1, #3182CE); transition: width 0.5s ease-out; }
+        .progress-bar-container { width: 100%; background-color: #1A202C; }
+        .progress-bar { height: 8px; width: 0%; background-color: var(--primary-color); transition: width 0.5s ease-out; border-radius: 0 4px 4px 0; }
         .slides-container { padding: 3rem; min-height: 500px; box-sizing: border-box; display: flex; justify-content: center; align-items: center; }
         .slide { display: none; width: 100%; max-width: 650px; text-align: center; animation: fadeIn 0.7s ease-in-out; }
         .slide.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-        .slide-icon {
-            font-size: 2.5em;
-            width: 80px;
-            height: 80px;
-            line-height: 80px;
-            border-radius: 50%;
-            background-color: rgba(49, 130, 206, 0.1);
-            color: var(--primary-color);
-            margin: 0 auto 1.5rem auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .slide h1 { font-size: 2.75em; color: var(--text-color); font-weight: 700; margin: 0 0 0.5rem; }
+        .slide-icon { font-size: 3em; color: var(--primary-color); margin: 0 auto 1.5rem auto; }
+        .slide h1 { font-size: 2.75em; color: var(--primary-color); font-weight: 700; margin: 0 0 0.5rem; }
         .slide h2 { font-size: 2.25em; color: var(--text-color); font-weight: 700; margin: 0 0 1.5rem; }
         .slide-details { font-size: 1.2em; line-height: 1.8; color: var(--subtle-text-color); text-align: right; }
-        .slide-details p { color: var(--text-color); font-weight: 500; }
+        .slide-details p { color: var(--text-color); font-weight: 400; }
         .slide-details ul { list-style-type: none; padding-right: 0; }
-        .slide-details li { background-color: var(--bg-color); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; display: flex; align-items: center; border-right: 4px solid var(--primary-color); }
+        .slide-details li { background-color: #1A202C; padding: 1rem; border-radius: 12px; margin-bottom: 0.75rem; display: flex; align-items: center; border-right: 4px solid var(--primary-color); }
         .slide-details li .fa-check { color: var(--success-color); margin-left: 15px; font-size: 1.2em; }
         .controls { display: flex; justify-content: space-between; padding: 1.25rem 2rem; background-color: var(--bg-color); border-top: 1px solid var(--border-color); }
-        .btn { background-color: var(--primary-color); color: #fff; padding: 0.75rem 2rem; border: none; border-radius: 8px; font-size: 1.1em; font-family: 'Tajawal', sans-serif; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .btn:hover:not(:disabled) { background-color: #2B6CB0; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(49, 130, 206, 0.4); }
-        .btn:disabled { background-color: #A0AEC0; cursor: not-allowed; }
+        .btn {
+            background-color: var(--primary-color); color: #1A202C; padding: 0.75rem 2.5rem; border: none;
+            border-radius: 999px; font-size: 1.1em; font-family: 'Tajawal', sans-serif; font-weight: 700; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .btn:hover:not(:disabled) { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(255, 214, 10, 0.2); }
+        .btn:disabled { background-color: #4A5568; color: var(--subtle-text-color); cursor: not-allowed; }
         #quiz-container { width: 100%; text-align: right; }
-        .question-text { font-size: 1.4em; font-weight: 700; margin-bottom: 2rem; }
+        .question-text { font-size: 1.4em; font-weight: 700; margin-bottom: 2rem; color: var(--text-color); }
         .options-container { display: flex; flex-direction: column; gap: 0.75rem; }
-        .option { width: 100%; padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background-color: #fff; text-align: right; cursor: pointer; transition: all 0.2s ease; font-size: 1.1em; box-sizing: border-box; font-weight: 500; }
-        .option:hover:not(.disabled) { border-color: var(--primary-color); background-color: #EBF8FF; }
-        .option.correct { border-color: var(--success-color); background-color: #F0FFF4; font-weight: 700; }
-        .option.incorrect { border-color: var(--danger-color); background-color: #FFF5F5; }
+        .option {
+            width: 100%; padding: 1rem; border: 2px solid var(--border-color); border-radius: 12px;
+            background-color: transparent; text-align: right; cursor: pointer; transition: all 0.2s ease;
+            font-size: 1.1em; box-sizing: border-box; font-weight: 500; color: var(--text-color);
+        }
+        .option:hover:not(.disabled) { border-color: var(--primary-color); background-color: rgba(255, 214, 10, 0.1); }
+        .option.correct { border-color: var(--success-color); background-color: rgba(56, 161, 105, 0.1); font-weight: 700; }
+        .option.incorrect { border-color: var(--danger-color); background-color: rgba(229, 62, 62, 0.1); }
         .option.disabled { cursor: not-allowed; }
         .feedback { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; font-size: 1.1em; display: none; font-weight: 500; }
-        .feedback.correct { background-color: #C6F6D5; color: #22543D; }
-        .feedback.incorrect { background-color: #FED7D7; color: #822727; }
+        .feedback.correct { background-color: rgba(56, 161, 105, 0.2); color: #9AE6B4; }
+        .feedback.incorrect { background-color: rgba(229, 62, 62, 0.2); color: #FEB2B2; }
         #score-text { font-size: 1.4em; color: var(--subtle-text-color); }
         #score { font-size: 3em; color: var(--primary-color); font-weight: 700; margin-top: 0.5rem; }
         .next-question-btn { margin-top: 1.5rem; width: 100%; }
@@ -246,7 +243,7 @@
         let currentQuestionIndex = 0;
 
         const quizData = [ 
-            {
+             {
                 question: "طالب لديه اختبار تاريخ غداً، ما هو 'الهدف' الأكثر أهمية لقراءته الليلة؟ (يطبق)",
                 options: ["المتعة والتسلية", "أخذ فكرة عامة فقط", "الاستعداد للاختبار", "البحث عن معلومة غير مرتبطة بالاختبار"],
                 correctAnswer: 2,
@@ -309,15 +306,15 @@
         ];
         
         function showSlide(index) {
-            slides.forEach((slide, i) => {
-                slide.style.display = i === index ? 'block' : 'none';
-                slide.classList.toggle('active', i === index);
-            });
+            slides.forEach((slide, i) => { slide.style.display = i === index ? 'block' : 'none'; });
+            slides[index].classList.add('active');
+            
             const progress = ((index + 1) / slides.length) * 100;
             progressBar.style.width = `${progress}%`;
+            
             prevBtn.disabled = index === 0;
             nextBtn.disabled = index === slides.length - 1;
-            
+
             if (slides[index] === quizSlide) {
                 document.querySelector('.controls').style.display = 'none';
                 renderQuiz();
@@ -378,7 +375,6 @@
         nextBtn.addEventListener('click', () => { if (currentSlideIndex < slides.length - 1) { currentSlideIndex++; showSlide(currentSlideIndex); } });
         prevBtn.addEventListener('click', () => { if (currentSlideIndex > 0) { currentSlideIndex--; showSlide(currentSlideIndex); } });
         
-        // Initial setup
         showSlide(currentSlideIndex);
     </script>
 </body>
