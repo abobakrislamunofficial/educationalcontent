@@ -6,53 +6,87 @@
     <title>عرض تقديمي: الوحدة الثالثة</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* --- الأنماط والتصميم (CSS) - لا داعي لتعديل هذا الجزء --- */
+        /* --- الأنماط والتصميم (CSS) - بجودة بصرية محسنة --- */
         :root {
-            --primary-color: #0d6efd; --success-color: #198754; --danger-color: #dc3545;
-            --light-color: #f8f9fa; --white-color: #ffffff; --dark-color: #212529;
-            --bg-color: #e9ecef; --border-radius: 0.75rem; --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --primary-color: #3182CE;
+            --success-color: #38A169;
+            --danger-color: #E53E3E;
+            --bg-color: #F7FAFC;
+            --card-bg-color: #FFFFFF;
+            --text-color: #2D3748;
+            --subtle-text-color: #718096;
+            --border-color: #E2E8F0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --border-radius: 12px;
         }
         body {
-            font-family: 'Cairo', sans-serif; background-color: var(--bg-color); color: var(--dark-color); margin: 0;
-            display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 1rem; box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+            box-sizing: border-box;
         }
         .presentation-container {
-            width: 100%; max-width: 900px; background-color: var(--white-color); border-radius: var(--border-radius);
-            box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column;
+            width: 100%;
+            max-width: 900px;
+            background-color: var(--card-bg-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
-        .progress-bar-container { width: 100%; background-color: #dee2e6; }
-        .progress-bar { height: 8px; width: 0%; background-color: var(--primary-color); transition: width 0.4s ease; }
-        .slides-container { padding: 2.5rem 2rem; min-height: 500px; box-sizing: border-box; display: flex; justify-content: center; align-items: center; }
-        .slide { display: none; width: 100%; max-width: 650px; text-align: center; animation: fadeIn 0.6s ease; }
+        .progress-bar-container { width: 100%; background-color: var(--border-color); }
+        .progress-bar { height: 8px; width: 0%; background: linear-gradient(90deg, #4299E1, #3182CE); transition: width 0.5s ease-out; }
+        .slides-container { padding: 3rem; min-height: 500px; box-sizing: border-box; display: flex; justify-content: center; align-items: center; }
+        .slide { display: none; width: 100%; max-width: 650px; text-align: center; animation: fadeIn 0.7s ease-in-out; }
         .slide.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .slide-icon { font-size: 3.5em; color: var(--primary-color); margin-bottom: 1.5rem; }
-        .slide h1 { font-size: 2.5em; color: var(--primary-color); margin: 0 0 0.75rem; }
-        .slide h2 { font-size: 2em; color: var(--dark-color); margin: 0 0 1rem; }
-        .slide-details { font-size: 1.15em; line-height: 1.8; color: #495057; text-align: right; margin-top: 1.5rem; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        .slide-icon {
+            font-size: 2.5em;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            background-color: rgba(49, 130, 206, 0.1);
+            color: var(--primary-color);
+            margin: 0 auto 1.5rem auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .slide h1 { font-size: 2.75em; color: var(--text-color); font-weight: 700; margin: 0 0 0.5rem; }
+        .slide h2 { font-size: 2.25em; color: var(--text-color); font-weight: 700; margin: 0 0 1.5rem; }
+        .slide-details { font-size: 1.2em; line-height: 1.8; color: var(--subtle-text-color); text-align: right; }
+        .slide-details p { color: var(--text-color); font-weight: 500; }
         .slide-details ul { list-style-type: none; padding-right: 0; }
-        .slide-details li { background-color: #f8f9fa; padding: 0.75rem; border-radius: 8px; margin-bottom: 0.75rem; display: flex; align-items: center; }
-        .slide-details li .fa-check { color: var(--success-color); margin-left: 10px; }
-        .controls { display: flex; justify-content: space-between; padding: 1.25rem 2rem; background-color: var(--light-color); border-top: 1px solid #dee2e6; }
-        .btn { background-color: var(--primary-color); color: #fff; padding: 0.75rem 2rem; border: none; border-radius: 0.5rem; font-size: 1.1em; font-family: 'Cairo', sans-serif; cursor: pointer; transition: all 0.2s; }
-        .btn:hover:not(:disabled) { background-color: #0b5ed7; transform: translateY(-2px); }
-        .btn:disabled { background-color: #6c757d; cursor: not-allowed; }
+        .slide-details li { background-color: var(--bg-color); padding: 1rem; border-radius: 8px; margin-bottom: 0.75rem; display: flex; align-items: center; border-right: 4px solid var(--primary-color); }
+        .slide-details li .fa-check { color: var(--success-color); margin-left: 15px; font-size: 1.2em; }
+        .controls { display: flex; justify-content: space-between; padding: 1.25rem 2rem; background-color: var(--bg-color); border-top: 1px solid var(--border-color); }
+        .btn { background-color: var(--primary-color); color: #fff; padding: 0.75rem 2rem; border: none; border-radius: 8px; font-size: 1.1em; font-family: 'Tajawal', sans-serif; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .btn:hover:not(:disabled) { background-color: #2B6CB0; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(49, 130, 206, 0.4); }
+        .btn:disabled { background-color: #A0AEC0; cursor: not-allowed; }
         #quiz-container { width: 100%; text-align: right; }
-        .question-text { font-size: 1.3em; font-weight: 600; margin-bottom: 1.5rem; }
+        .question-text { font-size: 1.4em; font-weight: 700; margin-bottom: 2rem; }
         .options-container { display: flex; flex-direction: column; gap: 0.75rem; }
-        .option { width: 100%; padding: 1rem; border: 2px solid #ced4da; border-radius: 0.5rem; background-color: #fff; text-align: right; cursor: pointer; transition: all 0.2s ease; font-size: 1.1em; box-sizing: border-box; }
-        .option:hover:not(:disabled) { border-color: var(--primary-color); background-color: #f0f6ff; }
-        .option.correct { border-color: var(--success-color); background-color: #d1e7dd; font-weight: bold; }
-        .option.incorrect { border-color: var(--danger-color); background-color: #f8d7da; }
-        .option.disabled { cursor: not-allowed; opacity: 0.8; }
-        .feedback { margin-top: 1rem; padding: 0.75rem; border-radius: 0.5rem; font-size: 1em; display: none; }
-        .feedback.correct { background-color: #d1e7dd; color: #0f5132; }
-        .feedback.incorrect { background-color: #f8d7da; color: #842029; }
-        #score-text { font-size: 1.4em; }
-        #score { font-size: 3em; color: var(--primary-color); font-weight: bold; margin-top: 0.5rem; }
+        .option { width: 100%; padding: 1rem; border: 2px solid var(--border-color); border-radius: 8px; background-color: #fff; text-align: right; cursor: pointer; transition: all 0.2s ease; font-size: 1.1em; box-sizing: border-box; font-weight: 500; }
+        .option:hover:not(.disabled) { border-color: var(--primary-color); background-color: #EBF8FF; }
+        .option.correct { border-color: var(--success-color); background-color: #F0FFF4; font-weight: 700; }
+        .option.incorrect { border-color: var(--danger-color); background-color: #FFF5F5; }
+        .option.disabled { cursor: not-allowed; }
+        .feedback { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; font-size: 1.1em; display: none; font-weight: 500; }
+        .feedback.correct { background-color: #C6F6D5; color: #22543D; }
+        .feedback.incorrect { background-color: #FED7D7; color: #822727; }
+        #score-text { font-size: 1.4em; color: var(--subtle-text-color); }
+        #score { font-size: 3em; color: var(--primary-color); font-weight: 700; margin-top: 0.5rem; }
         .next-question-btn { margin-top: 1.5rem; width: 100%; }
     </style>
 </head>
@@ -65,25 +99,22 @@
 
         <div class="slides-container">
             
-            <!-- الشريحة 1: العنوان الرئيسي للدرس -->
             <div class="slide">
-                <i class="fas fa-file-alt slide-icon"></i>
+                <div class="slide-icon"><i class="fas fa-file-alt"></i></div>
                 <h1>الوحدة الثالثة</h1>
-                <p style="font-size: 1.25em; color: #495057;">استراتيجية أسئلة ما قبل القراءة</p>
+                <p style="font-size: 1.25em; color: var(--subtle-text-color);">استراتيجية أسئلة ما قبل القراءة</p>
             </div>
 
-            <!-- الشريحة 2: تمهيد للدرس -->
             <div class="slide">
-                <i class="fas fa-route slide-icon" style="color:#6c757d;"></i>
+                <div class="slide-icon"><i class="fas fa-route"></i></div>
                 <h2>تمهيد للدرس</h2>
                 <div class="slide-details">
                     <p>القراءة كـالرحلة تماماً! هل تخرج في رحلة دون تخطيط؟ كذلك القراءة، فهي رحلة معرفية تحتاج إلى استعداد مسبق لتكون ممتعة ومثمرة. اليوم، سنتعلم كيف نكون مخططين بارعين لرحلاتنا القرائية.</p>
                 </div>
             </div>
 
-            <!-- الشريحة 3: أهداف الدرس -->
             <div class="slide">
-                <i class="fas fa-bullseye slide-icon"></i>
+                <div class="slide-icon"><i class="fas fa-bullseye"></i></div>
                 <h2>أهداف الدرس</h2>
                 <div class="slide-details">
                     <p>في نهاية هذا الدرس، يتوقع أن يكون الطالب قادرًا على أن:</p>
@@ -95,9 +126,8 @@
                 </div>
             </div>
 
-            <!-- الشريحة 4: السؤال الأول -->
             <div class="slide">
-                <i class="fas fa-question-circle slide-icon"></i>
+                <div class="slide-icon"><i class="fas fa-question-circle"></i></div>
                 <h2>1. ما الهدف من القراءة؟</h2>
                 <div class="slide-details">
                    <p>هنا تسأل نفسك: "لماذا سأقرأ هذا النص؟" وتختار هدفك بوضوح. قد يكون أحد التالي:</p>
@@ -109,18 +139,16 @@
                 </div>
             </div>
 
-            <!-- الشريحة 5: السؤال الثاني -->
             <div class="slide">
-                <i class="fas fa-brain slide-icon"></i>
+                <div class="slide-icon"><i class="fas fa-brain"></i></div>
                 <h2>2. ماذا أعرف عن الموضوع؟</h2>
                  <div class="slide-details">
                     <p>في هذه الخطوة، تقوم بتنشيط ذاكرتك عبر <b>تلخيص المعرفة السابقة في نقاط محددة</b>. هذا يجهز عقلك لربط المعلومات الجديدة بالقديمة.</p>
                 </div>
             </div>
 
-            <!-- الشريحة 6: السؤال الثالث -->
             <div class="slide">
-                <i class="fas fa-map-signs slide-icon"></i>
+                <div class="slide-icon"><i class="fas fa-map-signs"></i></div>
                 <h2>3. أين سأجد ما أبحث عنه؟</h2>
                 <div class="slide-details">
                     <p>هذه خطوة <b>تخطيط ذهني</b>. أنت لا تبحث الآن، بل تقرر أفضل مكان للبدء. تسأل نفسك: هل المعلومة التي أريدها موجودة على الأرجح في:</p>
@@ -132,9 +160,8 @@
                 </div>
             </div>
 
-            <!-- الشريحة 7: السؤال الرابع -->
             <div class="slide">
-                <i class="fas fa-pencil-alt slide-icon"></i>
+                <div class="slide-icon"><i class="fas fa-pencil-alt"></i></div>
                 <h2>4. ما الذي أحتاج إليه؟</h2>
                 <div class="slide-details">
                     <p>هذا السؤال يساعدك على <b>رسم خطة القراءة</b>. ما هي الأدوات والظروف التي تحتاجها؟ قد تكون:</p>
@@ -146,9 +173,8 @@
                 </div>
             </div>
 
-            <!-- الشريحة 8: السؤال الخامس -->
             <div class="slide">
-                <i class="fas fa-check-double slide-icon"></i>
+                <div class="slide-icon"><i class="fas fa-check-double"></i></div>
                 <h2>5. كيف سأتأكد من فهمي؟</h2>
                 <div class="slide-details">
                     <p>في هذه الخطوة، تحدد <b>طريقة التحقق من الفهم</b> التي ستستخدمها بعد الانتهاء من القراءة، مثل:</p>
@@ -159,9 +185,8 @@
                 </div>
             </div>
 
-            <!-- الشريحة 9: تطبيق الاستراتيجية -->
             <div class="slide">
-                <i class="fas fa-book slide-icon"></i>
+                <div class="slide-icon"><i class="fas fa-book"></i></div>
                 <h2>تطبيق الاستراتيجية</h2>
                 <div class="slide-details">
                    <p>تختلف الإجابات حسب <b>نوع المادة المقروءة</b>:</p>
@@ -173,30 +198,26 @@
                 </div>
             </div>
             
-            <!-- الشريحة 10: الخلاصة -->
             <div class="slide">
-                 <i class="fas fa-check-circle slide-icon" style="color:#198754;"></i>
+                 <div class="slide-icon"><i class="fas fa-check-circle"></i></div>
                  <h2>الخلاصة</h2>
                  <div class="slide-details">
                      <p>هذه الاستراتيجية تحول القراءة من نشاط عشوائي إلى <b>عملية منظمة وهادفة</b> تزيد من كفاءة القارئ وفهمه للمحتوى.</p>
                  </div>
             </div>
 
-            <!-- الشريحة 11: تمهيد للتقويم -->
             <div class="slide">
-                <i class="fas fa-flag-checkered slide-icon"></i>
+                <div class="slide-icon"><i class="fas fa-flag-checkered"></i></div>
                 <h2>حان وقت اختبار معلوماتك!</h2>
-                <p style="font-size: 1.25em; color: #495057;">أنتَ الآن جاهز للتقويم. اضغط "التالي" للبدء.</p>
+                <p style="font-size: 1.25em; color: var(--subtle-text-color);">أنتَ الآن جاهز للتقويم. اضغط "التالي" للبدء.</p>
             </div>
 
-            <!-- الشريحة 12: شريحة التقويم -->
             <div class="slide" id="quiz-slide">
                 <div id="quiz-container"></div>
             </div>
 
-            <!-- الشريحة 13: شريحة النتائج -->
             <div class="slide">
-                 <i class="fas fa-award slide-icon" style="color: #ffc107;"></i>
+                 <div class="slide-icon"><i class="fas fa-award"></i></div>
                 <h2>النتيجة النهائية</h2>
                 <div id="quiz-results">
                     <p id="score-text">لقد أكملتَ التقويم بنجاح. نتيجتك هي:</p>
@@ -214,6 +235,16 @@
 
     <script>
         // --- محرك العرض التقديمي (JavaScript) ---
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const progressBar = document.getElementById('progressBar');
+        const quizContainer = document.getElementById('quiz-container');
+        const quizSlide = document.getElementById('quiz-slide');
+        let currentSlideIndex = 0;
+        let score = 0;
+        let currentQuestionIndex = 0;
+
         const quizData = [ 
             {
                 question: "طالب لديه اختبار تاريخ غداً، ما هو 'الهدف' الأكثر أهمية لقراءته الليلة؟ (يطبق)",
@@ -270,39 +301,28 @@
                 feedback: "صحيح! منظمة تعني أنها تتبع خطة وخطوات منطقية بدلاً من العشوائية."
             },
             {
-                question: "ما هي أول خطوة يجب على القارئ الاستراتيجي القيام بها عند استلامه لنص جديد؟ (يطبق)",
+                question: "ما هي الخطوة الأولى التي يجب على القارئ الاستراتيجي القيام بها عند استلامه لنص جديد؟ (يطبق)",
                 options: ["البدء بقراءة أول فقرة فوراً", "سؤال نفسه: ما هدفي من قراءة هذا النص؟", "البحث عن الكلمات الصعبة", "تلخيص النص"],
                 correctAnswer: 1,
                 feedback: "إجابة صحيحة! تحديد الهدف هو دائماً نقطة الانطلاق في هذه الاستراتيجية."
             }
         ];
         
-        const slides = document.querySelectorAll('.slide');
-        const nextBtn = document.getElementById('nextBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const progressBar = document.getElementById('progressBar');
-        const quizContainer = document.getElementById('quiz-container');
-        const quizSlide = document.getElementById('quiz-slide');
-        let currentSlideIndex = 0;
-        let score = 0;
-        let currentQuestionIndex = 0;
-        
         function showSlide(index) {
-            slides.forEach((slide, i) => { slide.classList.toggle('active', i === index); });
+            slides.forEach((slide, i) => {
+                slide.style.display = i === index ? 'block' : 'none';
+                slide.classList.toggle('active', i === index);
+            });
             const progress = ((index + 1) / slides.length) * 100;
             progressBar.style.width = `${progress}%`;
             prevBtn.disabled = index === 0;
             nextBtn.disabled = index === slides.length - 1;
+            
             if (slides[index] === quizSlide) {
-                nextBtn.style.display = 'none'; 
-                prevBtn.style.display = 'none';
+                document.querySelector('.controls').style.display = 'none';
                 renderQuiz();
             } else {
-                 nextBtn.style.display = 'inline-block';
-                 prevBtn.style.display = 'inline-block';
-            }
-             if(index === slides.length - 1) { 
-                document.getElementById('score').textContent = `${score} / ${quizData.length}`;
+                document.querySelector('.controls').style.display = 'flex';
             }
         }
 
@@ -346,13 +366,19 @@
                 nextQuestionButton.onclick = () => { currentQuestionIndex++; renderQuiz(); };
             } else {
                 nextQuestionButton.textContent = 'عرض النتيجة';
-                nextQuestionButton.onclick = () => { currentSlideIndex++; showSlide(currentSlideIndex); };
+                nextQuestionButton.onclick = () => {
+                    currentSlideIndex++;
+                    showSlide(currentSlideIndex);
+                    document.getElementById('score').textContent = `${score} / ${quizData.length}`;
+                };
             }
             quizNavDiv.appendChild(nextQuestionButton);
         }
 
         nextBtn.addEventListener('click', () => { if (currentSlideIndex < slides.length - 1) { currentSlideIndex++; showSlide(currentSlideIndex); } });
         prevBtn.addEventListener('click', () => { if (currentSlideIndex > 0) { currentSlideIndex--; showSlide(currentSlideIndex); } });
+        
+        // Initial setup
         showSlide(currentSlideIndex);
     </script>
 </body>
