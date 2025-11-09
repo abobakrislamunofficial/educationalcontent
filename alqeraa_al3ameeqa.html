@@ -7,9 +7,18 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
         
+        :root{
+            --clr-primary:#09316D;
+            --clr-accent:#0d6efd;
+            --clr-success:#1B5E20;
+            --clr-bg:#F5F8FF;
+            --shadow-1:0 4px 12px rgba(9,49,109,.10);
+            --shadow-2:0 8px 24px rgba(9,49,109,.14);
+        }
+
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: #f0f2f5;
+            background-color: var(--clr-bg);
             color: #2c3e50;
             margin: 0;
             padding: 20px;
@@ -23,15 +32,16 @@
             width: 100%;
             max-width: 950px;
             background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: var(--shadow-2);
             overflow: hidden;
+            position: relative;
         }
 
         .slide {
             padding: 40px;
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+            animation: slideInRight 0.45s cubic-bezier(.25,.8,.25,1);
         }
 
         .slide.active {
@@ -44,68 +54,272 @@
             text-align: center;
         }
         .title-slide h1 {
-            font-size: 3em;
+            font-size: 2.5em;
             font-weight: 800;
-            color: #0d6efd;
+            background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin: 0;
         }
         .title-slide h2 {
-            font-size: 1.8em;
+            font-size: 1.4em;
             font-weight: 500;
             color: #6c757d;
-            margin-top: 10px;
+            margin-top: 15px;
         }
 
         .slide-header {
-            font-size: 2.4em;
+            font-size: 2em;
             font-weight: 800;
-            color: #0d6efd;
+            color: var(--clr-primary);
             text-align: center;
             padding-bottom: 15px;
             margin-bottom: 30px;
-            border-bottom: 3px solid #0d6efd;
+            border-bottom: 2px solid var(--clr-accent);
+            letter-spacing: -0.5px;
         }
         
-        .hook-text { text-align: center; font-size: 1.6em; line-height: 1.8; }
-        .hook-text p:first-child { cursor: pointer; }
-        .hook-text .solution { color: #198754; font-weight: 700; visibility: hidden; }
+        .hook-text { 
+            text-align: center; 
+            font-size: 1.3em; 
+            line-height: 1.85; 
+        }
+        .hook-text p:first-child { 
+            cursor: pointer; 
+            padding: 20px;
+            background: linear-gradient(135deg, #E6F0FF 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        .hook-text p:first-child:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-1);
+        }
+        .hook-text .solution { 
+            color: var(--clr-success); 
+            font-weight: 700; 
+            visibility: hidden; 
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
 
-        .objectives-list ul { list-style: none; padding-right: 0; font-size: 1.3em; line-height: 2.2; }
-        .objectives-list li::before { content: '🎯'; margin-left: 15px; font-size: 1.2em; }
+        .objectives-list ul { 
+            list-style: none; 
+            padding-right: 0; 
+            font-size: 1.15em; 
+            line-height: 2.2; 
+        }
+        .objectives-list li {
+            margin-bottom: 1.1em;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-right: 4px solid var(--clr-accent);
+        }
+        .objectives-list li::before { 
+            content: '🎯'; 
+            margin-left: 15px; 
+            font-size: 1.2em; 
+        }
         
-        .accordion-item { background-color: #f8f9fa; border: 1px solid #e0e6ed; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
-        .accordion-header { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 1.6em; font-weight: 700; color: #0056b3; }
-        .accordion-header::after { content: '▼'; font-size: 0.8em; color: #0d6efd; transition: transform 0.3s; }
-        .accordion-header.active::after { transform: rotate(-180deg); }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: #fff; padding: 0 20px; }
-        .accordion-content p { margin: 0 0 8px 0; padding: 15px 0; border-top: 1px solid #eee; font-size: 1.2em; line-height: 1.8; }
-        .accordion-content .label { font-weight: 700; color: #333; }
+        .accordion-item { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 1px solid #e0e6ed; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            overflow: hidden;
+            box-shadow: var(--shadow-1);
+            transition: all 0.3s ease;
+        }
+        .accordion-item:hover {
+            box-shadow: var(--shadow-2);
+        }
+        .accordion-header { 
+            padding: 20px; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 1.4em; 
+            font-weight: 700; 
+            color: var(--clr-primary);
+            background: linear-gradient(135deg, #E6F0FF 0%, #ffffff 100%);
+            transition: all 0.3s ease;
+        }
+        .accordion-header:hover {
+            background: linear-gradient(135deg, #d9e7ff 0%, #f8f9fa 100%);
+        }
+        .accordion-header::after { 
+            content: '▼'; 
+            font-size: 0.8em; 
+            color: var(--clr-accent); 
+            transition: transform 0.3s; 
+        }
+        .accordion-header.active::after { 
+            transform: rotate(-180deg); 
+        }
+        .accordion-content { 
+            max-height: 0; 
+            overflow: hidden; 
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+            background-color: #fff; 
+            padding: 0 20px; 
+        }
+        .accordion-content p { 
+            margin: 0; 
+            padding: 15px 0; 
+            border-top: 1px solid #eee; 
+            font-size: 1.1em; 
+            line-height: 1.85; 
+        }
+        .accordion-content .label { 
+            font-weight: 700; 
+            color: var(--clr-primary); 
+        }
         
-        .source-text { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 8px; font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;}
-        .activity-box { border-top: 2px dashed #0d6efd; padding-top: 20px; margin-top: 20px; }
-        .activity-box p { font-size: 1.2em; font-weight: 700; margin: 15px 0; }
-        .answer-area { border-bottom: 2px dotted #ccc; padding: 8px; font-size: 1.1em; min-height: 25px; }
+        .source-text { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 1px solid #dee2e6; 
+            padding: 20px; 
+            border-radius: 12px; 
+            font-size: 1.1em; 
+            line-height: 1.85; 
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-1);
+        }
+        .activity-box { 
+            border-top: 2px dashed var(--clr-accent); 
+            padding-top: 20px; 
+            margin-top: 20px; 
+        }
+        .activity-box p { 
+            font-size: 1.1em; 
+            font-weight: 700; 
+            margin: 15px 0; 
+        }
+        .answer-area { 
+            border-bottom: 2px dotted #ccc; 
+            padding: 8px; 
+            font-size: 1.1em; 
+            min-height: 25px; 
+            background: #fafbfc;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .answer-area:focus {
+            outline: none;
+            border-bottom-color: var(--clr-accent);
+            background: #ffffff;
+        }
 
-        #quiz-container { text-align: center; }
-        .quiz-question { font-size: 1.5em; font-weight: 500; margin-bottom: 30px; line-height: 1.7; min-height: 80px; }
-        .quiz-options { display: flex; flex-direction: column; gap: 15px; }
-        .quiz-option { background-color: #f8f9fa; border: 2px solid #dee2e6; border-radius: 12px; padding: 20px; font-size: 1.3em; cursor: pointer; transition: all 0.2s ease-in-out; font-weight: 500;}
-        .correct { background-color: #d1e7dd !important; border-color: #198754 !important; }
-        .incorrect { background-color: #f8d7da !important; border-color: #dc3545 !important; animation: shake 0.5s; }
-        #feedback { font-size: 1.2em; font-weight: 500; margin-top: 25px; padding: 12px; border-radius: 5px; }
-        #next-q-btn { display: none; margin: 20px auto 0 auto; background-color: #198754; }
+        #quiz-container { 
+            text-align: center; 
+        }
+        .quiz-question { 
+            font-size: 1.3em; 
+            font-weight: 500; 
+            margin-bottom: 30px; 
+            line-height: 1.85; 
+            min-height: 80px; 
+            padding: 20px;
+            background: linear-gradient(135deg, #E6F0FF 0%, #ffffff 100%);
+            border-radius: 12px;
+        }
+        .quiz-options { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+        }
+        .quiz-option { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #dee2e6; 
+            border-radius: 12px; 
+            padding: 20px; 
+            font-size: 1.2em; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-weight: 500;
+            box-shadow: var(--shadow-1);
+        }
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-2);
+            border-color: var(--clr-accent);
+        }
+        .correct { 
+            background: linear-gradient(135deg, #d1e7dd 0%, #ffffff 100%) !important; 
+            border-color: var(--clr-success) !important; 
+        }
+        .incorrect { 
+            background: linear-gradient(135deg, #f8d7da 0%, #ffffff 100%) !important; 
+            border-color: #dc3545 !important; 
+            animation: shake 0.5s; 
+        }
+        #feedback { 
+            font-size: 1.1em; 
+            font-weight: 500; 
+            margin-top: 25px; 
+            padding: 15px; 
+            border-radius: 8px; 
+        }
+        #next-q-btn { 
+            display: none; 
+            margin: 20px auto 0 auto; 
+            background: linear-gradient(135deg, var(--clr-success) 0%, #2E7D32 100%);
+        }
 
-        .navigation { display: flex; justify-content: space-between; padding: 20px 40px; background-color: #f8f9fa; border-top: 1px solid #dee2e6; }
-        .nav-button { background-color: #0d6efd; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1.1em; font-family: 'Tajawal', sans-serif; cursor: pointer; transition: background-color 0.2s; }
-        .nav-button:disabled { background-color: #adb5bd; cursor: not-allowed; }
+        .navigation { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 20px 40px; 
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-top: 1px solid #dee2e6; 
+        }
+        .nav-button { 
+            background: linear-gradient(135deg, var(--clr-accent) 0%, var(--clr-primary) 100%);
+            color: white; 
+            border: none; 
+            padding: 12px 30px; 
+            border-radius: 8px; 
+            font-size: 1.1em; 
+            font-family: 'Tajawal', sans-serif; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-1);
+        }
+        .nav-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-2);
+        }
+        .nav-button:active {
+            transform: scale(0.97);
+        }
+        .nav-button:disabled { 
+            background: #adb5bd; 
+            cursor: not-allowed;
+            box-shadow: none;
+        }
         
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, var(--clr-accent) 0%, var(--clr-primary) 100%);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            transition: width 0.3s ease;
+        }
+
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(3%); } to { opacity: 1; transform: translateX(0); } }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
     </style>
 </head>
 <body>
 
     <div class="presentation-container">
+        <div class="progress-bar" id="progressBar"></div>
         
         <!-- Slide 1: Title -->
         <div class="slide active title-slide">
@@ -133,7 +347,7 @@
             </div>
         </div>
 
-        <!-- Slide 4: العرض (Accordion) -->
+        <!-- Slide 4: العرض (Accordion - Updated) -->
         <div class="slide">
             <h1 class="slide-header">العرض: خطوات الاستراتيجية</h1>
             <div class="accordion-item">
@@ -147,24 +361,28 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">2. اسأل (Question)</div>
                 <div class="accordion-content">
                     <p><span class="label">الإجراء:</span> تحويل العناوين والأفكار الرئيسة إلى أسئلة.</p>
+                    <p><span class="label">الهدف:</span> تحويل القراءة إلى عملية بحث نشط عن إجابات.</p>
                 </div>
             </div>
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleAccordion(this)">3. اقرأ (Read)</div>
                 <div class="accordion-content">
-                    <p><span class="label">الإجراء:</span> قراءة النص بتركيز بهدف البحث عن إجابات.</p>
+                    <p><span class="label">الإجراء:</span> قراءة النص بتركيز بهدف البحث عن إجابات للأسئلة.</p>
+                    <p><span class="label">الهدف:</span> زيادة التركيز والفهم لأن القراءة أصبحت موجهة.</p>
                 </div>
             </div>
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleAccordion(this)">4. أجب (Recite)</div>
                 <div class="accordion-content">
                     <p><span class="label">الإجراء:</span> إغلاق الكتاب والإجابة من الذاكرة.</p>
+                    <p><span class="label">الهدف:</span> التأكد من الفهم وتثبيت المعلومة في الذاكرة.</p>
                 </div>
             </div>
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleAccordion(this)">5. راجع (Review)</div>
                 <div class="accordion-content">
                     <p><span class="label">الإجراء:</span> مراجعة الإجابات ومقارنتها بالكتاب.</p>
+                    <p><span class="label">الهدف:</span> ضمان دقة المعلومات وتصحيح أي فهم خاطئ.</p>
                 </div>
             </div>
         </div>
@@ -193,7 +411,7 @@
                 <button id="next-q-btn" class="nav-button" onclick="nextQuestion()">السؤال التالي</button>
             </div>
              <div id="result-screen" style="display:none;">
-                <h2 style="color: #198754;">أحسنت! لقد أكملت التقويم بنجاح.</h2>
+                <h2 style="color: var(--clr-success);">أحسنت! لقد أكملت التقويم بنجاح.</h2>
             </div>
         </div>
 
@@ -208,11 +426,18 @@
         const slides = document.querySelectorAll('.slide');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+
+        function updateProgress() {
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+            progressBar.style.width = progress + '%';
+        }
 
         function showSlide(index) {
             slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
             prevBtn.disabled = index === 0;
             nextBtn.disabled = index === slides.length - 1;
+            updateProgress();
         }
 
         function changeSlide(direction) {
@@ -229,8 +454,10 @@
             const content = header.nextElementSibling;
             if (content.style.maxHeight) {
                 content.style.maxHeight = null;
+                content.style.opacity = 0;
             } else {
                 content.style.maxHeight = content.scrollHeight + "px";
+                content.style.opacity = 1;
             }
         }
 
@@ -259,6 +486,7 @@
             questionEl.innerText = currentQ.question;
             optionsEl.innerHTML = '';
             feedbackEl.innerText = '';
+            feedbackEl.style.backgroundColor = 'transparent';
             currentQ.options.forEach(option => {
                 const button = document.createElement('div');
                 button.innerText = option;
@@ -270,11 +498,14 @@
 
         function selectAnswer(button, selectedOption, question) {
             const isCorrect = selectedOption === question.answer;
-            Array.from(optionsEl.children).forEach(btn => btn.disabled = true);
+            Array.from(optionsEl.children).forEach(btn => {
+                btn.disabled = true;
+                btn.style.cursor = 'not-allowed';
+            });
             if (isCorrect) {
                 button.classList.add('correct');
                 feedbackEl.innerText = question.explanation;
-                feedbackEl.style.color = '#0f5132';
+                feedbackEl.style.color = 'var(--clr-success)';
                 feedbackEl.style.backgroundColor = '#d1e7dd';
                 nextBtnQ.style.display = 'block';
             } else {
@@ -294,4 +525,4 @@
         loadQuestion();
     </script>
 </body>
-</html>
+</html>```
