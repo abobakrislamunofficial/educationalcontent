@@ -37,6 +37,24 @@
         .slide.active {
             display: block;
         }
+        
+        .title-slide {
+            padding-top: 80px;
+            padding-bottom: 80px;
+            text-align: center;
+        }
+        .title-slide h1 {
+            font-size: 3em;
+            font-weight: 800;
+            color: #0d6efd;
+            margin: 0;
+        }
+        .title-slide h2 {
+            font-size: 1.8em;
+            font-weight: 500;
+            color: #6c757d;
+            margin-top: 10px;
+        }
 
         .slide-header {
             font-size: 2.4em;
@@ -49,68 +67,31 @@
         }
         
         .hook-text { text-align: center; font-size: 1.6em; line-height: 1.8; }
-        .hook-text p { cursor: pointer; }
+        .hook-text p:first-child { cursor: pointer; }
         .hook-text .solution { color: #198754; font-weight: 700; visibility: hidden; }
 
         .objectives-list ul { list-style: none; padding-right: 0; font-size: 1.3em; line-height: 2.2; }
         .objectives-list li::before { content: '🎯'; margin-left: 15px; font-size: 1.2em; }
         
-        /* Accordion Styles Updated */
-        .accordion-item {
-            background-color: #f8f9fa;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            overflow: hidden;
-        }
-        .accordion-header {
-            padding: 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.6em;
-            font-weight: 700;
-            color: #0056b3;
-        }
-        .accordion-header::after {
-            content: '▼';
-            font-size: 0.8em;
-            color: #0d6efd;
-            transition: transform 0.3s;
-        }
-        .accordion-header.active::after {
-            transform: rotate(-180deg);
-        }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-            background-color: #fff;
-            padding: 0 20px;
-        }
-        .accordion-content p {
-            margin: 0 0 8px 0;
-            padding: 15px 0;
-            border-top: 1px solid #eee;
-            font-size: 1.2em;
-            line-height: 1.8;
-        }
-        .accordion-content .label {
-            font-weight: 700;
-            color: #333;
-        }
+        .accordion-item { background-color: #f8f9fa; border: 1px solid #e0e6ed; border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+        .accordion-header { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 1.6em; font-weight: 700; color: #0056b3; }
+        .accordion-header::after { content: '▼'; font-size: 0.8em; color: #0d6efd; transition: transform 0.3s; }
+        .accordion-header.active::after { transform: rotate(-180deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: #fff; padding: 0 20px; }
+        .accordion-content p { margin: 0 0 8px 0; padding: 15px 0; border-top: 1px solid #eee; font-size: 1.2em; line-height: 1.8; }
+        .accordion-content .label { font-weight: 700; color: #333; }
         
         .source-text { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 8px; font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;}
         .activity-box { border-top: 2px dashed #0d6efd; padding-top: 20px; margin-top: 20px; }
         .activity-box p { font-size: 1.2em; font-weight: 700; margin: 15px 0; }
         .answer-area { border-bottom: 2px dotted #ccc; padding: 8px; font-size: 1.1em; min-height: 25px; }
 
-        /* Quiz Styles */
         #quiz-container { text-align: center; }
         .quiz-question { font-size: 1.5em; font-weight: 500; margin-bottom: 30px; line-height: 1.7; min-height: 80px; }
         .quiz-options { display: flex; flex-direction: column; gap: 15px; }
         .quiz-option { background-color: #f8f9fa; border: 2px solid #dee2e6; border-radius: 12px; padding: 20px; font-size: 1.3em; cursor: pointer; transition: all 0.2s ease-in-out; font-weight: 500;}
+        .correct { background-color: #d1e7dd !important; border-color: #198754 !important; }
+        .incorrect { background-color: #f8d7da !important; border-color: #dc3545 !important; animation: shake 0.5s; }
         #feedback { font-size: 1.2em; font-weight: 500; margin-top: 25px; padding: 12px; border-radius: 5px; }
         #next-q-btn { display: none; margin: 20px auto 0 auto; background-color: #198754; }
 
@@ -119,22 +100,29 @@
         .nav-button:disabled { background-color: #adb5bd; cursor: not-allowed; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
     </style>
 </head>
 <body>
 
     <div class="presentation-container">
         
-        <!-- Slide 1: التمهيد -->
-        <div class="slide active">
+        <!-- Slide 1: Title -->
+        <div class="slide active title-slide">
+            <h1>خطوات القراءة المتعمقة</h1>
+            <h2>(استراتيجية SQ3R)</h2>
+        </div>
+
+        <!-- Slide 2: التمهيد -->
+        <div class="slide">
             <h1 class="slide-header">التمهيد</h1>
             <div class="hook-text">
-                <p onclick="showSolution()">هل سبق أن قرأت درسًا كاملاً ثم شعرت بأنك نسيته بعد فترة قصيرة؟ (انقر هنا لمعرفة الحل)</p>
-                <p id="hook-solution" class="solution" style="visibility: hidden;">الحل يكمن في اتباع استراتيجية منظمة للقراءة، وهذا هو موضوع درسنا اليوم.</p>
+                <p onclick="showSolution()">هل سبق أن قرأت درسًا كاملاً ثم شعرت بأنك نسيته بعد فترة قصيرة؟</p>
+                <p id="hook-solution" class="solution">الحل يكمن في اتباع استراتيجية منظمة للقراءة، وهذا هو موضوع درسنا اليوم.</p>
             </div>
         </div>
         
-        <!-- Slide 2: الأهداف -->
+        <!-- Slide 3: الأهداف -->
         <div class="slide">
             <h1 class="slide-header">أهداف الدرس</h1>
             <div class="objectives-list">
@@ -145,9 +133,9 @@
             </div>
         </div>
 
-        <!-- Slide 3: العرض (Accordion) -->
+        <!-- Slide 4: العرض (Accordion) -->
         <div class="slide">
-            <h1 class="slide-header">العرض: خطوات الاستراتيجية (SQ3R)</h1>
+            <h1 class="slide-header">العرض: خطوات الاستراتيجية</h1>
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleAccordion(this)">1. استطلع (Survey)</div>
                 <div class="accordion-content">
@@ -159,35 +147,31 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">2. اسأل (Question)</div>
                 <div class="accordion-content">
                     <p><span class="label">الإجراء:</span> تحويل العناوين والأفكار الرئيسة إلى أسئلة.</p>
-                    <p><span class="label">الهدف:</span> تحويل القراءة إلى عملية بحث نشط عن إجابات.</p>
                 </div>
             </div>
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleAccordion(this)">3. اقرأ (Read)</div>
                 <div class="accordion-content">
-                    <p><span class="label">الإجراء:</span> قراءة النص بتركيز بهدف البحث عن إجابات للأسئلة.</p>
-                    <p><span class="label">الهدف:</span> زيادة التركيز والفهم لأن القراءة أصبحت موجهة.</p>
+                    <p><span class="label">الإجراء:</span> قراءة النص بتركيز بهدف البحث عن إجابات.</p>
                 </div>
             </div>
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleAccordion(this)">4. أجب (Recite)</div>
                 <div class="accordion-content">
-                    <p><span class="label">الإجراء:</span> إغلاق الكتاب والإجابة عن الأسئلة من الذاكرة.</p>
-                    <p><span class="label">الهدف:</span> التأكد من الفهم وتثبيت المعلومة في الذاكرة.</p>
+                    <p><span class="label">الإجراء:</span> إغلاق الكتاب والإجابة من الذاكرة.</p>
                 </div>
             </div>
             <div class="accordion-item">
                 <div class="accordion-header" onclick="toggleAccordion(this)">5. راجع (Review)</div>
                 <div class="accordion-content">
-                    <p><span class="label">الإجراء:</span> مراجعة الإجابات ومقارنتها بالكتاب للتأكد من صحتها.</p>
-                    <p><span class="label">الهدف:</span> ضمان دقة المعلومات وتصحيح أي فهم خاطئ.</p>
+                    <p><span class="label">الإجراء:</span> مراجعة الإجابات ومقارنتها بالكتاب.</p>
                 </div>
             </div>
         </div>
         
-        <!-- Slide 4: التطبيق العملي (Updated) -->
+        <!-- Slide 5: التطبيق العملي -->
         <div class="slide">
-            <h1 class="slide-header">التطبيق العملي الموجه</h1>
+            <h1 class="slide-header">التطبيق العملي</h1>
             <div class="source-text">
                 <h4>النص للتطبيق: لماذا توقيت مكة المكرمة؟ (الفقرة الأولى)</h4>
                 <p>إن المدينة المثالية التي يحتسب العالم وقته على أساسها يجب أن تكون مدينة ينطبق فيها خط الشمال المغناطيسي مع خط الشمال الحقيقي (الجغرافي) ولا يتوفر ذلك الوصف إلا في مكة المكرمة...</p>
@@ -199,7 +183,7 @@
             </div>
         </div>
 
-        <!-- Slide 5: التقويم البنائي -->
+        <!-- Slide 6: التقويم البنائي -->
         <div class="slide">
             <h1 class="slide-header">تقويم بنائي</h1>
             <div id="quiz-container">
