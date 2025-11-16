@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مراجعة عامة على الكفايات اللغوية ١-١</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a2b47;
+            --secondary-color: #4a69bd;
+            --accent-color: #6c5ce7;
+            --background-color: #f5f6fa;
+            --slide-bg-color: #ffffff;
+            --correct-answer-bg: #d4edda;
+            --incorrect-answer-bg: #f8d7da;
+            --text-color: #2c3e50;
+            --border-color: #dcdde1;
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, var(--background-color) 0%, #e3e8f0 100%);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #presentation-container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--slide-bg-color);
+            border-radius: 20px;
+            box-shadow: var(--shadow-medium);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        #progress-bar-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            z-index: 10;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            transition: width 0.4s ease-in-out;
+        }
+
+        #slides-viewport {
+            padding: 40px 50px;
+            margin-top: 6px;
+            min-height: 500px;
+        }
+
+        .slide {
+            display: none;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-title, .section-title {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .rule {
+            background-color: #f8f9fa;
+            border-right: 5px solid var(--secondary-color);
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            font-size: 1.15em;
+            line-height: 1.8;
+            box-shadow: var(--shadow-light);
+        }
+
+        .questions-container .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: #fdfdff;
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .question p {
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .options {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .options li {
+            background-color: #fdfdfd;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            font-size: 1.05em;
+        }
+        
+        .options li:hover {
+            transform: scale(1.02);
+            border-color: var(--secondary-color);
+            box-shadow: 0 4px 10px rgba(74, 105, 189, 0.1);
+        }
+
+        .options li.answered {
+            cursor: default;
+        }
+
+        .options li.correct {
+            background-color: var(--correct-answer-bg);
+            border-color: #c3e6cb;
+            font-weight: 700;
+            cursor: default;
+        }
+
+        .options li.incorrect {
+            background-color: var(--incorrect-answer-bg);
+            border-color: #f5c6cb;
+            cursor: default;
+        }
+
+        #navigation {
+            background-color: #f8f9fa;
+            border-top: 1px solid var(--border-color);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        #navigation button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(74, 105, 189, 0.2);
+        }
+
+        #navigation button:hover:not(:disabled) {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 43, 71, 0.2);
+        }
+
+        #navigation button:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #slide-counter {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .final-score {
+            text-align: center;
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-top: 20px;
+        }
+
+        .final-score p {
+            font-size: 0.6em;
+            color: var(--text-color);
+            font-weight: 400;
+        }
+        
+        .restart-btn {
+            display: block;
+            margin: 30px auto 0;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .restart-btn:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container">
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div id="slides-viewport">
+            
+            <section class="slide active">
+                <h1 class="section-title">📖 مراجعة عامة</h1>
+                <h2 class="slide-title">الكفايات اللغوية ١-١</h2>
+            </section>
+
+            <section class="slide">
+                <h1 class="section-title">✍️ أولاً: الكفاية النحوية</h1>
+            </section>
+
+            <section class="slide">
+                <h3 class="slide-title">1. أقسام الكلمة، والمعرفة والنكرة</h3>
+                <div class="rule"><strong>القاعدة:</strong> تنقسم الكلمة إلى (اسم، فعل، حرف). والاسم ينقسم إلى <strong>معرفة</strong> (ما دل على معين) و<strong>نكرة</strong> (ما دل على غير معين).</div>
+                <div class="questions-container">
+                    <div class="question"><p>سؤال: نوع الكلمة (هو) من حيث أقسام الكلمة:</p><ul class="options"><li>(أ) فعل</li><li data-answer="correct">(ب) اسم</li><li>(ج) حرف</li><li>(د) غير ذلك</li></ul></div>
+                    <div class="question"><p>سؤال: كلمة تدل على حرف:</p><ul class="options"><li>(أ) ورقة</li><li data-answer="correct">(ب) في</li><li>(ج) شكر</li><li>(د) مجتهد</li></ul></div>
+                    <div class="question"><p>سؤال: اسم يدل على المعرفة:</p><ul class="options"><li>(أ) شجرة</li><li>(ب) كتاب</li><li data-answer="correct">(ج) بغداد</li><li>(د) مدرسة</li></ul></div>
+                    <div class="question"><p>سؤال: اسم يدل على المعرفة:</p><ul class="options"><li>(أ) قلم</li><li>(ب) كتاب</li><li data-answer="correct">(ج) يوسف</li><li>(د) فصل</li></ul></div>
+                    <div class="question"><p>سؤال: اسم يدل على نكرة:</p><ul class="options"><li>(أ) الذي</li><li>(ب) هاتان</li><li>(ج) هي</li><li data-answer="correct">(د) حديقة</li></ul></div>
+                    <div class="question"><p>سؤال: اسم يدل على نكرة:</p><ul class="options"><li>(أ) التي</li><li>(ب) اللذان</li><li>(ج) مكة المكرمة</li><li data-answer="correct">(د) طالب</li></ul></div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <h3 class="slide-title">2. الجملة الاسمية (المبتدأ والخبر)</h3>
+                <div class="rule"><strong>القاعدة:</strong> الجملة الاسمية تبدأ باسم، وركناها هما <strong>المبتدأ</strong> و<strong>الخبر</strong>، وكلاهما <strong>مرفوع</strong>. علامات الرفع: الضمة (للمفرد)، الألف (للمثنى)، الواو (لجمع المذكر السالم).</div>
+                <div class="questions-container">
+                    <div class="question"><p>سؤال: كلمة (الحق) في جملة: "الحق يعلو ولا يعلى عليه" تعرب:</p><ul class="options"><li>(أ) فاعل</li><li data-answer="correct">(ب) مبتدأ</li><li>(ج) مفعول به</li><li>(د) فعل</li></ul></div>
+                    <div class="question"><p>سؤال: "العلم نور". ما تحته خط (نور) يعرب:</p><ul class="options"><li data-answer="correct">(أ) خبر</li><li>(ب) مبتدأ</li><li>(ج) فاعل</li><li>(د) نائب فاعل</li></ul></div>
+                    <div class="question"><p>سؤال: "المعلمون / المهندسون .........." أكمل الجملة:</p><ul class="options"><li>(أ) نشيطان</li><li>(ب) نشيطات</li><li data-answer="correct">(ج) نشيطون</li><li>(د) نشيطين</li></ul></div>
+                    <div class="question"><p>سؤال: "المؤمنون متحابون" / "الأخوة متحابون". الكلمة الثانية خبر مرفوع وعلامة الرفع:</p><ul class="options"><li>(أ) الضمة</li><li>(ب) الألف</li><li>(ج) ثبوت النون</li><li data-answer="correct">(د) الواو</li></ul></div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <h3 class="slide-title">3. النواسخ (كان وإن وأخواتهما)</h3>
+                <div class="rule"><strong>القاعدة:</strong> <strong>كان وأخواتها</strong> (أفعال ناسخة) ترفع المبتدأ وتنصب الخبر. <strong>إن وأخواتها</strong> (حروف ناسخة) تنصب المبتدأ وترفع الخبر.</div>
+                <div class="questions-container">
+                    <div class="question"><p>سؤال: أدخل (بات) على جملة "العابدون ساجدون":</p><ul class="options"><li data-answer="correct">(أ) بات العابدون ساجدين</li><li>(ب) بات العابدين ساجدين</li><li>(ج) بات العابدين ساجدون</li><li>(د) بات العابدون ساجدون</li></ul></div>
+                    <div class="question"><p>سؤال: "صار القاضيان عادلين" / "صار الحكمان عادلين". الاسم الثاني يعرب:</p><ul class="options"><li>(أ) مبتدأ</li><li>(ب) فاعل</li><li data-answer="correct">(ج) اسم صار</li><li>(د) خبر صار</li></ul></div>
+                    <div class="question"><p>سؤال: "إن ............. ذو خلق عظيم":</p><ul class="options"><li data-answer="correct">(أ) أباك</li><li>(ب) أبيك</li><li>(ج) أبوك</li><li>(د) أخوك</li></ul></div>
+                    <div class="question"><p>سؤال: من الحروف الناسخة:</p><ul class="options"><li>(أ) بات</li><li>(ب) ليس</li><li>(ج) كان</li><li data-answer="correct">(د) لعل</li></ul></div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <h3 class="slide-title">4. الجملة الفعلية (الفاعل ونائب الفاعل)</h3>
+                <div class="rule"><strong>القاعدة:</strong> <strong>الفاعل</strong> هو من قام بالفعل ويكون مرفوعاً. عند بناء الفعل <strong>للمجهول</strong>، يُحذف الفاعل ويصبح المفعول به <strong>نائب فاعل مرفوع</strong>. (الماضي: يُضم أوله ويُكسر ما قبل آخره).</div>
+                <div class="questions-container">
+                    <div class="question"><p>سؤال: "حصد الفائزون جوائز كثيرة". ما تحته خط (الفائزون) يعرب:</p><ul class="options"><li>(أ) مبتدأ</li><li data-answer="correct">(ب) فاعل</li><li>(ج) خبر</li><li>(د) مفعول به</li></ul></div>
+                    <div class="question"><p>سؤال: "عوقب المجرمون" / "عوقب المتأخرون". تعرب الكلمة الثانية:</p><ul class="options"><li>(أ) فاعل</li><li data-answer="correct">(ب) نائب فاعل</li><li>(ج) مبتدأ</li><li>(د) خبر المبتدأ</li></ul></div>
+                    <div class="question"><p>سؤال: يصنف نائب الفاعل من:</p><ul class="options"><li data-answer="correct">(أ) المرفوعات</li><li>(ب) المنصوبات</li><li>(ج) المجرورات</li><li>(د) المجزومات</li></ul></div>
+                    <div class="question"><p>سؤال: عند بناء الفعل الماضي للمجهول نضم أوله و........... ما قبل آخره:</p><ul class="options"><li>(أ) نضم</li><li data-answer="correct">(ب) نكسر</li><li>(ج) نفتح</li><li>(د) نسكن</li></ul></div>
+                    <div class="question"><p>سؤال: عند بناء الجملة "قال الشاهد الحق" للمجهول تصبح:</p><ul class="options"><li>(أ) قال الحق</li><li data-answer="correct">(ب) قيل الحق</li><li>(ج) قول الحق</li><li>(د) قيل الشاهد الحق</li></ul></div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <h3 class="slide-title">5. إعراب الفعل المضارع</h3>
+                <div class="rule"><strong>القاعدة:</strong> يكون المضارع <strong>مرفوعاً</strong> (إن لم يسبقه شيء)، <strong>منصوباً</strong> (بعد لن، كي، أنْ...)، أو <strong>مجزوماً</strong> (بعد لم، لا الناهية...).</div>
+                <div class="questions-container">
+                    <div class="question"><p>سؤال: الفعل (نشرح) في قوله تعالى: "ألم نشرح لك صدرك":</p><ul class="options"><li>(أ) مكسور</li><li>(ب) مرفوع</li><li>(ج) منصوب</li><li data-answer="correct">(د) مجزوم</li></ul></div>
+                    <div class="question"><p>سؤال: "الصحفيون يتتبعون الأخبار". علامة رفع الفعل المضارع:</p><ul class="options"><li>(أ) الضمة</li><li>(ب) الواو</li><li data-answer="correct">(ج) ثبوت النون</li><li>(د) الألف</li></ul></div>
+                    <div class="question"><p>سؤال: "يكرم المؤمن ضيفه". الحالة الإعرابية للفعل:</p><ul class="options"><li>(أ) النصب</li><li>(ب) الجزم</li><li>(ج) الجر</li><li data-answer="correct">(د) الرفع</li></ul></div>
+                    <div class="question"><p>سؤال: من أدوات نصب الفعل المضارع:</p><ul class="options"><li>(أ) لم</li><li>(ب) لا الناهية</li><li>(ج) لام الأمر</li><li data-answer="correct">(د) لن</li></ul></div>
+                    <div class="question"><p>سؤال: "يحب الطفلان أن .............. القرآن":</p><ul class="options"><li>(أ) يحفظون</li><li>(ب) يحفظان</li><li data-answer="correct">(ج) يحفظا</li><li>(د) تحفظان</li></ul></div>
+                    <div class="question"><p>سؤال: "لم .............. الحاج الجمرات":</p><ul class="options"><li>(أ) يرمون</li><li>(ب) يرميان</li><li data-answer="correct">(ج) يرم</li><li>(د) يرمي</li></ul></div>
+                    <div class="question"><p>سؤال: حدد الجملة التي كتبت كتابة صحيحة من الجمل التالية:</p><ul class="options"><li>(أ) لا تسعى بالشر</li><li data-answer="correct">(ب) لا تسع بالشر</li><li>(ج) لا تسعا بالشر</li><li>(د) لا تسعاي بالشر</li></ul></div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <h3 class="slide-title">6. أسلوب الشرط</h3>
+                <div class="rule"><strong>القاعدة:</strong> يتكون من أداة شرط + فعل شرط + جواب شرط. أدوات الشرط الجازمة (مثل: مَنْ) تجزم فعلين.</div>
+                <div class="questions-container">
+                    <div class="question"><p>سؤال: "من يذاكر دروسه ينجح". نوع الأسلوب السابق:</p><ul class="options"><li>(أ) أسلوب أمر</li><li>(ب) أسلوب نهي</li><li data-answer="correct">(ج) أسلوب شرط</li><li>(د) أسلوب قسم</li></ul></div>
+                    <div class="question"><p>سؤال: "من يجتهد في عمله ينجح". فعل الشرط في الجملة السابقة:</p><ul class="options"><li data-answer="correct">(أ) يجتهد</li><li>(ب) في</li><li>(ج) عمله</li><li>(د) ينجح</li></ul></div>
+                    <div class="question"><p>سؤال: فعل الشرط وجواب الشرط كلاهما:</p><ul class="options"><li>(أ) مرفوعان</li><li>(ب) منصوبان</li><li data-answer="correct">(ج) مجزومان</li><li>(د) مجروران</li></ul></div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <h3 class="slide-title">7. علامات الإعراب الفرعية</h3>
+                <div class="rule"><strong>القاعدة:</strong> العلامات الفرعية هي التي تنوب عن العلامات الأصلية (الضمة للرفع، الفتحة للنصب، الكسرة للجر).</div>
+                <div class="questions-container">
+                    <div class="question"><p>سؤال: من علامات النصب الفرعية:</p><ul class="options"><li data-answer="correct">(أ) الياء</li><li>(ب) الفتحة</li><li>(ج) الضمة</li><li>(د) الواو</li></ul></div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <h1 class="section-title">✒️ ثانياً: الكفاية الإملائية</h1>
+            </section>
+
+            <section class="slide">
+                <h3 class="slide-title">1. علامات الترقيم</h3>
+                <div class="rule"><strong>القاعدة:</strong> هي رموز لتنظيم النص. <strong>(!)</strong> للتعجب والانفعال، <strong>(:)</strong> بعد القول، <strong>(.)</strong> في نهاية الجملة التامة.</div>
+                <div class="questions-container">
+                    <div class="question"><p>سؤال: توضع علامة التأثر (!) بعد:</p><ul class="options"><li>(أ) الدعاء</li><li>(ب) التعجب</li><li>(ج) المدح</li><li data-answer="correct">(د) كل ما سبق</li></ul></div>
+                    <div class="question"><p>سؤال: توضع بعد الجمل المعبرة عن الانفعالات النفسية كالتعب والفرح والحزن:</p><ul class="options"><li>(أ) علامة الاستفهام</li><li data-answer="correct">(ب) علامة التعجب</li><li>(ج) النقطة</li><li>(د) الفاصلة</li></ul></div>
+                    <div class="question"><p>سؤال: "قال الرسول صلى الله عليه وسلم .........." علامة الترقيم المناسبة:</p><ul class="options"><li>(أ) ؟</li><li>(ب) " "</li><li>(ج) ؛</li><li data-answer="correct">(د) :</li></ul></div>
+                    <div class="question"><p>سؤال: "ما أجمل الحياة ....." علامة الترقيم المناسبة لهذه الجملة:</p><ul class="options"><li data-answer="correct">(أ) !</li><li>(ب) ؟</li><li>(ج) " "</li><li>(د) :</li></ul></div>
+                    <div class="question"><p>سؤال: علامة الترقيم المناسبة التي توضع في نهاية الجملة التامة:</p><ul class="options"><li>(أ) الفاصلة</li><li data-answer="correct">(ب) النقطة</li><li>(ج) التعجب</li><li>(د) التنصيص</li></ul></div>
+                </div>
+            </section>
+
+            <section class="slide">
+                <h3 class="slide-title">2. أعراف الكتابة</h3>
+                <div class="rule"><strong>القاعدة:</strong> هي تقاليد تنظيمية متفق عليها في الكتابة (كالعناوين، الفقرات، ترك الهوامش).</div>
+                <div class="questions-container">
+                    <div class="question"><p>سؤال: عادات تعارف عليها الكتاب والمؤلفون على التزامها بهدف تنظيم الكتابة:</p><ul class="options"><li data-answer="correct">(أ) أعراف الكتابة</li><li>(ب) شواهد الكتابة</li><li>(ج) محدثات الكتابة</li><li>(د) ثوابت الكتابة</li></ul></div>
+                </div>
+            </section>
+
+            <section class="slide" id="final-slide">
+                <h1 class="section-title">🏁 ختام المراجعة</h1>
+                <p class="rule" style="text-align:center; font-size: 1.2em;">تم استيعاب جميع القواعد والأسئلة الواردة في أوراق العمل.<br><strong>بالتوفيق في اختباركم!</strong></p>
+                <div class="final-score">
+                    <span id="score-text">0</span> / <span id="total-questions">0</span>
+                    <p>إجابات صحيحة</p>
+                </div>
+                <button class="restart-btn" onclick="location.reload()">إعادة الاختبار</button>
+            </section>
+
+        </div>
+        <div id="navigation">
+            <button id="prev-btn">السابق</button>
+            <div id="slide-counter">الشريحة 1 من 17</div>
+            <button id="next-btn">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const slideCounter = document.getElementById('slide-counter');
+            const progressBar = document.getElementById('progress-bar');
+            const finalSlide = document.getElementById('final-slide');
+            const scoreText = document.getElementById('score-text');
+            const totalQuestionsText = document.getElementById('total-questions');
+
+            let currentSlide = 0;
+            let totalQuestions = 0;
+            let correctAnswers = 0;
+
+            // --- Initialization ---
+            function initializeQuiz() {
+                const allQuestions = document.querySelectorAll('.question');
+                totalQuestions = allQuestions.length;
+                totalQuestionsText.textContent = totalQuestions;
+
+                allQuestions.forEach((question) => {
+                    const options = question.querySelectorAll('.options li');
+                    
+                    options.forEach((option) => {
+                        option.addEventListener('click', () => handleAnswerClick(option, question));
+                    });
+                });
+            }
+            
+            function handleAnswerClick(clickedOption, questionElement) {
+                // Prevent answering the same question multiple times
+                if (questionElement.classList.contains('answered')) {
+                    return;
+                }
+                questionElement.classList.add('answered');
+
+                const isCorrect = clickedOption.hasAttribute('data-answer');
+                const correctOption = questionElement.querySelector('.options li[data-answer="correct"]');
+
+                // Disable all options for this question
+                questionElement.querySelectorAll('.options li').forEach(opt => {
+                    opt.classList.add('answered');
+                    opt.style.cursor = 'default';
+                });
+
+                if (isCorrect) {
+                    clickedOption.classList.add('correct');
+                    correctAnswers++;
+                } else {
+                    clickedOption.classList.add('incorrect');
+                    correctOption.classList.add('correct');
+                }
+                
+                updateFinalScore();
+            }
+
+            function updateFinalScore() {
+                scoreText.textContent = correctAnswers;
+            }
+
+            // --- Navigation ---
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+                currentSlide = index;
+                updateUI();
+            }
+
+            function updateUI() {
+                slideCounter.textContent = `الشريحة ${currentSlide + 1} من ${slides.length}`;
+                progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === slides.length - 1;
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < slides.length - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            });
+            
+            // Keyboard navigation for slides
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) {
+                    showSlide(currentSlide + 1);
+                } else if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            });
+            
+            // Initial setup
+            initializeQuiz();
+            showSlide(0);
+        });
+    </script>
+</body>
+</html>
