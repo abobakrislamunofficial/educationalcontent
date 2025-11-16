@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>النسخة النهائية: عرض تقديمي تفاعلي لأسئلة ما بعد القراءة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --accent-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #9b59b6;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --gradient-1: linear-gradient(135deg, #3498db, #2980b9);
+            --gradient-2: linear-gradient(135deg, #2ecc71, #27ae60);
+            --gradient-3: linear-gradient(135deg, #e74c3c, #c0392b);
+            --gradient-4: linear-gradient(135deg, #f39c12, #e67e22);
+            --gradient-5: linear-gradient(135deg, #9b59b6, #8e44ad);
+            --shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+            --transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .presentation-container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-bar-container { height: 8px; background-color: rgba(0,0,0,0.1); width: 100%; }
+        .progress-bar { height: 100%; width: 0%; background: var(--gradient-1); transition: width 0.5s ease; }
+        .slides-container { padding: 40px; min-height: 550px; }
+
+        .slide { display: none; width: 100%; animation: fadeIn 0.5s ease; text-align: center; }
+        .slide.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .slide h1 {
+            font-size: 2.8rem;
+            margin-bottom: 25px;
+            color: var(--dark-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        .slide h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient-1);
+            border-radius: 2px;
+        }
+
+        .slide h2 { font-size: 2.2rem; margin-bottom: 20px; color: var(--dark-color); }
+        .slide-intro-text { font-size: 1.2rem; line-height: 1.7; margin-bottom: 30px; color: #555; max-width: 600px; margin-left: auto; margin-right: auto; }
+
+        .infographic-card {
+            background: white; border-radius: 15px; padding: 25px; margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative; overflow: hidden;
+            transition: var(--transition); text-align: right;
+        }
+        .infographic-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.15); }
+        .infographic-card::before {
+            content: ''; position: absolute; top: 0; right: 0;
+            width: 8px; height: 100%;
+        }
+        .infographic-card.info-1::before { background: var(--gradient-1); }
+        .infographic-card.info-2::before { background: var(--gradient-2); }
+        .infographic-card.info-3::before { background: var(--gradient-3); }
+        .infographic-card.info-4::before { background: var(--gradient-4); }
+        .infographic-card.info-5::before { background: var(--gradient-5); }
+
+        .card-header { display: flex; align-items: center; margin-bottom: 15px; }
+        .card-icon {
+            width: 50px; height: 50px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; color: white;
+            font-size: 1.5rem; margin-left: 15px; flex-shrink: 0;
+        }
+        .card-icon.icon-1 { background: var(--gradient-1); }
+        .card-icon.icon-2 { background: var(--gradient-2); }
+        .card-icon.icon-3 { background: var(--gradient-3); }
+        .card-icon.icon-4 { background: var(--gradient-4); }
+        .card-icon.icon-5 { background: var(--gradient-5); }
+        .card-title { font-size: 1.7rem; font-weight: 700; color: var(--dark-color); }
+        .card-content { padding-right: 65px; margin-top: -10px; }
+        .card-content p { font-size: 1.1rem; color: #555; line-height: 1.8; }
+        .card-list { list-style: none; text-align: right; margin-top: 10px; }
+        .card-list li { padding: 8px 0; position: relative; padding-right: 30px; font-size: 1.1rem; }
+        .card-list li::before {
+            content: '✓'; position: absolute; right: 0;
+            font-weight: bold; font-size: 1.2rem;
+        }
+        .info-1 .card-list li::before { color: var(--primary-color); }
+        .info-2 .card-list li::before { color: var(--secondary-color); }
+        .info-3 .card-list li::before { color: var(--accent-color); }
+        .info-4 .card-list li::before { color: var(--warning-color); }
+        .info-5 .card-list li::before { color: var(--info-color); }
+
+
+        .quiz-container { padding: 30px; }
+        .question-text { font-size: 1.5rem; font-weight: 700; margin-bottom: 25px; text-align: right; }
+        .options-container { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .option {
+            padding: 15px 20px; border: 2px solid #eee; border-radius: 10px;
+            background-color: #f9f9f9; text-align: right; cursor: pointer;
+            transition: var(--transition); font-size: 1.1rem; position: relative;
+        }
+        .option:hover { background-color: #f0f0f0; transform: translateX(-5px); }
+        .option.correct { background-color: rgba(46, 204, 113, 0.1); border-color: var(--secondary-color); }
+        .option.incorrect { background-color: rgba(231, 76, 60, 0.1); border-color: var(--accent-color); }
+        .option::after {
+            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+            font-weight: bold; font-size: 1.5rem;
+        }
+        .option.correct::after { content: '✓'; color: var(--secondary-color); }
+        .option.incorrect::after { content: '✗'; color: var(--accent-color); }
+        
+        .feedback {
+            margin-top: 20px; padding: 15px; border-radius: 10px;
+            font-size: 1.1rem; text-align: right; display: none;
+        }
+        .feedback.correct { background-color: rgba(46, 204, 113, 0.15); color: #27ae60; }
+        .feedback.incorrect { background-color: rgba(231, 76, 60, 0.15); color: #c0392b; }
+
+        .controls { display: flex; justify-content: space-between; padding: 20px 40px; background-color: #f9f9f9; border-top: 1px solid #eee; }
+        .btn {
+            padding: 12px 35px; border: none; border-radius: 50px; background: var(--gradient-1);
+            color: white; font-size: 1.1rem; font-family: 'Tajawal', sans-serif; font-weight: 700; cursor: pointer;
+            transition: var(--transition); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 7px 15px rgba(52, 152, 219, 0.25); }
+        .btn:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        #score { font-size: 4rem; font-weight: 800; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="slides-container">
+            
+            <div class="slide">
+                <h1>أسئلة ما بعد القراءة</h1>
+                <p class="slide-intro-text">استراتيجية احترافية لتحويل المعلومات إلى معرفة راسخة، وتعميق الفهم بعد كل قراءة.</p>
+            </div>
+
+            <div class="slide">
+                <div class="infographic-card info-1">
+                    <div class="card-header">
+                        <div class="card-icon icon-1"><i class="fas fa-search-plus"></i></div>
+                        <h2 class="card-title">1. هل أنا بحاجة للمزيد؟</h2>
+                    </div>
+                    <div class="card-content">
+                        <p>هذا السؤال يجعلك تقيّم فجوات الفهم لديك. هل هناك نقاط غامضة تتطلب منك البحث عن تفاصيل إضافية أو متابعة المستجدات؟</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                 <div class="infographic-card info-2">
+                    <div class="card-header">
+                        <div class="card-icon icon-2"><i class="fas fa-clipboard-list"></i></div>
+                        <h2 class="card-title">2. هل أجبت عن كل الأسئلة؟</h2>
+                    </div>
+                    <div class="card-content">
+                        <p>إذا كانت قراءتك بهدف الإجابة عن أسئلة محددة، فهذه هي لحظة المراجعة. خطط لكيفية العثور على إجابات للأسئلة المتبقية.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                 <div class="infographic-card info-3">
+                    <div class="card-header">
+                        <div class="card-icon icon-3"><i class="fas fa-check-double"></i></div>
+                        <h2 class="card-title">3. هل إجاباتي صحيحة؟</h2>
+                    </div>
+                    <div class="card-content">
+                        <p>الفهم الصحيح يتطلب التحقق. لا تعتمد على ذاكرتك فقط، بل قم بمطابقة إجاباتك مع النص الأصلي أو ناقشها مع زملائك.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                 <div class="infographic-card info-4">
+                    <div class="card-header">
+                        <div class="card-icon icon-4"><i class="fas fa-file-signature"></i></div>
+                        <h2 class="card-title">4. ما مدى كفاية الملخص؟</h2>
+                    </div>
+                    <div class="card-content">
+                        <p>الملخص الجيد هو دليل الفهم. يجب أن يحتوي على الأفكار الرئيسة، ويجيب عن الأسئلة، ويستفيد من الرسوم والجداول الهامة.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                 <div class="infographic-card info-5">
+                    <div class="card-header">
+                        <div class="card-icon icon-5"><i class="fas fa-calendar-alt"></i></div>
+                        <h2 class="card-title">5. هل أحتاج لمراجعة لاحقة؟</h2>
+                    </div>
+                     <div class="card-content">
+                        <p>المعلومات تتلاشى مع الوقت. خطط لمراجعتك القادمة بتحديد "متى" و "كيف" ستعود لهذه المادة لترسيخها في ذاكرتك.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide">
+                <h1>حان وقت الاختبار!</h1>
+                <p class="slide-intro-text">لنختبر مدى استيعابك لهذه الاستراتيجية الفعالة.</p>
+            </div>
+
+            <div class="slide" id="quiz-slide">
+                <div class="quiz-container">
+                    <div id="quiz-content"></div>
+                </div>
+            </div>
+
+            <div class="slide">
+                 <h1>النتيجة النهائية</h1>
+                 <p class="slide-intro-text">لقد أكملتَ التقويم بنجاح. هذه هي نتيجتك:</p>
+                 <p id="score">0 / 5</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="prevBtn" disabled>السابق</button>
+            <button class="btn" id="nextBtn">التالي</button>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const progressBar = document.getElementById('progressBar');
+        const quizContent = document.getElementById('quiz-content');
+        const quizSlide = document.getElementById('quiz-slide');
+        let currentSlideIndex = 0;
+        let score = 0;
+        let currentQuestionIndex = 0;
+
+        const quizData = [
+            { question: "بعد قراءة فصل في كتاب، شعرت أنك لم تفهم علاقة السبب والنتيجة المذكورة. أي سؤال يجب أن تطرحه على نفسك؟", options: ["هل الإجابة صحيحة؟", "ما مدى كفاية الملخص؟", "هل أنا بحاجة إلى المزيد من المعلومات؟", "هل أجبت عن جميع الأسئلة؟"], correctAnswer: 2, feedback: "صحيح! هذا السؤال يدفعك للبحث عن تفاصيل إيضاحية لسد الفجوات في فهمك." },
+            { question: "أي من الإجراءات التالية هو التطبيق الصحيح لسؤال 'هل الإجابة صحيحة؟'", options: ["كتابة الملخص من جديد", "مناقشة إجاباتك مع زميل", "تحديد موعد للمراجعة", "البحث عن صور ورسوم بيانية"], correctAnswer: 1, feedback: "ممتاز! عرض الأجوبة على الآخرين أو مطابقتها بالكتاب هي الطريقة المثلى للتحقق من صحتها." },
+            { question: "وفقاً للاستراتيجية، أي مما يلي لا يعتبر من خصائص الملخص الجيد؟", options: ["يحتوي على الأفكار الرئيسة", "ينقل النص الأصلي حرفياً", "يعتمد على الجداول والرسوم", "يجيب بالتفصيل عن الأسئلة"], correctAnswer: 1, feedback: "أحسنت! الملخص الجيد يعبر عن الفهم بأسلوبك الخاص، وليس مجرد نسخ للنص الأصلي." },
+            { question: "التفكير في 'متى وكيف' ستراجع ما قرأته هو إجابة عن سؤال:", options: ["هل أحتاج لمراجعة لاحقة؟", "هل أجبت عن كل الأسئلة؟", "هل أنا بحاجة للمزيد؟", "ما مدى كفاية الملخص؟"], correctAnswer: 0, feedback: "صحيح! هذا السؤال يتعلق بالتخطيط المستقبلي لترسيخ المعلومات ومنع نسيانها." },
+            { question: "طالب انتهى من حل واجب قائم على فصل قرأه، لكنه ترك سؤالين بدون إجابة. أي سؤال من أسئلة ما بعد القراءة يعالج هذه المشكلة مباشرة؟", options: ["هل الإجابة صحيحة؟", "هل أجبت عن جميع الأسئلة؟", "ما مدى كفاية الملخص؟", "هل أحتاج لمراجعة لاحقة؟"], correctAnswer: 1, feedback: "إجابة دقيقة! هذا السؤال يركز على اكتمال المهمة وتحديد الخطوات اللازمة للإجابة على الأسئلة المتبقية." }
+        ];
+        
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            const progress = ((index + 1) / slides.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+            if (slides[index] === quizSlide) {
+                renderQuiz();
+            }
+        }
+
+        function renderQuiz() {
+            const q = quizData[currentQuestionIndex];
+            quizContent.innerHTML = `
+                <p class="question-text">${currentQuestionIndex + 1}. ${q.question}</p>
+                <div class="options-container">
+                    ${q.options.map((opt, i) => `<div class="option" data-index="${i}">${opt}</div>`).join('')}
+                </div>
+                <div class="feedback"></div><div id="quiz-nav"></div>
+            `;
+            document.querySelectorAll('.option').forEach(o => o.addEventListener('click', handleOptionClick));
+        }
+
+        function handleOptionClick(event) {
+            const selectedOption = event.target;
+            if (document.querySelector('.option.disabled')) return;
+            const selectedIndex = parseInt(selectedOption.dataset.index);
+            const questionData = quizData[currentQuestionIndex];
+            const feedbackDiv = quizContent.querySelector('.feedback');
+            const quizNavDiv = quizContent.querySelector('#quiz-nav');
+            const allOptions = quizContent.querySelectorAll('.option');
+            
+            allOptions.forEach(opt => opt.classList.add('disabled'));
+
+            if (selectedIndex === questionData.correctAnswer) {
+                selectedOption.classList.add('correct');
+                feedbackDiv.textContent = questionData.feedback;
+                feedbackDiv.classList.add('correct');
+                score++;
+            } else {
+                selectedOption.classList.add('incorrect');
+                allOptions[questionData.correctAnswer].classList.add('correct');
+                feedbackDiv.textContent = `الإجابة الصحيحة: ${allOptions[questionData.correctAnswer].textContent}. ${questionData.feedback}`;
+                feedbackDiv.classList.add('incorrect');
+            }
+            feedbackDiv.style.display = 'block';
+            
+            const nextQuestionButton = document.createElement('button');
+            nextQuestionButton.className = 'btn';
+            nextQuestionButton.style.marginTop = '20px';
+            nextQuestionButton.style.width = '100%';
+
+            if (currentQuestionIndex < quizData.length - 1) {
+                nextQuestionButton.textContent = 'السؤال التالي';
+                nextQuestionButton.onclick = () => { currentQuestionIndex++; renderQuiz(); };
+            } else {
+                nextQuestionButton.textContent = 'عرض النتيجة';
+                nextQuestionButton.onclick = () => {
+                    currentSlideIndex++;
+                    showSlide(currentSlideIndex);
+                    document.getElementById('score').textContent = `${score} / ${quizData.length}`;
+                };
+            }
+            quizNavDiv.appendChild(nextQuestionButton);
+        }
+
+        nextBtn.addEventListener('click', () => { if (currentSlideIndex < slides.length - 1) { currentSlideIndex++; showSlide(currentSlideIndex); } });
+        prevBtn.addEventListener('click', () => { if (currentSlideIndex > 0) { currentSlideIndex--; showSlide(currentSlideIndex); } });
+        
+        showSlide(currentSlideIndex);
+    </script>
+</body>
+</html>
