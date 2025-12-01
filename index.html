@@ -3,81 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فهرس المحتويات التعليمية</title>
+    <title>عروض تقديمية</title>
+    <!-- نفس كود التصميم CSS من الصفحة الأصلية -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
-        :root {
-            --primary-color: #2c3e50; /* كحلي */
-            --secondary-color: #3498db; /* أزرق */
-            --background-color: #f4f6f9;
-        }
-        body {
-            font-family: 'Cairo', sans-serif;
-            margin: 0;
-            background-color: var(--background-color);
-            color: #333;
-        }
-        .header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 2rem 1rem;
-            text-align: center;
-        }
+        :root { --primary-color: #2c3e50; --secondary-color: #3498db; --background-color: #f4f6f9; --card-background: #ffffff; --text-color: #333; --light-gray: #ecf0f1; --shadow-color: rgba(0, 0, 0, 0.1); }
+        body { font-family: 'Cairo', sans-serif; margin: 0; background-color: var(--background-color); color: var(--text-color); line-height: 1.6; }
+        .header { background-color: var(--primary-color); color: white; padding: 2rem 1rem; text-align: center; box-shadow: 0 2px 5px var(--shadow-color); }
         .header h1 { margin: 0; font-size: 2.5rem; }
-        .container {
-            max-width: 900px;
-            margin: 4rem auto;
-            padding: 2rem;
-            text-align: center;
-        }
-        .nav-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-        @media (min-width: 768px) {
-            .nav-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        .nav-card {
-            background-color: white;
-            padding: 3rem 2rem;
-            border-radius: 15px;
-            text-decoration: none;
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            font-weight: 700;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .nav-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
-            color: var(--secondary-color);
-        }
-        .nav-card span {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 1rem;
-        }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .back-link { display: inline-block; margin-bottom: 2rem; color: var(--secondary-color); font-weight: 600; text-decoration: none; }
+        #activity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+        .card { background-color: var(--card-background); border-radius: 10px; box-shadow: 0 4px 8px var(--shadow-color); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); }
+        .card-content { padding: 1.5rem; flex-grow: 1; }
+        .card-content h3 { margin-top: 0; color: var(--primary-color); font-size: 1.4rem; }
+        .card-content p { font-size: 0.95rem; color: #666; margin-bottom: 1rem; }
+        .card-footer { padding: 1rem 1.5rem; background-color: #fafafa; border-top: 1px solid var(--light-gray); text-align: left; }
+        .card-link { text-decoration: none; background-color: var(--secondary-color); color: white; padding: 10px 20px; border-radius: 5px; font-weight: 600; transition: background-color 0.3s ease; }
+        .card-link:hover { background-color: #2980b9; }
+        @media (max-width: 768px) { .header h1 { font-size: 2rem; } #activity-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <header class="header">
-        <h1>فهرس المحتويات التعليمية</h1>
+        <h1>عروض تقديمية</h1>
     </header>
     <main class="container">
-        <div class="nav-grid">
-            <a href="presentations.html" class="nav-card">
-                <span>🖥️</span>
-                عروض تقديمية
-            </a>
-            <a href="activities.html" class="nav-card">
-                <span>🎓</span>
-                أنشطة تعليمية
-            </a>
-        </div>
+        <a href="index.html" class="back-link">← العودة إلى الرئيسية</a>
+        <div id="activity-grid"></div>
     </main>
+    <script>
+        const presentations = [
+            { title: "التوابع (النعت - العطف - التوكيد - البدل)", description: "عرض تقديمي", url: "https://abobakrislamunofficial.github.io/educationalcontent/tawaabi3.html" },
+            { title: "المنادى", description: "عرض تقديمي", url: "https://abobakrislamunofficial.github.io/educationalcontent/monada.html" },
+            { title: "الاستثناء", description: "عرض تقديمي", url: "https://abobakrislamunofficial.github.io/educationalcontent/istithna.html" },
+            { title: "أعراف الكتابة", description: "عرض تقديمي", url: "https://abobakrislamunofficial.github.io/educationalcontent/a3raf.html" },
+            { title: "أسئلة ما قبل القراءة", description: "عرض تقديمي", url: "https://abobakrislamunofficial.github.io/educationalcontent/ma_kabl_alqraa.html" },
+            { title: "القراءة التمهيدية", description: "عرض تقديمي", url: "https://abobakrislamunofficial.github.io/educationalcontent/qaraa_tamheedia.html" },
+            { title: "القراءة المتعمقة", description: "عرض تقديمي", url: "https://abobakrislamunofficial.github.io/educationalcontent/alqeraa_al3ameeqa.html" },
+            { title: "مراجعه كفايات ١-١", description: "عرض تقديمي", url: "https://abobakrislamunofficial.github.io/educationalcontent/moraja3a.html" },
+            { title: "خطوات بناء موضوع", description: "عرض تقديمي", url: "https://abobakrislamunofficial.github.io/educationalcontent/Khatawat_benaa.html" }
+        ];
+
+        const grid = document.getElementById('activity-grid');
+        presentations.forEach(activity => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `<div class="card-content"><h3>${activity.title}</h3><p>${activity.description}</p></div><div class="card-footer"><a href="${activity.url}" class="card-link" target="_blank" rel="noopener noreferrer">اذهب للمحتوى</a></div>`;
+            grid.appendChild(card);
+        });
+    </script>
 </body>
 </html>
