@@ -2,736 +2,453 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خطوات بناء الموضوع - عرض تفاعلي</title>
+    <!-- تجاوب حقيقي مع إمكانية التكبير للمكفوفين -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>خطوات بناء الموضوع - السبورة الصفية</title>
+
+    <!-- الخط -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
-
+        /* ==========================
+          متغيّرات التصميم
+        ========================== */
         :root {
-            --primary: #2c3e50;       /* أزرق غامق */
-            --secondary: #476381;     /* أزرق فاتح قليلاً */
-            --accent: #e67e22;        /* برتقالي للتمييز */
-            --accent-glow: rgba(230, 126, 34, 0.3);
-            --success: #27ae60;       /* أخضر للإجابات الصحيحة */
-            --error: #c0392b;         /* أحمر للإجابات الخاطئة */
-            /* خلفية أكثر حيوية */
-            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            /* ظلال أكثر نعومة وعمقاً */
-            --card-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.07);
-            --hover-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            --header-bg: #2c3e50;
+            --text: #333;
+            --book-header: #2980b9;
+            --answer: #27ae60;
+            --bg: #f9f9f9;
+            --radius: 0.35rem;
+            --shadow: 0 4px 12px rgba(0,0,0,.08);
+            --max-content: min(55rem, 90vw);
+            --step-h: 2.75rem;
         }
 
+        /* وضع مظلم تلقائي */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text: #e5e5e5;
+                --bg: #121212;
+                --header-bg: #1e2a38;
+                --book-header: #4dabf7;
+                --answer: #51cf66;
+                --shadow: 0 4px 12px rgba(0,0,0,.3);
+            }
+            .slide { background: #1e1e1e; border-color: #444; }
+            .interactive-row:hover { background: #252525; }
+        }
+
+        /* تقليل الحركة */
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; animation: none !important; }
+        }
+
+        /* ==========================
+          إعادة ضبط عام
+        ========================== */
+        *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            font-family: 'Tajawal', sans-serif;
-            background: var(--bg-gradient);
             margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            color: var(--primary);
-            /* إضافة نقش خفيف للخلفية */
-            background-image: var(--bg-gradient), url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
-        /* حاوية العرض - تأثير الزجاج */
-        .presentation-container {
-            width: 95%;
-            max-width: 1400px;
-            height: 90vh;
-            background-color: rgba(255, 255, 255, 0.95); /* شفافية طفيفة */
-            backdrop-filter: blur(10px); /* تأثير الضباب خلف الزجاج */
-            border-radius: 25px;
-            box-shadow: var(--card-shadow);
-            position: relative;
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             display: flex;
             flex-direction: column;
+            height: 100vh;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            line-height: 1.6;
         }
+        h1, h2, h3 { margin: 0 0 0.5em; }
 
-        /* شريط العنوان العلوي */
-        .header-bar {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            padding: 20px 30px;
+        /* ==========================
+          رأس الصفحة
+        ========================== */
+        .board-header {
+            background: var(--header-bg);
+            color: #fff;
+            padding: clamp(.6rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            z-index: 10;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .lesson-title { font-weight: 800; font-size: clamp(1rem, 2.5vw, 1.25rem); }
+        .date-box {
+            background: rgba(255,255,255,.12);
+            padding: 0.3rem 0.7rem;
+            border-radius: var(--radius);
+            font-size: clamp(.8rem, 2vw, .95rem);
         }
 
-        .header-title {
-            font-size: 1.3em;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
-
-        .slide-indicator {
-            background: rgba(255,255,255,0.25);
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* منطقة المحتوى (الشرائح) */
-        .slide-viewport {
+        /* ==========================
+          منطقة الشرائح
+        ========================== */
+        .main-board {
             flex: 1;
-            position: relative;
+            padding: clamp(1rem, 3vw, 2rem);
             overflow-y: auto;
-            padding: 50px;
-            scroll-behavior: smooth;
-            /* تخصيص شريط التمرير */
-            scrollbar-width: thin;
-            scrollbar-color: var(--secondary) #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
-        .slide-viewport::-webkit-scrollbar { width: 8px; }
-        .slide-viewport::-webkit-scrollbar-track { background: #f0f0f0; }
-        .slide-viewport::-webkit-scrollbar-thumb { background-color: var(--secondary); border-radius: 10px; }
-
-
         .slide {
             display: none;
-            /* تحسين انسيابية الحركة */
-            animation: slideInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-            height: 100%;
-        }
-
-        .slide.active {
-            display: block;
-        }
-
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* تأثيرات حركية للعناصر الداخلية */
-        .slide.active h1, .slide.active p, .slide.active .info-card, .slide.active .accordion-item, .slide.active table, .slide.active .quiz-card {
-            animation: fadePopIn 0.5s ease-out backwards;
-        }
-        /* تأخيرات زمنية متتابعة لظهور العناصر */
-        .slide.active *:nth-child(1) { animation-delay: 0.1s; }
-        .slide.active *:nth-child(2) { animation-delay: 0.2s; }
-        .slide.active *:nth-child(3) { animation-delay: 0.3s; }
-        .slide.active *:nth-child(4) { animation-delay: 0.4s; }
-        .slide.active *:nth-child(5) { animation-delay: 0.5s; }
-
-        @keyframes fadePopIn {
-            from { opacity: 0; transform: scale(0.98) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-
-        /* تنسيقات النصوص والعناوين */
-        h1 {
-            color: var(--primary);
-            font-size: 3em;
-            margin-bottom: 35px;
-            position: relative;
-            display: inline-block;
-            padding-bottom: 15px;
-        }
-        
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 60px;
-            height: 5px;
-            background: var(--accent);
-            border-radius: 3px;
-        }
-
-        .main-icon {
-            font-size: 6em;
-            margin-bottom: 25px;
-            display: inline-block;
-            /* إضافة توهج خلف الأيقونة الرئيسية */
-            filter: drop-shadow(0 0 20px var(--accent-glow));
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-
-        h2 {
-            color: var(--secondary);
-            font-size: 2em;
-            margin-top: 0;
-            font-weight: 700;
-        }
-
-        p, li {
-            font-size: 1.4em;
-            line-height: 1.8;
-            color: #555;
-        }
-
-        /* مربعات التمييز (للأهداف والتهيئة) */
-        .info-card {
-            background: #fff;
-            border-right: 6px solid var(--accent);
-            border-radius: 12px;
-            padding: 30px;
-            margin: 25px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            background: linear-gradient(to left, #ffffff, #f8f9fa);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        
-        .info-card:hover {
-            transform: translateY(-5px) translateX(-5px);
-            box-shadow: var(--hover-shadow);
-        }
-
-        /* الأكورديون (للخطوات) */
-        .accordion-item {
-            background: white;
-            border: none;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-            transition: all 0.3s ease;
-        }
-        
-        .accordion-item:hover {
-             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-
-        .accordion-header {
-            padding: 22px 30px;
-            font-size: 1.4em;
-            font-weight: bold;
-            cursor: pointer;
-            background: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s;
-            color: var(--primary);
-        }
-
-        .accordion-header:hover {
-            background-color: #f4f6f8;
-            color: var(--accent);
-            padding-right: 35px; /* حركة بسيطة عند التحويم */
-        }
-
-        .accordion-item.open .accordion-header {
-             background-color: #f0f4f8;
-             color: var(--accent);
-             border-bottom: 1px solid #eee;
-        }
-
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-            padding: 0 30px;
-            font-size: 1.3em;
-            color: #666;
-            background: #fafbfc;
-            line-height: 1.7;
-        }
-
-        .accordion-item.open .accordion-content {
-            padding: 30px;
-            max-height: 300px; /* زيادة الارتفاع المحتمل */
-        }
-
-        .arrow { 
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
-            font-size: 0.8em;
-            color: var(--secondary);
-        }
-        .accordion-item.open .arrow { transform: rotate(180deg); color: var(--accent); }
-        .accordion-header:hover .arrow { transform: translateY(3px); }
-        .accordion-item.open .accordion-header:hover .arrow { transform: rotate(180deg) translateY(-3px); }
-
-        /* الجداول */
-        .styled-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            font-size: 1.3em;
-            margin-top: 30px;
-            box-shadow: var(--card-shadow);
-            border-radius: 15px;
-            overflow: hidden;
-            background: white;
-        }
-
-        .styled-table th, .styled-table td {
-            padding: 20px 30px;
-            text-align: right;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .styled-table th {
-            background-color: var(--primary);
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .styled-table tr:last-child td { border-bottom: none; }
-        .styled-table tr:nth-child(even) { background-color: #f8f9fa; }
-        .styled-table tr { transition: all 0.2s; }
-        .styled-table tr:hover { 
-            background-color: #fff; 
-            transform: scale(1.01);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            z-index: 2;
-            position: relative;
-        }
-        
-        /* تحريك صفوف الجدول عند الظهور */
-        .slide.active .styled-table tbody tr {
-            opacity: 0;
-            animation: slideInRight 0.4s ease-out forwards;
-        }
-        .slide.active .styled-table tbody tr:nth-child(1) { animation-delay: 0.3s; }
-        .slide.active .styled-table tbody tr:nth-child(2) { animation-delay: 0.4s; }
-        .slide.active .styled-table tbody tr:nth-child(3) { animation-delay: 0.5s; }
-        .slide.active .styled-table tbody tr:nth-child(4) { animation-delay: 0.6s; }
-        .slide.active .styled-table tbody tr:nth-child(5) { animation-delay: 0.7s; }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* التقويم (Quiz) */
-        .quiz-container {
-            display: grid;
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .quiz-card {
+            max-width: var(--max-content);
             background: #fff;
-            padding: 30px;
-            border-radius: 15px;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            padding: clamp(1.5rem, 4vw, 3rem);
+            box-shadow: var(--shadow);
+            animation: fadeIn .35s ease;
         }
-        .quiz-card:hover { transform: translateY(-3px); }
+        .slide.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-        .question-text {
-            font-weight: 800;
-            font-size: 1.5em;
-            margin-bottom: 25px;
-            color: var(--primary);
-            border-right: 4px solid var(--accent);
-            padding-right: 15px;
+        /* ==========================
+          مكونات الكتاب
+        ========================== */
+        .question-header {
+            background: #eef6fb;
+            border-right: 5px solid var(--book-header);
+            padding: clamp(.8rem, 2vw, 1rem);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            color: var(--header-bg);
         }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .option-btn {
-            padding: 20px;
-            background: #f8f9fa;
-            border: 2px solid transparent;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1.2em;
-            font-family: inherit;
-            font-weight: 500;
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-            text-align: right;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            border-color: var(--accent);
-            background: #fff;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.2);
-        }
-        
-        .option-btn:active:not(:disabled) {
-            transform: translateY(-1px);
-        }
-
-        .option-btn.correct {
-            background-color: #d4edda;
-            border-color: var(--success);
-            color: var(--success);
-            font-weight: bold;
-            box-shadow: 0 0 15px rgba(39, 174, 96, 0.3);
-        }
-
-        .option-btn.wrong {
-            background-color: #f8d7da;
-            border-color: var(--error);
-            color: var(--error);
-            font-weight: bold;
-            box-shadow: 0 0 15px rgba(192, 57, 43, 0.3);
-        }
-        
-        /* تحريك أزرار الخيارات */
-        .slide.active .options-grid .option-btn {
-            opacity: 0;
-            animation: fadePopIn 0.4s ease-out forwards;
-        }
-        .slide.active .quiz-card:nth-child(1) .option-btn:nth-child(1) { animation-delay: 0.4s; }
-        .slide.active .quiz-card:nth-child(1) .option-btn:nth-child(2) { animation-delay: 0.5s; }
-        .slide.active .quiz-card:nth-child(2) .option-btn:nth-child(1) { animation-delay: 0.6s; }
-        .slide.active .quiz-card:nth-child(2) .option-btn:nth-child(2) { animation-delay: 0.7s; }
-        /* وهكذا للبقية... يمكن تعميمها عبر JS ولكن هذا يكفي للعرض الحالي */
-
-
-        /* أزرار التحكم السفلية */
-        .footer-controls {
-            padding: 25px 50px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .control-btn {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 15px 35px;
-            font-size: 1.2em;
-            border-radius: 50px; /* أزرار دائرية أكثر */
-            cursor: pointer;
-            font-family: 'Tajawal', sans-serif;
-            font-weight: bold;
-            transition: all 0.3s;
-            display: flex;
+        .question-number {
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.2);
+            justify-content: center;
+            width: 1.6rem; height: 1.6rem;
+            background: var(--book-header);
+            color: #fff;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            font-size: .9rem;
         }
 
-        .control-btn:hover:not(:disabled) { 
-            background: linear-gradient(to right, var(--accent), #f39c12);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.3);
+        /* جدول متجاوب */
+        .interactive-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            padding: clamp(.8rem, 2vw, 1.2rem) 0.3rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background .2s;
         }
-        
-        .control-btn:active:not(:disabled) {
-             transform: translateY(-1px);
+        @media (max-width: 600px) {
+            .interactive-row { grid-template-columns: 1fr; text-align: right; }
         }
+        .row-answer {
+            color: var(--answer);
+            font-weight: 700;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all .3s ease;
+            text-align: right;
+        }
+        .revealed .row-answer { opacity: 1; transform: none; }
 
-        .control-btn:disabled { 
-            background: #dce1e6; 
-            color: #95a5a6;
-            cursor: not-allowed; 
-            box-shadow: none;
+        /* خطوات قابلة للطي */
+        .step-box { border: 1px solid #ddd; border-radius: var(--radius); overflow: hidden; margin-bottom: .5rem; }
+        .step-title {
+            padding: clamp(.7rem, 2vw, 1rem);
+            background: #fdfdfd;
+            font-weight: 700;
+            color: var(--book-header);
+            cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: background .2s;
         }
+        .step-title:hover { background: #f0f8ff; }
+        .step-detail {
+            max-height: 0; overflow: hidden;
+            padding: 0 1rem;
+            background: #fff;
+            transition: max-height .3s ease, padding .3s ease;
+            border-top: 1px solid transparent;
+        }
+        .step-box.open .step-detail { max-height: 200px; padding: 1rem; border-top-color: #eee; }
+        .chevron::after { content: "⌄"; font-size: 1.2rem; color: #999; }
+        .step-box.open .chevron::after { transform: rotate(180deg); display: inline-block; }
 
+        /* ==========================
+          التحكم السفلي
+        ========================== */
+        .controls {
+            background: #fff;
+            border-top: 1px solid #ddd;
+            padding: clamp(.6rem, 2vw, 1rem);
+            display: flex; justify-content: center; align-items: center; gap: clamp(1rem, 4vw, 2rem);
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            background: var(--header-bg);
+            color: #fff;
+            border: none;
+            padding: clamp(.6rem, 2vw, .8rem) clamp(2rem, 5vw, 3rem);
+            border-radius: var(--radius);
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            font-family: inherit;
+            cursor: pointer;
+            transition: opacity .2s;
+            touch-action: manipulation;
+        }
+        .nav-btn:disabled { opacity: .45; cursor: not-allowed; }
+        .page-num { font-weight: 700; color: #777; }
+
+        /* ==========================
+          طباعة
+        ========================== */
+        @media print {
+            body { overflow: visible; background: #fff; }
+            .board-header, .controls { display: none; }
+            .slide { display: block !important; box-shadow: none; border: none; page-break-after: always; }
+        }
     </style>
 </head>
+
 <body>
+    <!-- رأس الصفحة -->
+    <header class="board-header">
+        <div class="lesson-title">الكفايات اللغوية 4 - الوحدة الرابعة</div>
+        <div class="date-box" id="date-display"></div>
+    </header>
 
-<div class="presentation-container">
-    
-    <div class="header-bar">
-        <div class="header-title">الوحدة الرابعة: كفاية الاتصال الكتابي</div>
-        <div class="slide-indicator">شريحة <span id="current">1</span> من <span id="total">7</span></div>
-    </div>
-
-    <div class="slide-viewport">
-        
-        <div class="slide active" style="text-align: center; padding-top: 8%;">
-            <div class="main-icon" style="color: var(--accent);">✍️</div>
-            <h1 style="font-size: 4.5em; border: none; margin-bottom: 10px;">خطوات بناء الموضوع</h1>
-            <p style="font-size: 2em; color: var(--secondary); font-weight: 500; margin-top: 0;">دليل مهارات الكتابة والإنشاء</p>
-            <div style="margin-top: 40px; height: 5px; width: 100px; background: var(--accent); margin: 40px auto 0; border-radius: 10px;"></div>
-        </div>
-
-        <div class="slide">
-            <h1>💡 التهيئة</h1>
-            <div class="info-card">
-                <h2>نشاط استهلالي:</h2>
-                <p>تعرف على تفضيلات زملائك. اسأل زملاءك عن الفنون التعبيرية التي يفضلون الكتابة فيها، والموضوعات التي يميلون إليها.</p>
-            </div>
-            <div class="info-card" style="border-color: var(--secondary);">
-                <h2>سؤال للنقاش:</h2>
-                <p>لماذا يفضل البعض "القصة" بينما يفضل آخرون "المقالات العلمية"؟</p>
+    <!-- منطقة الشرائح -->
+    <main class="main-board">
+        <!-- الشريحة 1 -->
+        <div class="slide active">
+            <h2 style="text-align:center; color: var(--header-bg); margin-bottom: 2rem;">خطوات بناء الموضوع</h2>
+            <div style="text-align:center;">
+                <div style="font-size: clamp(4rem, 10vw, 6rem); color: var(--book-header); margin-bottom: 1rem;">🏗️ 📝</div>
+                <h3 style="color:#555;">مدخل للدرس:</h3>
+                <p style="font-size: clamp(1.1rem, 3vw, 1.4rem); max-width: 35rem; margin-inline:auto;">
+                    «كما يحتاج المهندس إلى مخططات دقيقة قبل البدء في البناء..<br>
+                    يحتاج الكاتب إلى هندسة أفكاره وتخطيطها قبل الشروع في الكتابة.»
+                </p>
             </div>
         </div>
 
+        <!-- الشريحة 2 -->
         <div class="slide">
-            <h1>🎯 الأهداف السلوكية</h1>
-            <p style="font-size: 1.6em; margin-bottom: 30px;">يتوقع من الطالب في نهاية الدرس أن:</p>
-            <ul style="list-style-type: none; padding: 0;">
-                <li class="info-card" style="border-color: #27ae60;">1️⃣ يعدد خطوات بناء الموضوع السبعة مرتبة زمنياً.</li>
-                <li class="info-card" style="border-color: #2980b9;">2️⃣ يصنف مصادر المعلومات (كتب، ملاحظة، وثائق) حسب نوع الموضوع.</li>
-                <li class="info-card" style="border-color: #8e44ad;">3️⃣ يختار الفن التعبيري المناسب (مقال، تقرير، قصة) للموضوع المطروح.</li>
+            <div class="question-header">يتوقع من الطالب في نهاية الدرس أن:</div>
+            <ul style="list-style:none; padding:0; font-size: clamp(1rem, 2.5vw, 1.2rem); line-height: 1.8;">
+                <li>🔹 يعدد خطوات بناء الموضوع السبعة.</li>
+                <li>🔹 يميز بين الفنون التعبيرية المناسبة لكل موضوع.</li>
+                <li>🔹 يحدد مصادر جمع المعلومات المناسبة للموضوعات المختلفة.</li>
             </ul>
         </div>
 
+        <!-- الشريحة 3 -->
         <div class="slide">
-            <h1>خطوات بناء الموضوع</h1>
-            <div class="accordion-item" onclick="toggleItem(this)">
-                <div class="accordion-header">
-                    1. اختيار الموضوع
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="accordion-content">
-                    معلوماتك عنه جيدة، أو يمثل جزءاً من اهتماماتك، أو يهم القراء، أو لديك إضافات جيدة حوله.
-                </div>
+            <div class="question-header">خطوات بناء الموضوع (الشكل التوضيحي):</div>
+
+            <div class="step-box" onclick="toggleStep(this)">
+                <div class="step-title">1. اختيار الموضوع <span class="chevron"></span></div>
+                <div class="step-detail">معلوماتك جيدة عنه، ويمثل جزءاً من اهتماماتك، أو يهم القراء.</div>
             </div>
-            <div class="accordion-item" onclick="toggleItem(this)">
-                <div class="accordion-header">
-                    2. تحديد الهدف
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="accordion-content">
-                    التعبير عن الذات: عاطفة، أو رأي... أو معالجة معلومات: إضافة، تلخيص، توضيح.
-                </div>
+
+            <div class="step-box" onclick="toggleStep(this)">
+                <div class="step-title">2. تحديد الهدف <span class="chevron"></span></div>
+                <div class="step-detail">التعبير عن الذات: عاطفة أو رأي - معالجة معلومات: إضافة، تلخيص.</div>
             </div>
-            <div class="accordion-item" onclick="toggleItem(this)">
-                <div class="accordion-header">
-                    3. جمع المعلومات وتصنيفها
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="accordion-content">
-                    مصادر المعلومات: الكتب، الصحف، الشبكة العنكبوتية، المقابلات، الخبرة الشخصية.
-                </div>
+
+            <div class="step-box" onclick="toggleStep(this)">
+                <div class="step-title">3. جمع المعلومات وتصنيفها <span class="chevron"></span></div>
+                <div class="step-detail">مصادر المعلومات: الكتب، الصحف، الإنترنت، المقابلات.. وتصنيفها في أبواب.</div>
             </div>
-            <div class="accordion-item" onclick="toggleItem(this)">
-                <div class="accordion-header">
-                    4. تخطيط الموضوع
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="accordion-content">
-                    تصميم مخطط الموضوع (رسم الهيكل العام).
-                </div>
+
+            <div class="step-box" onclick="toggleStep(this)">
+                <div class="step-title">4. تخطيط الموضوع <span class="chevron"></span></div>
+                <div class="step-detail">تصميم مخطط الموضوع (لاحق).</div>
             </div>
-            <div class="accordion-item" onclick="toggleItem(this)">
-                <div class="accordion-header">
-                    5. الكتابة الأولى
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="accordion-content">
-                    التركيز على عرض المعلومات، واستيفائها (دون القلق المفرط من الأخطاء).
-                </div>
+
+            <div class="step-box" onclick="toggleStep(this)">
+                <div class="step-title">5. الكتابة الأولى <span class="chevron"></span></div>
+                <div class="step-detail">التركيز على عرض المعلومات واستيفائها.</div>
             </div>
-            <div class="accordion-item" onclick="toggleItem(this)">
-                <div class="accordion-header">
-                    6. المراجعة
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="accordion-content">
-                    التأكد من صحة اللغة والإملاء وعلامات الترقيم، ومنطقية تسلسل الأفكار، وقوة التأثير.
-                </div>
+
+            <div class="step-box" onclick="toggleStep(this)">
+                <div class="step-title">6. المراجعة <span class="chevron"></span></div>
+                <div class="step-detail">التأكد من صحة اللغة والإملاء، ومنطقية تسلسل الأفكار، وقوة التأثير.</div>
             </div>
-             <div class="accordion-item" onclick="toggleItem(this)">
-                <div class="accordion-header">
-                    7. الكتابة النهائية
-                    <span class="arrow">▼</span>
-                </div>
-                <div class="accordion-content">
-                    كتابة المبيضة، والاهتمام بجودة الإخراج وتناسق الهوامش.
-                </div>
+
+            <div class="step-box" onclick="toggleStep(this)">
+                <div class="step-title">7. الكتابة النهائية <span class="chevron"></span></div>
+                <div class="step-detail">كتابة المبيضة، والاهتمام بجودة الإخراج وتناسق الهوامش.</div>
             </div>
         </div>
 
+        <!-- الشريحة 4 -->
         <div class="slide">
-            <h1>📚 مصادر المعلومات</h1>
-            <p>حدد أفضل المصادر لجمع المعلومات، إذا كنت تريد أن:</p>
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th width="45%">الموضوع</th>
-                        <th>مصادر المعلومات الأفضل</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>تتابع نتائج زيارة أحد السياسيين</td>
-                        <td>الصحف، وكالات الأنباء، المواقع الإخبارية.</td>
-                    </tr>
-                    <tr>
-                        <td>تنشئ محلاً كبيراً لبيع الأغذية في حيّك</td>
-                        <td>الملاحظة المباشرة، المسح الميداني، سؤال السكان.</td>
-                    </tr>
-                    <tr>
-                        <td>تدرس ظاهرة (البطالة) وآثارها</td>
-                        <td>الكتب، الدراسات الإحصائية، البحوث الاجتماعية.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="question-header"><span class="question-number">1</span> لكل موضوع فنّ تعبيري يناسبه: (أكمل)</div>
+            <div style="display:flex; font-weight:bold; border-bottom:2px solid #333; padding-bottom:.5rem; margin-bottom:.5rem;">
+                <div style="flex:1;">الموضوع</div>
+                <div style="flex:1; text-align:right; color:var(--answer);">الفن التعبيري المناسب</div>
+            </div>
 
-        <div class="slide">
-            <h1>🎨 الفنون التعبيرية</h1>
-            <p>لكل موضوع فنّ يناسبه (أكمل):</p>
-            <table class="styled-table">
-                <thead>
-                    <tr>
-                        <th width="45%">الموضوع</th>
-                        <th>الفن التعبيري المناسب</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>نقل تجربة شخصية عاشها الكاتب</td>
-                        <td style="color: var(--accent); font-weight: bold;">المذكرات الأدبية</td>
-                    </tr>
-                    <tr>
-                        <td>رصد آراء الناس حول قضية ما</td>
-                        <td style="color: var(--accent); font-weight: bold;">التحقيق الصحفي</td>
-                    </tr>
-                    <tr>
-                        <td>تصوير الانفعالات والأحداث المؤثرة</td>
-                        <td style="color: var(--accent); font-weight: bold;">القصة القصيرة</td>
-                    </tr>
-                    <tr>
-                        <td>تصويب أخطاء شائعة</td>
-                        <td style="color: var(--accent); font-weight: bold;">المقال الاجتماعي</td>
-                    </tr>
-                    <tr>
-                        <td>إبداء الرغبة في الالتحاق بوظيفة</td>
-                        <td style="color: var(--accent); font-weight: bold;">الرسائل الإدارية</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">نقل تجربة شخصية عايشها الكاتب في مرحلة من عمره</div>
+                <div class="row-answer">المذكرات الأدبية</div>
+            </div>
 
-        <div class="slide">
-            <h1>✅ التقويم البنائي</h1>
-            <p style="font-size: 1.5em; margin-bottom: 30px;">اختر الإجابة الصحيحة لقياس مدى فهمك:</p>
-            
-            <div class="quiz-container">
-                
-                <div class="quiz-card">
-                    <div class="question-text">1. إذا أردت كتابة موضوع عن "تاريخ نادي رياضي"، فإن أفضل مصدر للمعلومات هو:</div>
-                    <div class="options-grid">
-                        <button class="option-btn" onclick="checkAnswer(this, false)">الملاحظة المباشرة</button>
-                        <button class="option-btn" onclick="checkAnswer(this, true)">وثائق النادي وسجلاته</button>
-                    </div>
-                </div>
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">رصد آراء الشباب وأولياء الأمور حول مواقع التواصل</div>
+                <div class="row-answer">التحقيق الصحفي</div>
+            </div>
 
-                <div class="quiz-card">
-                    <div class="question-text">2. المرحلة التي نركز فيها على "صحة اللغة وعلامات الترقيم" هي:</div>
-                    <div class="options-grid">
-                        <button class="option-btn" onclick="checkAnswer(this, true)">المراجعة</button>
-                        <button class="option-btn" onclick="checkAnswer(this, false)">الكتابة الأولى</button>
-                    </div>
-                </div>
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">تصوير الانفعالات النفسية والأحداث المؤلمة (دار المسنين)</div>
+                <div class="row-answer">القصة القصيرة</div>
+            </div>
 
-                <div class="quiz-card">
-                    <div class="question-text">3. الفن التعبيري المناسب لـ "تصوير الانفعالات والأحداث المؤثرة":</div>
-                    <div class="options-grid">
-                        <button class="option-btn" onclick="checkAnswer(this, false)">التقرير</button>
-                        <button class="option-btn" onclick="checkAnswer(this, true)">القصة القصيرة</button>
-                    </div>
-                </div>
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">تصويب أخطاء شائعة في حفظ الأطعمة</div>
+                <div class="row-answer">المقال العلمي / الإرشادي</div>
+            </div>
 
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">إبداء الرغبة في الالتحاق بوظيفة</div>
+                <div class="row-answer">الرسالة الإدارية</div>
             </div>
         </div>
 
-    </div>
+        <!-- الشريحة 5 -->
+        <div class="slide">
+            <div class="question-header"><span class="question-number">3</span> أهداف الكتابة مختلفة. الموضوعات اللاحقة كتبتها أنت، فما هدفك فيها يأتي؟</div>
 
-    <div class="footer-controls">
-        <button class="control-btn" id="prevBtn" onclick="changeSlide(-1)">السابق</button>
-        <button class="control-btn" id="nextBtn" onclick="changeSlide(1)">التالي ⬅</button>
-    </div>
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">تقرير إلى وزير التعليم عن أوضاع مدرستك</div>
+                <div class="row-answer">نقل معلومات رسمية / حقائق</div>
+            </div>
 
-</div>
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">رسالة إلى معلمي</div>
+                <div class="row-answer">تواصل وجداني / شكر / استفسار</div>
+            </div>
 
-<script>
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.slide');
-    const totalSlides = slides.length;
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">قصة قصيرة بعنوان (نهاية مدمن)</div>
+                <div class="row-answer">وعظ / تأثير عاطفي</div>
+            </div>
 
-    // تحديث العداد
-    document.getElementById('total').textContent = totalSlides;
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">مقالة عن الآثار السلبية لإدمان الشبكة العالمية</div>
+                <div class="row-answer">تحليل ظاهرة / توعية</div>
+            </div>
 
-    function showSlide(index) {
-        slides.forEach(s => s.classList.remove('active'));
-        slides[index].classList.add('active');
-        
-        document.getElementById('current').textContent = index + 1;
-        
-        // التحكم في الأزرار
-        document.getElementById('prevBtn').disabled = index === 0;
-        
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">كتاب عن طاعة ولي الأمر في الإسلام</div>
+                <div class="row-answer">تأصيل شرعي / نصح</div>
+            </div>
+        </div>
+
+        <!-- الشريحة 6 -->
+        <div class="slide">
+            <div class="question-header"><span class="question-number">4</span> عُينت مديراً لناديك الرياضي المفضل.. اجمع المعلومات التي تريدها، وحدّد مصادرك:</div>
+
+            <div class="step-box" onclick="toggleStep(this)">
+                <div class="step-title">معلومات عن: تاريخ النادي <span class="chevron"></span></div>
+                <div class="step-detail" style="color:var(--answer); font-weight:bold;">
+                    وثائق النادي وسجلاته - كتب عنه في الصحف والمجلات - التحدث مع الإداريين واللاعبين القدامى.
+                </div>
+            </div>
+
+            <div class="step-box" onclick="toggleStep(this)">
+                <div class="step-title">معلومات عن: أوضاع اللاعبين حالياً <span class="chevron"></span></div>
+                <div class="step-detail" style="color:var(--answer); font-weight:bold;">
+                    نقاشات مع: مدير الكرة، المدير الفني، المدرب، طبيب النادي - مشاهدة عروض التدريب.
+                </div>
+            </div>
+
+            <br>
+
+            <div class="question-header"><span class="question-number">5</span> حدّد أفضل المصادر لجمع المعلومات، إذا كنت تريد أن:</div>
+
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">تتابع نتائج زيارة أحد السياسيين لدولة عظمى</div>
+                <div class="row-answer">وكالات الأنباء / الصحف السياسية</div>
+            </div>
+
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">تنشئ محلاً كبيراً لبيع الأغذية في حي من أحياء مدينتك</div>
+                <div class="row-answer">الملاحظة الميدانية / سؤال السكان</div>
+            </div>
+
+            <div class="interactive-row" onclick="reveal(this)">
+                <div class="row-text">تدرس ظاهرة البطالة في المملكة وآثارها</div>
+                <div class="row-answer">وزارة الموارد البشرية / هيئة الإحصاء</div>
+            </div>
+        </div>
+
+        <!-- الشريحة 7 -->
+        <div class="slide">
+            <div class="question-header"><span class="question-number">6</span> الواجب المنزلي (مهمة أدائية)</div>
+            <div style="border:2px dashed #999; padding: clamp(1rem, 4vw, 2rem); text-align:center; background:#fffdfd;">
+                <h3 style="margin-top:0;">اكتب إلى مدير المدرسة تقريراً عن مقصف المدرسة.</h3>
+                <p style="font-size: clamp(1rem, 2.5vw, 1.15rem); color:#555; text-align:right; margin-right:1rem;">
+                    <strong>المطلوب تنفيذه في ورقة خارجية:</strong><br><br>
+                    ١- اجمع أولاً المعلومات اللازمة (حدد المصادر).<br>
+                    ٢- صنّف معلوماتك في عدد من العناوين الجانبية.<br>
+                    ٣- حدد هدفك من الكتابة.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- أزرار التحكم -->
+    <footer class="controls">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">السابق</button>
+        <span class="page-num" id="page-indicator">١ / ٧</span>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">التالي</button>
+    </footer>
+
+    <!-- ==========================
+      السكربتات
+    ========================== -->
+    <script>
+        /* التاريخ الهجري القصير */
+        document.getElementById('date-display').textContent =
+            new Intl.DateTimeFormat('ar-SA', { dateStyle: 'short' }).format(new Date());
+
+        /* التنقل */
+        const slides = document.querySelectorAll('.slide');
+        const indicator = document.getElementById('page-indicator');
+        const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        if (index === totalSlides - 1) {
-            nextBtn.textContent = 'انتهى الدرس';
-            nextBtn.disabled = true;
-        } else {
-            nextBtn.textContent = 'التالي ⬅';
-            nextBtn.disabled = false;
+        let current = 0;
+
+        function updateUI() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === current));
+            indicator.textContent = `${current + 1} / ${slides.length}`;
+            prevBtn.disabled = current === 0;
+            nextBtn.disabled = current === slides.length - 1;
+            document.querySelector('.main-board').scrollTop = 0;
         }
-    }
-
-    function changeSlide(direction) {
-        if (direction === 1 && currentSlide < totalSlides - 1) {
-            currentSlide++;
-        } else if (direction === -1 && currentSlide > 0) {
-            currentSlide--;
+        function changeSlide(dir) {
+            current = Math.max(0, Math.min(slides.length - 1, current + dir));
+            updateUI();
         }
-        showSlide(currentSlide);
-    }
+        updateUI();
 
-    // وظيفة الأكورديون
-    function toggleItem(el) {
-        // إغلاق الآخرين (اختياري، تم تعطيله ليبقى الطالب قادراً على مقارنة الخطوات)
-        // document.querySelectorAll('.accordion-item').forEach(item => {
-        //     if(item !== el) item.classList.remove('open');
-        // });
-        el.classList.toggle('open');
-    }
+        /* كشف الإجابة */
+        function reveal(row) { row.classList.add('revealed'); }
 
-    // وظيفة التحقق من الإجابة
-    function checkAnswer(btn, isCorrect) {
-        // تعطيل الأزرار الأخرى في نفس السؤال
-        const siblings = btn.parentElement.querySelectorAll('.option-btn');
-        siblings.forEach(s => {
-            s.disabled = true;
-            if (s !== btn) s.style.opacity = '0.6';
-            s.style.cursor = 'default';
+        /* فتح الخطوات */
+        function toggleStep(box) { box.classList.toggle('open'); }
+
+        /* مفاتيح لوحة المفاتيح */
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
         });
-
-        if (isCorrect) {
-            btn.classList.add('correct');
-            btn.innerHTML += ' <span style="float:left">✅</span>';
-        } else {
-            btn.classList.add('wrong');
-            btn.innerHTML += ' <span style="float:left">❌</span>';
-        }
-    }
-
-    // تشغيل الشريحة الأولى
-    showSlide(0);
-
-    // دعم لوحة المفاتيح
-    document.addEventListener('keydown', function(event) {
-        if (event.key === "ArrowLeft") {
-            changeSlide(1);
-        } else if (event.key === "ArrowRight") {
-            changeSlide(-1);
-        }
-    });
-</script>
-
+    </script>
 </body>
 </html>
