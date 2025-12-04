@@ -1,58 +1,64 @@
-// mindmap.js
+// mindmap.js - يدعم الرسم المتحرك
 
-function drawMindMap() {
+function animateMindMap() {
     const canvas = document.getElementById('mindmapCanvas');
     if (!canvas) return;
-    
     const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
 
-    // مسح الـ Canvas
-    ctx.clearRect(0, 0, width, height);
-
-    // بيانات العقد (Nodes)
-    const centerX = width / 2;
-    const centerY = height / 2;
-    
+    const cx = w/2, cy = h/2;
     const nodes = [
-        { text: "بناء الموضوع", x: centerX, y: centerY, color: "#e67e22", size: 60 },
-        { text: "اختيار", x: centerX, y: centerY - 150, color: "#3498db", size: 40 },
-        { text: "تحديد الهدف", x: centerX + 130, y: centerY - 80, color: "#3498db", size: 40 },
-        { text: "جمع المعلومات", x: centerX + 130, y: centerY + 80, color: "#3498db", size: 40 },
-        { text: "التخطيط", x: centerX, y: centerY + 150, color: "#3498db", size: 40 },
-        { text: "الكتابة الأولى", x: centerX - 130, y: centerY + 80, color: "#3498db", size: 40 },
-        { text: "المراجعة", x: centerX - 130, y: centerY - 80, color: "#3498db", size: 40 },
-        { text: "النهائية", x: centerX - 200, y: centerY, color: "#27ae60", size: 40 } // مميزة لأنها النهاية
+        { x: cx, y: cy, r: 40, c: '#e67e22', t: 'بناء الموضوع' },
+        { x: cx, y: cy-120, r: 25, c: '#3498db', t: '1.اختيار' },
+        { x: cx+100, y: cy-60, r: 25, c: '#3498db', t: '2.هدف' },
+        { x: cx+100, y: cy+60, r: 25, c: '#3498db', t: '3.جمع' },
+        { x: cx, y: cy+120, r: 25, c: '#3498db', t: '4.تخطيط' },
+        { x: cx-100, y: cy+60, r: 25, c: '#3498db', t: '5.كتابة' },
+        { x: cx-100, y: cy-60, r: 25, c: '#3498db', t: '6.مراجعة' }
     ];
 
-    // رسم الخطوط (Edges)
-    ctx.strokeStyle = "#95a5a6";
-    ctx.lineWidth = 2;
-    
-    nodes.slice(1).forEach(node => {
-        ctx.beginPath();
-        ctx.moveTo(nodes[0].x, nodes[0].y);
-        ctx.lineTo(node.x, node.y);
-        ctx.stroke();
-    });
+    let step = 0;
+    const totalSteps = nodes.length;
 
-    // رسم العقد والنصوص
-    nodes.forEach(node => {
-        // الدائرة
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.size, 0, 2 * Math.PI);
-        ctx.fillStyle = node.color;
-        ctx.fill();
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 3;
-        ctx.stroke();
+    function drawStep() {
+        if (step >= totalSteps) return; // انتهى الرسم
 
-        // النص
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 14px Cairo";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(node.text, node.x, node.y);
-    });
+        const n = nodes[step];
+        
+        // رسم الخط إذا لم تكن العقدة المركزية
+        if (step > 0) {
+            ctx.beginPath();
+            ctx.moveTo(nodes[0].x, nodes[0].y);
+            ctx.lineTo(n.x, n.y);
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // رسم الدائرة بتأثير الظهور
+        let currentR = 0;
+        const animateNode = setInterval(() => {
+            currentR += 2;
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, currentR, 0, Math.PI*2);
+            ctx.fillStyle = n.c;
+            ctx.fill();
+            
+            if (currentR >= n.r) {
+                clearInterval(animateNode);
+                // كتابة النص
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 12px Cairo';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(n.t, n.x, n.y);
+                
+                step++;
+                setTimeout(drawStep, 200); // تأخير بسيط قبل رسم العقدة التالية
+            }
+        }, 10);
+    }
+
+    drawStep(); // بدء الرسم
 }
