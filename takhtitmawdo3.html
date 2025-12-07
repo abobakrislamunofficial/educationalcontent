@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصميم مخطط الموضوع</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            overflow: hidden;
+        }
+        .slide {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            background: linear-gradient(135deg, #19376d 0%, #2a4a8a 100%);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5;
+        }
+        .geometric-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(240, 200, 112, 0.1);
+        }
+        .shape1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -100px;
+        }
+        .shape2 {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            left: -50px;
+        }
+        .shape3 {
+            width: 150px;
+            height: 150px;
+            bottom: 100px;
+            right: 100px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            width: 100%;
+            max-width: 900px;
+        }
+        .title {
+            font-size: 64px;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .decorative-line {
+            width: 120px;
+            height: 4px;
+            background-color: #f0c870;
+            margin: 32px 0;
+            opacity: 1;
+            transform: scaleX(1);
+        }
+        .subtitle {
+            font-size: 28px;
+            font-weight: 500;
+            color: #f0c870;
+            text-align: center;
+            max-width: 800px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="pattern"></div>
+        <div class="geometric-shape shape1"></div>
+        <div class="geometric-shape shape2"></div>
+        <div class="geometric-shape shape3"></div>
+        
+        <div class="content-container">
+            <h1 class="title" id="title">تصميم مخطط الموضوع</h1>
+            <div class="decorative-line" id="decorativeLine"></div>
+            <h2 class="subtitle" id="subtitle">كفاية الاتصال الكتابي</h2>
+        </div>
+    </div>
+</body>
+</html>
