@@ -2,115 +2,505 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>تصميم مخطط الموضوع</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-gold: #f0c870;
+            --bg-dark: #19376d;
+            --bg-light: #2a4a8a;
+            --text-white: #ffffff;
+            --text-dark: #19376d;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
+
         body {
             font-family: 'Tajawal', sans-serif;
-            overflow: hidden;
-        }
-        .slide {
-            width: 1280px;
-            height: 720px;
-            position: relative;
-            background: linear-gradient(135deg, #19376d 0%, #2a4a8a 100%);
+            background-color: #0f224a;
+            height: 100vh;
+            height: 100dvh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
+
+        #presentation-stage {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* الخلفية والزخارف */
         .pattern {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
             background-size: 20px 20px;
-            opacity: 0.5;
+            opacity: 0.6;
+            pointer-events: none;
         }
+
         .geometric-shape {
             position: absolute;
             border-radius: 50%;
-            background: rgba(240, 200, 112, 0.1);
+            background: rgba(240, 200, 112, 0.15);
+            pointer-events: none;
         }
-        .shape1 {
-            width: 300px;
-            height: 300px;
-            top: -100px;
-            right: -100px;
-        }
-        .shape2 {
-            width: 200px;
-            height: 200px;
-            bottom: -50px;
-            left: -50px;
-        }
-        .shape3 {
-            width: 150px;
-            height: 150px;
-            bottom: 100px;
-            right: 100px;
-            background: rgba(255, 255, 255, 0.05);
-        }
-        .content-container {
+
+        .shape1 { width: 400px; height: 400px; top: -100px; right: -100px; }
+        .shape2 { width: 300px; height: 300px; bottom: -50px; left: -50px; }
+        .shape3 { width: 150px; height: 150px; bottom: 100px; right: 20%; background: rgba(255, 255, 255, 0.05); }
+
+        /* الشرائح */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 2;
-            width: 100%;
-            max-width: 900px;
-        }
-        .title {
-            font-size: 64px;
-            font-weight: 700;
-            color: #ffffff;
             text-align: center;
-            margin-bottom: 24px;
+            pointer-events: none;
+            padding: 20px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+            z-index: 20;
+        }
+
+        /* النصوص */
+        h1 {
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            color: var(--text-white);
+            margin-bottom: 20px;
+            font-weight: 800;
             line-height: 1.2;
-            opacity: 1;
-            transform: translateY(0);
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .decorative-line {
-            width: 120px;
+
+        h2 {
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
+            color: var(--primary-gold);
+            margin-bottom: 30px;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h2::after {
+            content: '';
+            display: block;
+            width: 60%;
             height: 4px;
-            background-color: #f0c870;
-            margin: 32px 0;
-            opacity: 1;
-            transform: scaleX(1);
+            background-color: var(--primary-gold);
+            margin: 10px auto 0;
+            border-radius: 2px;
         }
-        .subtitle {
-            font-size: 28px;
+
+        h3 {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            margin: 10px 0 25px 0;
+            color: #e0e0e0;
             font-weight: 500;
-            color: #f0c870;
-            text-align: center;
-            max-width: 800px;
+        }
+        
+        .subtitle-highlight {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: var(--primary-gold);
+            font-weight: normal;
+        }
+
+        /* القوائم والبطاقات */
+        .list-item {
+            background: var(--card-bg);
+            color: var(--text-dark);
+            margin: 12px 0;
+            padding: 15px 30px;
+            border-right: 6px solid var(--primary-gold);
+            border-radius: 12px;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
+            text-align: right;
+            width: 100%;
+            max-width: 950px; /* توسيع العرض لاستيعاب النص الكامل */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+            line-height: 1.6;
+        }
+
+        .list-item.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* تنسيق المقارنة */
+        .comparison-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            justify-content: center;
+            align-items: stretch;
+            margin-top: 10px;
+        }
+
+        .info-card {
+            flex: 1;
+            background: var(--card-bg);
+            color: var(--text-dark);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: right;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s, transform 0.5s;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .info-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-header {
+            font-weight: 800;
+            color: #19376d;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+        }
+
+        .card-content {
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+            line-height: 1.7;
+        }
+        
+        .card-content ul { padding-right: 20px; margin: 0; }
+        .card-content li { margin-bottom: 8px; }
+
+        .decorative-line {
+            width: 150px;
+            height: 4px;
+            background-color: var(--primary-gold);
+            margin: 20px 0;
+        }
+
+        /* شريط التقدم */
+        .progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            z-index: 100;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-gold);
+            width: 0%;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px rgba(240, 200, 112, 0.5);
+        }
+
+        /* التحكم */
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+            background: rgba(25, 55, 109, 0.6);
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 450px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            border: none;
+            background: var(--primary-gold);
+            color: var(--text-dark);
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s;
+            flex: 1;
+        }
+
+        button:hover { background: #fff; transform: translateY(-2px); }
+        button:active { transform: scale(0.95); }
+        
+        .page-num {
+            font-weight: bold;
+            color: #fff;
+            min-width: 60px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        /* الجوال */
+        @media (max-width: 768px) {
+            .comparison-wrapper { flex-direction: column; }
+            .info-card { margin-bottom: 15px; }
+            .slide {
+                justify-content: flex-start;
+                padding-top: 80px; 
+                padding-bottom: 120px;
+            }
+            .list-item { padding: 12px 20px; font-size: 1rem; }
+            .shape1 { width: 200px; height: 200px; }
+            h2 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
-    <div class="slide">
+
+    <div id="presentation-stage">
         <div class="pattern"></div>
         <div class="geometric-shape shape1"></div>
         <div class="geometric-shape shape2"></div>
         <div class="geometric-shape shape3"></div>
-        
-        <div class="content-container">
-            <h1 class="title" id="title">تصميم مخطط الموضوع</h1>
-            <div class="decorative-line" id="decorativeLine"></div>
-            <h2 class="subtitle" id="subtitle">كفاية الاتصال الكتابي</h2>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
         </div>
+
+        <div class="slide active" id="slide-0">
+            <h1 id="title">تصميم مخطط الموضوع</h1>
+            <div class="decorative-line"></div>
+            <h2 style="color: var(--primary-gold); font-weight: 500; font-size: 2rem; border: none;">كفاية الاتصال الكتابي</h2>
+            <style> #slide-0 h2::after { display: none; } </style>
+        </div>
+
+        <div class="slide" id="slide-1">
+            <h2>التمهيد</h2>
+            <div class="list-item fragment">
+                <strong>تساؤل:</strong> هل واجهت يوماً صعوبة في ترتيب أفكارك أثناء الكتابة؟
+            </div>
+            <div class="list-item fragment">
+                <strong>حقيقة:</strong> الكاتب الماهر هو مهندس يخطط لبناء نصه قبل وضع حجر الأساس.
+            </div>
+            <div class="list-item fragment">
+                <strong>الفكرة:</strong> التخطيط الجيد يختصر الوقت ويضمن وصول الرسالة بوضوح.
+            </div>
+        </div>
+
+        <div class="slide" id="slide-2">
+            <h2>الأهداف السلوكية والاجتماعية</h2>
+            <div class="list-item fragment">
+                <strong>1. هدف اجتماعي (منهجي):</strong> أن يقدّر الطالب قيمة التخطيط ودوره في نجاح العمل الجماعي والفردي.
+            </div>
+            <div class="list-item fragment">
+                <strong>2. هدف سلوكي (مهاري):</strong> أن يحدد الطالب العناصر الفنية والأفكار الرئيسة والتفصيلية للموضوع.
+            </div>
+            <div class="list-item fragment">
+                <strong>3. هدف سلوكي (مهاري):</strong> أن يقترح الطالب أساليب العرض والتأثير والإقناع المناسبة للموضوع.
+            </div>
+        </div>
+
+        <div class="slide" id="slide-3">
+            <h2>عناصر التصميم</h2>
+            <div class="list-item fragment">1. حدّد العناصر الفنية للموضوع بحسب نوعه الفني (مقال أو قصة أو رسالة أو تقرير...).</div>
+            <div class="list-item fragment">2. حدّد الأفكار الرئيسة لكل عنصر من العناصر الفنية للموضوع.</div>
+            <div class="list-item fragment">3. حدّد الأفكار والتفصيلات الجزئية لكل فكرة من الأفكار الرئيسة.</div>
+            <div class="list-item fragment">4. اقترح أسلوب العرض، وأساليب التأثير والإقناع، وشواهد الدعم.</div>
+        </div>
+
+        <div class="slide" id="slide-4">
+            <h2>نموذج (مقال: مجلس الشورى)</h2>
+            <h3>١. المقدمة <span class="subtitle-highlight">(الفكرة الرئيسة الأولى: مبدأ الشورى)</span></h3>
+            
+            <div class="comparison-wrapper">
+                <div class="info-card fragment">
+                    <div class="card-header">الأفكار الجزئية</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>القرآن يدعو إلى الشورى.</li>
+                            <li>الشورى في الهدي النبوي.</li>
+                            <li>الشورى في تاريخ الخلفاء الراشدين.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-card fragment">
+                    <div class="card-header">أسلوب العرض</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>قصة بدر.</li>
+                            <li>قصة تولي عثمان رضي الله عنه الخلافة.</li>
+                            <li>آية الشورى - حديث نبوي.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-5">
+            <h2>الفكرة الرئيسة الثانية: التأسيس</h2>
+            
+            <div class="comparison-wrapper">
+                <div class="info-card fragment">
+                    <div class="card-header">الأفكار الجزئية</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>مجلس الشورى في عهد الملك عبدالعزيز رحمه الله.</li>
+                            <li>نظام مجلس الشورى كما أعلنه الملك فهد، رحمه الله.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-card fragment">
+                    <div class="card-header">أسلوب العرض</div>
+                    <div class="card-content">
+                        سرد وصفي مع الاستدلال بنصوص النظام.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-6">
+            <h2>٢. العرض: (الفكرة الرئيسة: اللجان)</h2>
+            
+            <div class="comparison-wrapper">
+                <div class="info-card fragment">
+                    <div class="card-header">الأفكار الجزئية</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>تحديد لجان المجلس.</li>
+                            <li>بيان مسؤوليات كل لجنة.</li>
+                            <li>عرض لأهم إنجازاتها.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-card fragment">
+                    <div class="card-header">أسلوب العرض</div>
+                    <div class="card-content">
+                        تقرير مباشر، مع الاستدلال ببعض النصوص والوثائق.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-7">
+            <h2>٣. الخاتمة</h2>
+            <div class="list-item fragment">
+                <strong>الفكرة الرئيسة:</strong> ماذا ننتظر من المجلس بعد؟
+            </div>
+            <div class="list-item fragment">
+                <strong>الفكرة الجزئية:</strong> آمال نطمح أن يحققها المجلس.
+            </div>
+            <div class="list-item fragment">
+                <strong>أسلوب العرض:</strong> نقاط محددة، مع اقتراحات للتنفيذ.
+            </div>
+        </div>
+
+        <div class="controls">
+            <button onclick="changeSlide(-1)">السابق</button>
+            <span class="page-num" id="pageIndicator">1 / 8</span>
+            <button onclick="changeSlide(1)">التالي</button>
+        </div>
+
     </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const pageIndicator = document.getElementById('pageIndicator');
+        const progressBar = document.getElementById('progressBar');
+
+        function updateUI() {
+            pageIndicator.innerText = (currentSlideIndex + 1) + " / " + totalSlides;
+            const percent = ((currentSlideIndex + 1) / totalSlides) * 100;
+            progressBar.style.width = percent + "%";
+        }
+
+        function changeSlide(direction) {
+            const activeSlide = slides[currentSlideIndex];
+            
+            if (direction === 1) {
+                const hiddenFragments = activeSlide.querySelectorAll('.fragment:not(.visible)');
+                
+                if (hiddenFragments.length > 0) {
+                    hiddenFragments[0].classList.add('visible');
+                    if(window.innerWidth < 768) {
+                        activeSlide.scrollTo({
+                            top: activeSlide.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }
+                } else {
+                    if (currentSlideIndex < totalSlides - 1) {
+                        activeSlide.classList.remove('active');
+                        currentSlideIndex++;
+                        slides[currentSlideIndex].classList.add('active');
+                        slides[currentSlideIndex].scrollTop = 0;
+                    }
+                }
+            } else if (direction === -1) {
+                if (currentSlideIndex > 0) {
+                    activeSlide.classList.remove('active');
+                    currentSlideIndex--;
+                    slides[currentSlideIndex].classList.add('active');
+                }
+            }
+            updateUI();
+        }
+
+        updateUI();
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowLeft" || e.code === "Space") changeSlide(1);
+            if (e.key === "ArrowRight") changeSlide(-1);
+        });
+    </script>
 </body>
 </html>
