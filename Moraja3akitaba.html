@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار مراجعة الوحدة الرابعة - التواصل الكتابي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --correct-color: #27ae60;
+            --incorrect-color: #c0392b;
+            --bg-color: #f4f6f7;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .score-board {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-top: 10px;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            transition: transform 0.2s;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16px;
+            text-align: right;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #f0f8ff;
+            border-color: var(--accent-color);
+        }
+
+        /* تنسيقات الإجابات */
+        .option-btn.correct {
+            background-color: var(--correct-color) !important;
+            color: white !important;
+            border-color: var(--correct-color) !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-color) !important;
+            color: white !important;
+            border-color: var(--incorrect-color) !important;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        /* أيقونات صغيرة للحالة */
+        .option-btn.correct::after {
+            content: "✓";
+            position: absolute;
+            left: 15px;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect::after {
+            content: "✕";
+            position: absolute;
+            left: 15px;
+            font-weight: bold;
+        }
+
+        .result-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        
+        #final-score {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>أسئلة مراجعة الوحدة الرابعة - التواصل الكتابي</h1>
+        <div class="score-board">النتيجة: <span id="current-score">0</span> / 20</div>
+    </header>
+
+    <div id="quiz-container">
+        </div>
+
+    <div class="result-footer">
+        <p id="final-score"></p>
+        <button onclick="location.reload()" style="padding: 10px 20px; background: var(--accent-color); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-family: inherit;">إعادة الاختبار</button>
+    </div>
+</div>
+
+<script>
+    // قاعدة بيانات الأسئلة والأجوبة
+    // المفتاح: 0=أ, 1=ب, 2=ج, 3=د
+    const questions = [
+        {
+            q: "1. ما العنصران الأساسيان اللذان تعتمد عليهما الكتابة الجيدة؟",
+            options: ["الموهبة والإلهام", "القراءة الجيدة والتخطيط الجيد", "السرعة في الكتابة والخيال الواسع", "الخبرة الطويلة والممارسة المستمرة"],
+            answer: 1 // ب
+        },
+        {
+            q: "2. أي من التالي يُعد أهم مصادر المعلومات؟",
+            options: ["الشبكة العنكبوتية", "وسائل الإعلام المختلفة", "الكتاب", "الملاحظات الشخصية"],
+            answer: 2 // ج
+        },
+        {
+            q: "3. ما العامل الذي يحدد اختيار الفن التعبيري المناسب؟",
+            options: ["مستوى ثقافة الكاتب", "الهدف من الكتابة", "طول النص المطلوب", "نوع الجمهور المستهدف"],
+            answer: 1 // ب
+        },
+        {
+            q: "4. إذا أراد شخص أن يُبلّغ صديقه ببعض أموره، فما الفن التعبيري الأنسب؟",
+            options: ["المقالة", "القصيدة", "الرسالة", "القصة"],
+            answer: 2 // ج
+        },
+        {
+            q: "5. ما الفن التعبيري الأفضل للمشاركة في مناقشة موضوع صحفي؟",
+            options: ["الرسالة", "المقالة", "القصة", "اليوميات"],
+            answer: 1 // ب
+        },
+        {
+            q: "6. كم عدد العناصر الفنية التي تتكون منها المقالة؟",
+            options: ["ثلاثة عناصر", "خمسة عناصر", "أربعة عناصر", "ستة عناصر"],
+            answer: 2 // ج
+        },
+        {
+            q: "7. أي من التالي ليس من مكونات القصة؟",
+            options: ["الزمان والمكان", "البطل والشخصيات الثانوية", "المقدمة والخاتمة", "الأحداث والحبكة القصصية"],
+            answer: 2 // ج
+        },
+        {
+            q: "8. ما الخطوة الأولى في تصميم مخطط الموضوع؟",
+            options: ["تحديد الأفكار الرئيسة", "ترتيب الأفكار حسب تسلسل مناسب", "تحديد العناصر الفنية للفن التعبيري", "التفكير في أساليب الإقناع والتأثير"],
+            answer: 2 // ج
+        },
+        {
+            q: "9. أي من الأدوات التالية يمكن استخدامها لتصميم مخطط الموضوع؟",
+            options: ["الجدول فقط", "شجرة الذاكرة فقط", "مخطط هيكل السمكة فقط", "جميع ما سبق"],
+            answer: 3 // د
+        },
+        {
+            q: "10. متى يجب على الكاتب أن يبدأ كتابة موضوعه؟",
+            options: ["فور اختيار الموضوع مباشرة", "بعد جمع بعض المعلومات", "بعد تصميم مخطط مناسب", "بعد مناقشة الفكرة مع الآخرين"],
+            answer: 2 // ج
+        },
+        {
+            q: "11. ما صفة العنوان الجيد من حيث الطول؟",
+            options: ["طويل ومفصّل", "قصير ومختصر", "متوسط الطول", "لا يهم طوله"],
+            answer: 1 // ب
+        },
+        {
+            q: "12. أي من التالي ليس من صفات المقدمة الجيدة؟",
+            options: ["قصيرة", "مشوقة", "مفصّلة وشاملة", "ممهدة للموضوع"],
+            answer: 2 // ج
+        },
+        {
+            q: "13. ما الذي يجب أن تركز عليه الخاتمة الجيدة؟",
+            options: ["إضافة معلومات جديدة لم تُذكر في الموضوع", "تكرار المقدمة بصياغة مختلفة", "تلخيص الأفكار أو بيان الرأي النهائي", "طرح أسئلة جديدة للقارئ"],
+            answer: 2 // ج
+        },
+        {
+            q: "14. على ماذا يجب التركيز في المسودة الأولى للكتابة؟",
+            options: ["جمال الأسلوب وقوة التعبير", "استيفاء جميع الأفكار والجزئيات", "التنقيح وتصحيح الأخطاء", "جودة بناء الفقرات"],
+            answer: 1 // ب
+        },
+        {
+            q: "15. متى يتم الاهتمام بجودة بناء الفقرات وقوة التأثير؟",
+            options: ["أثناء الكتابة الأولى", "قبل تصميم المخطط", "في مرحلة المراجعة", "عند اختيار الموضوع"],
+            answer: 2 // ج
+        },
+        {
+            q: "16. ما الذي تُنتجه المراجعة والتنقيح؟",
+            options: ["أفكاراً جديدة", "مخططاً أفضل", "كتابة جيدة", "موضوعات إضافية"],
+            answer: 2 // ج
+        },
+        {
+            q: "17. لماذا يراجع الكتّاب موضوعاتهم قبل عرضها؟",
+            options: ["لزيادة عدد الصفحات", "لأن المراجعة تُحسّن جودة الكتابة", "لإرضاء الناشرين", "لتأخير موعد النشر"],
+            answer: 1 // ب
+        },
+        {
+            q: "18. أي من التالي يُعد من مهارات بناء الموضوع؟",
+            options: ["اختيار نوع الورق", "تحديد عدد الصفحات", "الكتابة في فقرات", "اختيار حجم الخط"],
+            answer: 2 // ج
+        },
+        {
+            q: "19. ما أول خطوة في خطوات بناء الموضوع؟",
+            options: ["جمع المعلومات", "اختيار الموضوع", "تحديد الأهداف", "الكتابة الأولى"],
+            answer: 1 // ب
+        },
+        {
+            q: "20. أي من التالي يُعد من مكونات التصميم في مهارات الكتابة؟",
+            options: ["اختيار العنوان", "بناء المقدمة", "تحديد الأفكار الرئيسة", "الكتابة في فقرات"],
+            answer: 2 // ج
+        }
+    ];
+
+    let score = 0;
+    const quizContainer = document.getElementById('quiz-container');
+    const currentScoreEl = document.getElementById('current-score');
+    const finalScoreEl = document.getElementById('final-score');
+
+    // دالة إنشاء الأسئلة
+    function renderQuestions() {
+        questions.forEach((question, index) => {
+            // إنشاء كارد السؤال
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card';
+
+            // نص السؤال
+            const questionTitle = document.createElement('div');
+            questionTitle.className = 'question-text';
+            questionTitle.textContent = question.q;
+            questionCard.appendChild(questionTitle);
+
+            // حاوية الخيارات
+            const optionsGrid = document.createElement('div');
+            optionsGrid.className = 'options-grid';
+
+            // إنشاء الأزرار
+            question.options.forEach((opt, optIndex) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(btn, index, optIndex, question.answer);
+                // تعيين معرف فريد لتسهيل الوصول للإجابة الصحيحة لاحقاً
+                btn.id = `q${index}-opt${optIndex}`;
+                optionsGrid.appendChild(btn);
+            });
+
+            questionCard.appendChild(optionsGrid);
+            quizContainer.appendChild(questionCard);
+        });
+    }
+
+    // دالة التحقق من الإجابة
+    function checkAnswer(selectedBtn, questionIndex, selectedOptionIndex, correctOptionIndex) {
+        // منع الضغط مرة أخرى على نفس السؤال
+        const buttons = document.querySelectorAll(`#q${questionIndex}-opt0, #q${questionIndex}-opt1, #q${questionIndex}-opt2, #q${questionIndex}-opt3`);
+        
+        // إذا كان السؤال مجاباً عليه بالفعل، نخرج من الدالة
+        if (selectedBtn.disabled) return;
+
+        // تعطيل جميع الأزرار لهذا السؤال
+        buttons.forEach(btn => btn.disabled = true);
+
+        const correctBtn = document.getElementById(`q${questionIndex}-opt${correctOptionIndex}`);
+
+        if (selectedOptionIndex === correctOptionIndex) {
+            // الإجابة صحيحة
+            selectedBtn.classList.add('correct');
+            score++;
+            currentScoreEl.textContent = score;
+        } else {
+            // الإجابة خاطئة
+            selectedBtn.classList.add('incorrect');
+            // تلوين الإجابة الصحيحة بالأخضر
+            correctBtn.classList.add('correct');
+        }
+
+        // تحديث رسالة النهاية إذا تم حل جميع الأسئلة (اختياري)
+        // هنا نكتفي بتحديث النتيجة الحية
+    }
+
+    // تشغيل الدالة عند تحميل الصفحة
+    renderQuestions();
+
+</script>
+
+</body>
+</html>
