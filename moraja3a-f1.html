@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مراجعة كفايات 1-1 ف1</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            background-color: white;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 85vh;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            flex-shrink: 0; /* لمنع تقلص الهيدر */
+        }
+
+        .slide-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto; /* شريط التمرير هنا */
+            display: none; 
+        }
+
+        .slide-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #2980b9;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Question Styles */
+        .question-block {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #34495e;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .tf-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-option {
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95em;
+            text-align: right;
+            transition: all 0.2s;
+        }
+
+        .btn-option:hover {
+            background-color: #ecf0f1;
+        }
+
+        /* Feedback Colors */
+        .correct {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724;
+            position: relative;
+        }
+        
+        .correct::after {
+            content: "✓";
+            position: absolute;
+            left: 10px;
+            font-weight: bold;
+        }
+
+        .incorrect {
+            background-color: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24;
+            position: relative;
+        }
+
+        .incorrect::after {
+            content: "✕";
+            position: absolute;
+            left: 10px;
+            font-weight: bold;
+        }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        /* Reveal Answer Button */
+        .reveal-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        
+        .answer-box {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 5px;
+            display: none;
+            border: 1px solid #c3e6cb;
+        }
+
+        /* Navigation */
+        .controls {
+            padding: 15px;
+            background-color: #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0; /* لمنع تقلص الفوتر */
+        }
+
+        .nav-btn {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .nav-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .progress {
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+
+        /* Table Style */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #bdc3c7;
+            padding: 8px;
+            text-align: center;
+        }
+        .data-table th { background-color: #f2f2f2; }
+
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="header">مراجعة كفايات 1-1 ف1</div>
+
+    <div class="slide-content active" id="slide1">
+        <h2>1. أسئلة (صح وخطأ) :</h2>
+        <div id="q-container-1"></div>
+    </div>
+
+    <div class="slide-content" id="slide2">
+        <h2>2. أسئلة (اختر الإجابة الصحيحة) :</h2>
+        <div id="q-container-2"></div>
+    </div>
+
+    <div class="slide-content" id="slide3">
+         <h2>2. أسئلة (اختر الإجابة الصحيحة) :</h2>
+        <div id="q-container-3"></div>
+    </div>
+
+    <div class="slide-content" id="slide4">
+        <h2>3. أجب حسب المطلوب:</h2>
+        <p style="font-size:0.9em; color:gray;">فكر في الإجابة ثم اضغط "أظهر الإجابة" للتحقق.</p>
+        <div id="q-container-4"></div>
+    </div>
+
+    <div class="slide-content" id="slide5">
+        <h2>4. أسئلة (اختر الإجابة) : </h2>
+        <div id="q-container-5"></div>
+    </div>
+
+    <div class="slide-content" id="slide6">
+        <h2>4. أسئلة (اختر الإجابة) : </h2>
+        <div id="q-container-6"></div>
+    </div>
+
+    <div class="slide-content" id="slide7">
+        <h2>5. التصنيف والترتيب</h2>
+        
+        <div class="question-block">
+            <div class="question-text">أ/ صنف الأفعال المضارعة: (عليك أن تسمو - الصحفيون يتتبعون الأخبار - يشرحُ المعلم - لن أسعى بالشر)</div>
+            <button class="reveal-btn" onclick="toggleAnswer('ans-table-7')">الإجابة</button>
+            <div id="ans-table-7" class="answer-box">
+                <table class="data-table">
+                    <tr><th>الأفعال المرفوعة</th><th>الأفعال المنصوبة</th></tr>
+                    <tr><td style="color:green">يتتبعون ، يشرح</td><td style="color:green">تسمو ، أسعى</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-text">ب/ رتب الأفكار لموضوع (الداء السكري):</div>
+            <div style="font-size:0.9em; margin-bottom:10px;">
+                1. الأدوية المتاحة ( ) | 2. الأخطار الناجمة ( ) | 3. أسباب الحدوث ( ) <br>
+                4. أعراض الداء ( ) | 5. أعداد المصابين ( ) | 6. التعريف العلمي ( )
+            </div>
+            <button class="reveal-btn" onclick="toggleAnswer('ans-order-7')">الإجابة</button>
+            <div id="ans-order-7" class="answer-box">
+                <ol>
+                    <li>التعريف العلمي للداء السكري.</li>
+                    <li>أعداد المصابين بالسكري حول العالم.</li>
+                    <li>أعراض الداء السكري.</li>
+                    <li>أسباب حدوث الداء السكري.</li>
+                    <li>الأخطار الناجمة عنه.</li>
+                    <li>الأدوية المتاحة وتأثيراتها الطبية.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>السابق</button>
+        <span class="progress" id="progressText">شريحة 1 من 7</span>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">التالي</button>
+    </div>
+</div>
+
+<script>
+    // --- Data Definition ---
+    
+    // Slide 1: True/False
+    const slide1Data = [
+        { t: "1- من أشهر أعراف الكتابة (العناوين).", a: true },
+        { t: "2- الإبراز: هو إبراز الكلمات أو الجمل ذات الأهمية باستخدام الخطوط والقوسين والتلوين.", a: true },
+        { t: "3- التعداد نوع واحد فقط وهو النقطي.", a: false },
+        { t: "4- الكتابة في فقرات: نبدأ الفقرة بفراغ في أول السطر بمقدار كلمة.", a: true },
+        { t: "5- تحديد الأهداف ليس من أعراف الكتابة.", a: false },
+        { t: "6- الجداول والرسوم تساعد على تلخيص الجزئيات الكثيرة للموضوع.", a: true },
+        { t: "7- التلخيص: كثير من المؤلفين يختتمون فصول كتبهم بملخص يوجز أهم ما ورد فيها.", a: true },
+        { t: "8- (1ـ 2ـ 3ـ) تعداد رقمي.", a: true },
+        { t: "9- أعراف الكتابة لا تساعد القارئ على الفهم والتركيز.", a: false },
+        { t: "10- لعلامة التأثر (!) نغمة خاصة معبرة عن الانفعال العاطفي.", a: true },
+        { t: "11- الفاعل يقع بعد الفعل المبني للمعلوم.", a: true },
+        { t: "12- صيم ــ شُوهد ــ لاحظ. الأفعال السابقة مبنية لما لم يُسَم فاعله.", a: false, note: "التصحيح: صيم، شوهد مبنية للمجهول، لكن لوحظ أيضاً؟ السؤال في النص الأصلي إجابته خطأ ربما لوجود كلمة شاذة أو صيغة السؤال." }, 
+        // Note: Based on user input key, #12 is False. Keeping strictly to user input key.
+        { t: "13- من مصادر المعلومات: الخبرات الشخصية والصحف والمجلات والإنترنت.", a: true },
+        { t: "14- آخر خطوة من خطوات القراءة المتعمقة (استطلع).", a: false },
+        { t: "15- لعلامة التأثر (!) نغمة خاصة معبرة عن الانفعال العاطفي.", a: true },
+        { t: "16- الفقرة تعبر عن أكثر من فكرة رئيسة.", a: false },
+        { t: "17- من خطوات بناء الموضوع الكتابة الأولى وهي التركيز على عرض المعلومات واستيفائها.", a: true },
+        { t: "18- علامة الحذف (...) توضع مكان الكلام المحذوف.", a: true },
+        { t: "19- تُعَد الإجابة عن الأسئلة من خطوات القراءة المتعمقة.", a: true },
+        { t: "20- الرسوم والجداول من الاستراتيجيات التي لا تساعد على الفهم والتركيز.", a: false },
+    ];
+
+    // Slide 2: MCQ
+    const slide2Data = [
+        { q: '1- "هؤلاء قومنا اتخذوا من دونه آلهة" نوع ما تحته خط (هؤلاء):', opts: ["نكرة", "معرفة", "(أ ، ب)", "غير ذلك"], correct: 1 },
+        { q: '2- "الصديقان وفيّان" (أدخل "كان"):', opts: ["كان الصديقان وفيين", "كان الصديقان وفيان", "كان الصديقين وفيين", "لا شيء مما سبق"], correct: 0 },
+        { q: '3- النجاح ثمرة الاجتهاد المستمر. (الخبر هو):', opts: ["النجاح", "ثمرة", "الاجتهاد", "المستمر"], correct: 1 },
+        { q: '4- النصر حليفنا، ما دام المؤمنون ........ :', opts: ["متحدون", "متحدان", "متحدين", "متحد"], correct: 2 },
+        { q: '5- كافأ المعلم المتفوقين. (عند بناء الجملة للمجهول):', opts: ["كُوفأ المتفوقون", "كُوفئ المتفوقين", "كُوفئ المتفوقون", "كافأ المتفوقين"], correct: 2 },
+        { q: '6- "أبي ذو خلق طيب" إعراب "أبي" مبتدأ مرفوع وعلامة رفعه:', opts: ["الواو", "الضمة المقدرة", "الفتحة", "الضمة الظاهرة"], correct: 1 },
+        { q: '7- كأن القائدان أسدان. (صوب الخطأ):', opts: ["كأن القائدان أسدين", "كأن القائدين أسدان", "كأن القائدين أسدين", "أ، ب"], correct: 1 },
+        { q: '8- أنت تلتزمين بالحجاب. إعراب (تلتزمين) فعل مضارع مرفوع بـ:', opts: ["الضمة الظاهرة", "الضمة المقدرة", "ثبوت النون", "الياء"], correct: 2 },
+        { q: '9- "ومن يتق الله يجعل له مخرجا". الفعل (يتقِ) فعل مضارع:', opts: ["مرفوع", "منصوب", "مجزوم", "مجرور"], correct: 2 },
+        { q: '10- حسدوا الفتى إذ لم ينالوا سعيه. علامة جزم "ينالوا":', opts: ["حذف النون", "حذف حرف العلة", "السكون", "الكسرة"], correct: 0 }
+    ];
+
+    // Slide 3: MCQ
+    const slide3Data = [
+        { q: "11- علامة ترقيم يقف القارئ عندها وقفة قصيرة لاستعادة النفس:", opts: ["النقطتان (:)", "النقطة (.)", "الاستفهام (؟)", "الفاصلة (،)"], correct: 3 },
+        { q: "12- من أعراف الكتابة الأساسية:", opts: ["التلخيص", "الكتابة في فقرات", "تحديد الأهداف", "الأسئلة"], correct: 1 },
+        { q: "13- العناوين التي تكتب يمين الصفحة بشكل مستقل هي:", opts: ["رئيسة", "بارزة", "جانبية", "صغيرة"], correct: 2 },
+        { q: "14- تحديد ...... يتحكم في اختيار الفن التعبيري المناسب:", opts: ["نوع الخط", "الأسلوب", "الهدف", "الأفكار"], correct: 2 },
+        { q: "15- مقالة بعنوان (الماء)، بيان المشكلات يكون في:", opts: ["المقدمة", "جميع الفقرات", "العرض", "الخاتمة"], correct: 2 },
+        { q: "16- يعتمد الكاتب إلى انتقاء عنوانه ليوظفه في:", opts: ["تمثيل الحقائق", "التفسير", "جذب الانتباه", "شرح الموضوع"], correct: 2 },
+        { q: "17- أفضل مصدر للمعلومات عن زيارة أحد السياسيين السعوديين لدولة عظمى:", opts: ["سكان الدولة", "الصحف والمجلات", "التقارير", "السفارة السعودية"], correct: 3 },
+        { q: "18- الخطوة التي يكون فيها كتابة المبيضة والإخراج:", opts: ["الكتابة الأولى", "جمع المعلومات", "تخطيط الموضوع", "الكتابة النهائية"], correct: 3 },
+        { q: "19- من الرسوم التوضيحية التي تساعد على تنظيم المعلومات وتصنيفها:", opts: ["شجرة الحفظ", "شجرة الذاكرة", "شجرة العائلة", "ب، ج"], correct: 1 },
+        { q: "20- النقطة تدل على أن معنى الجملة:", opts: ["مكتمل", "ناقص", "متعدد", "محذوف"], correct: 0 }
+    ];
+
+    // Slide 4: Open Ended Data
+    const slide4Data = [
+        { q: '1- المواطنون آمنون. (أدخل "إن" وغير ما يلزم)', a: 'إن المواطنين آمنون.' },
+        { q: '2- بات العابدون ساهرون. (صحح الخطأ)', a: 'بات العابدون ساهرين.' },
+        { q: '3- يسعى في الخير، يلقى الجزاء الحسن. (اربط بأداة شرط)', a: 'من يسعَ في الخير يلقَ الجزاء الحسن.' },
+        { q: '4- قابل المعلم أباك. (ابن الفعل للمجهول)', a: 'قوبل أبوك.' },
+        { q: '5- لم يتأخر الطالب عن الدرس. (حول لجملة اسمية)', a: 'الطلاب لم يتأخروا عن الدرس.' },
+        { q: 'ب- ضع علامات الترقيم: كان أبوك [ ] رحمه الله [ ] رجلا فاضلا.', a: 'كان أبوك - رحمه الله - رجلا فاضلا.' },
+        { q: 'ب- ضع علامات الترقيم: ما أجمل الرياض [ ] هل أتيحت لك رؤيته [ ]', a: 'ما أجمل الرياض ! هل أتيحت لك رؤيته ؟' },
+        { q: 'ب- ضع علامات الترقيم: الصبا [ ] بفتح الصاد [ ] رياح تهب من الشرق.', a: 'الصبا ( بفتح الصاد ) رياح تهب من الشرق.' },
+        { q: 'ب- ضع علامات الترقيم: حسان بن ثابت شاعر مخضرم [ ] لأنه عاش في الجاهلية والإسلام [ ]', a: 'حسان بن ثابت شاعر مخضرم ؛ لأنه عاش في الجاهلية والإسلام .' },
+        { q: 'ب- ضع علامات الترقيم: قرأت كتبًا كثيرة، مثل [ ] الخصائص لابن جني [ ]', a: 'قرأت كتبًا كثيرة، مثل : الخصائص لابن جني ، ولسان العرب...' }
+    ];
+
+    // Slide 5: Review
+    const slide5Data = [
+        { q: '1- أنتما تعلمان الناس الخير (تعلمان) فعل:', opts: ["ماضي", "من الأفعال الخمسة", "معتل الأخر", "أمر"], correct: 1 },
+        { q: '2- بنية الكتاب تعني:', opts: ["موضوعاته وفهارسه", "الغلاف والتكلفة", "الحجم", "التلخيص"], correct: 0 },
+        { q: '3- القوسان ( ) يحصر بينهما:', opts: ["كلمة توضح غامضا", "الكلام المعترض", "الكلام المنقول", "رسالة"], correct: 0 },
+        { q: '4- من الحروف التي تنصب الفعل المضارع:', opts: ["أن", "لن", "كي", "جميع ما سبق"], correct: 3 },
+        { q: '5- تدور الفقرة حول:', opts: ["موضوعات مختلفة", "فكرة رئيسة واحدة", "فكرتان", "ثلاث أفكار"], correct: 1 },
+        { q: '6- "أبي ذو خلق" إعراب أبي، مرفوع بـ:', opts: ["الواو", "الضمة المقدرة", "الفتحة", "الظاهرة"], correct: 1 },
+        { q: '7- كان وأخواتها ترفع المبتدأ و...:', opts: ["تنصب الخبر", "تجر الخبر", "ترفع الخبر", "تجزم الفعل"], correct: 0 },
+        { q: '8- يشترط في العنوان أن يكون:', opts: ["طويلا", "دالا على المحتوى", "غير مثير", "لا يدل على المحتوى"], correct: 1 },
+        { q: '9- "من يتق الله" يتقِ فعل مضارع:', opts: ["مرفوع", "منصوب", "مجزوم", "مجرور"], correct: 2 },
+        { q: '10- "لم ينالوا" علامة الجزم:', opts: ["حذف النون", "حذف العلة", "السكون", "الكسرة"], correct: 0 }
+    ];
+
+    // Slide 6: More MCQ
+    const slide6Data = [
+        { q: "11- علامة الترقيم لاستعادة النفس:", opts: ["النقطتان", "النقطة", "الاستفهام", "الفاصلة"], correct: 3 },
+        { q: "12- علامة توضع نهاية الجمل الانفعالية:", opts: ["التعجب (!)", "الاستفهام", "النقطة", "النقطتان"], correct: 0 },
+        { q: "13- أين أجد معنى (الصمد):", opts: ["كتاب قانون", "مجلة", "معجم لسان العرب", "لا شيء"], correct: 2 },
+        { q: "14- تحديد .... يتحكم في الفن التعبيري:", opts: ["الخط", "الأسلوب", "الهدف", "الأفكار"], correct: 2 },
+        { q: "15- تمييز الكلمات بلون مختلف يسمى:", opts: ["التعداد", "التنقيط", "الإبراز", "التخطيط"], correct: 2 },
+        { q: "16- (الطالبان مجتهدان) نوع الجملة:", opts: ["اسمية", "فعلية", "شبه جملة", "اعتراضية"], correct: 0 },
+        { q: "17- من العناصر الفنية للمقال:", opts: ["المقدمة", "الشخصيات", "الأحداث", "العقدة"], correct: 0 },
+        { q: "18- قال .... أنا أحب الرياضة:", opts: ["شرطتان", "تنصيص", "استفهام", "نقطتان رئيسيتان"], correct: 3 },
+        { q: "19- علامات ترقيم تنغيمية:", opts: ["( ؟ )", "( ؛ )", "( . )", "( : )"], correct: 0 },
+        { q: "20- ( إن ـ أن ـ ليت ...) تسمى:", opts: ["حروف النصب", "الجزم", "الجر", "الحروف الناسخة"], correct: 3 }
+    ];
+
+    // --- Rendering Functions ---
+
+    function renderTrueFalse(containerId, data) {
+        const container = document.getElementById(containerId);
+        data.forEach((item, index) => {
+            const block = document.createElement('div');
+            block.className = 'question-block';
+            
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.innerText = item.t;
+            
+            const optsDiv = document.createElement('div');
+            optsDiv.className = 'tf-grid';
+            
+            ['صح ( √ )', 'خطأ ( × )'].forEach((label, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-option';
+                btn.innerText = label;
+                const isTrueBtn = (i === 0);
+                
+                btn.onclick = function() {
+                    const buttons = optsDiv.querySelectorAll('.btn-option');
+                    buttons.forEach(b => b.classList.add('disabled'));
+                    
+                    if (isTrueBtn === item.a) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.classList.add('incorrect');
+                        // Highlight correct one
+                        buttons[item.a ? 0 : 1].classList.add('correct');
+                    }
+                };
+                optsDiv.appendChild(btn);
+            });
+
+            block.appendChild(qText);
+            block.appendChild(optsDiv);
+            container.appendChild(block);
+        });
+    }
+
+    function renderMCQ(containerId, data) {
+        const container = document.getElementById(containerId);
+        data.forEach((item, index) => {
+            const block = document.createElement('div');
+            block.className = 'question-block';
+            
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.innerText = item.q;
+            
+            const optsDiv = document.createElement('div');
+            optsDiv.className = 'options-grid';
+            
+            item.opts.forEach((optText, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-option';
+                btn.innerText = optText;
+                
+                btn.onclick = function() {
+                    const buttons = optsDiv.querySelectorAll('.btn-option');
+                    buttons.forEach(b => b.classList.add('disabled'));
+                    
+                    if (i === item.correct) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.classList.add('incorrect');
+                        buttons[item.correct].classList.add('correct');
+                    }
+                };
+                optsDiv.appendChild(btn);
+            });
+
+            block.appendChild(qText);
+            block.appendChild(optsDiv);
+            container.appendChild(block);
+        });
+    }
+
+    function renderReveal(containerId, data) {
+        const container = document.getElementById(containerId);
+        data.forEach((item, index) => {
+            const block = document.createElement('div');
+            block.className = 'question-block';
+            
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.innerText = item.q;
+            
+            const btn = document.createElement('button');
+            btn.className = 'reveal-btn';
+            btn.innerText = 'الإجابة';
+            
+            const ansDiv = document.createElement('div');
+            ansDiv.className = 'answer-box';
+            ansDiv.innerText = item.a;
+            
+            btn.onclick = function() {
+                ansDiv.style.display = 'block';
+                btn.style.display = 'none';
+            };
+
+            block.appendChild(qText);
+            block.appendChild(btn);
+            block.appendChild(ansDiv);
+            container.appendChild(block);
+        });
+    }
+    
+    function toggleAnswer(id) {
+        const el = document.getElementById(id);
+        if(el.style.display === 'block') {
+            el.style.display = 'none';
+        } else {
+            el.style.display = 'block';
+        }
+    }
+
+    // --- Initialization ---
+    
+    renderTrueFalse('q-container-1', slide1Data);
+    renderMCQ('q-container-2', slide2Data);
+    renderMCQ('q-container-3', slide3Data);
+    renderReveal('q-container-4', slide4Data);
+    renderMCQ('q-container-5', slide5Data);
+    renderMCQ('q-container-6', slide6Data);
+
+    // --- Navigation Logic (FIXED) ---
+    let currentSlide = 1;
+    const totalSlides = 7;
+
+    function changeSlide(direction) {
+        // Hide current
+        const currentEl = document.getElementById(`slide${currentSlide}`);
+        currentEl.classList.remove('active');
+        
+        // Update index
+        currentSlide += direction;
+        
+        // Bounds check
+        if(currentSlide < 1) currentSlide = 1;
+        if(currentSlide > totalSlides) currentSlide = totalSlides;
+        
+        // Show new
+        const nextEl = document.getElementById(`slide${currentSlide}`);
+        nextEl.classList.add('active');
+        
+        // Update UI
+        document.getElementById('progressText').innerText = `شريحة ${currentSlide} من ${totalSlides}`;
+        document.getElementById('prevBtn').disabled = (currentSlide === 1);
+        document.getElementById('nextBtn').disabled = (currentSlide === totalSlides);
+        
+        // Scroll Logic Fixed: Scroll the slide content, NOT the container
+        // التصحيح: التمرير يتم للعنصر النشط الجديد لأن شريط التمرير يخصه هو
+        if(nextEl) {
+            nextEl.scrollTop = 0;
+        }
+    }
+
+</script>
+
+</body>
+</html>
