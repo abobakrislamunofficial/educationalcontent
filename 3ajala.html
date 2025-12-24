@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>الرؤوس المرقمة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-dark: #222831;
+            --accent-yellow: #ffd700;
+            --bg-light: #eeeeee;
+            --white: #ffffff;
+            --wheel-size: 85vmin;
+            --max-wheel-size: 500px;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #cdd3d8 100%);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            box-sizing: border-box;
+            color: var(--primary-dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            background: var(--white);
+            padding: 35px 25px;
+            border-radius: 35px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25), 0 0 0 2px rgba(255, 215, 0, 0.1) inset;
+            text-align: center;
+            width: 100%;
+            max-width: 550px;
+            position: relative;
+        }
+
+        h1 {
+            font-weight: 900;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin: 0 0 25px 0;
+        }
+        
+        h1 .highlight {
+            color: var(--accent-yellow);
+            text-shadow: 2px 2px 0px var(--primary-dark);
+            -webkit-text-stroke: 1px var(--primary-dark);
+        }
+
+        .controls-area {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            padding: 8px 15px;
+            border-radius: 18px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+            border: 1px solid #eee;
+        }
+
+        label { font-weight: 700; margin-left: 10px; font-size: 0.9rem; color: #666; }
+
+        .input-field {
+            width: 50px;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--primary-dark);
+            font-family: 'Cairo';
+            outline: none;
+        }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        .btn-update {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, #ffb300 100%);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 18px;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 1rem;
+            font-family: 'Cairo';
+            box-shadow: 0 8px 20px -5px rgba(255, 193, 7, 0.5);
+            transition: all 0.2s ease;
+        }
+        .btn-update:active { transform: scale(0.98); }
+
+        .wheel-outer-wrap {
+            position: relative;
+            width: var(--wheel-size);
+            height: var(--wheel-size);
+            max-width: var(--max-wheel-size);
+            max-height: var(--max-wheel-size);
+            margin: 0 auto 30px;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.2));
+        }
+
+        .pointer {
+            position: absolute;
+            top: -22px; left: 50%;
+            transform: translateX(-50%);
+            width: 45px; height: 45px;
+            background: var(--primary-dark);
+            clip-path: polygon(50% 100%, 15% 0, 85% 0);
+            z-index: 20;
+        }
+
+        .wheel {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 12px solid var(--primary-dark);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.25);
+            position: relative;
+            transition: transform 5s cubic-bezier(0.2, 0.05, 0.1, 1);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .wheel-center-hub {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 18%; height: 18%;
+            background: var(--primary-dark);
+            border: 5px solid var(--white);
+            border-radius: 50%;
+            z-index: 15;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            display: flex; justify-content: center; align-items: center;
+        }
+        .wheel-center-hub::after { content: '★'; color: var(--accent-yellow); font-size: 1.5rem; }
+
+        .number-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center;
+            font-weight: 900;
+            font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        #result-container {
+            min-height: 70px;
+            display: flex; justify-content: center; align-items: center;
+            background: #f0f2f5;
+            border-radius: 20px;
+            padding: 15px;
+            border: 2px dashed #dce0e4;
+        }
+
+        #result-text {
+            font-size: 1.3rem; font-weight: 700; color: #7f8c8d; margin: 0;
+        }
+
+        .winner-number-box {
+            display: inline-block;
+            background: var(--accent-yellow);
+            color: var(--primary-dark);
+            padding: 5px 20px;
+            border-radius: 12px;
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-right: 10px;
+            box-shadow: 5px 5px 0px var(--primary-dark);
+            transform: rotate(-3deg);
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 25px 15px; }
+            .controls-area { gap: 10px; padding: 15px; }
+            .input-wrapper { flex-grow: 1; justify-content: center; }
+            .btn-update { width: 100%; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>الرؤوس <span class="highlight">المرقمة</span></h1>
+    
+    <div class="controls-area">
+        <div class="input-wrapper">
+            <label for="minRange">من:</label>
+            <input type="number" id="minRange" class="input-field" value="1" min="0">
+        </div>
+        <div class="input-wrapper">
+            <label for="maxRange">إلى:</label>
+            <input type="number" id="maxRange" class="input-field" value="12" min="1">
+        </div>
+        <button class="btn-update" onclick="updateWheel()">تحديث الأرقام</button>
+    </div>
+
+    <div class="wheel-outer-wrap">
+        <div class="pointer"></div>
+        <div class="wheel" id="wheel" onclick="spinWheel()">
+            <div class="wheel-center-hub"></div>
+        </div>
+    </div>
+
+    <div id="result-container">
+        <p id="result-text">اضغط على العجلة لاختيار رأس مرقم!</p>
+    </div>
+</div>
+
+<script>
+    let currentRotation = 0;
+    let isSpinning = false;
+    
+    const vibrantColors = [
+        "#ff3d00", "#2979ff", "#00c853", "#ffc400", 
+        "#f50057", "#651fff", "#00b0ff", "#ff9100"
+    ];
+
+    function updateWheel() {
+        if (isSpinning) return;
+        const minInput = document.getElementById('minRange');
+        const maxInput = document.getElementById('maxRange');
+        let min = parseInt(minInput.value);
+        let max = parseInt(maxInput.value);
+        
+        if (isNaN(min) || isNaN(max) || min >= max || (max - min) > 40) {
+            alert("يرجى التأكد من صحة المدى (الفرق بين الرقمين لا يجب أن يتجاوز 40).");
+            min = 1; max = 12; minInput.value = 1; maxInput.value = 12;
+        }
+
+        const wheel = document.getElementById('wheel');
+        const centerHub = wheel.querySelector('.wheel-center-hub');
+        Array.from(wheel.children).forEach(child => {
+            if (child !== centerHub) wheel.removeChild(child);
+        });
+
+        const count = max - min + 1;
+        const step = 360 / count;
+        let gradientParts = [];
+
+        for (let i = 0; i < count; i++) {
+            const color = vibrantColors[i % vibrantColors.length];
+            gradientParts.push(`${color} ${i * step}deg ${(i + 1) * step}deg`);
+            
+            const numberText = document.createElement('span');
+            numberText.className = 'number-text';
+            numberText.textContent = min + i;
+            
+            numberText.style.color = (i % vibrantColors.length === 3) ? "#222831" : "#ffffff";
+
+            const angle = (i * step) + (step / 2);
+            
+            // تم تعديل طريقة التموضع هنا لتكون مضمونة الظهور
+            // يتم تحريك النص للمنتصف، تدويره للزاوية المطلوبة، دفعه للخارج، ثم تدويره ليصبح مقروءاً
+            numberText.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translate(32vmin) rotate(90deg)`;
+
+            wheel.appendChild(numberText);
+        }
+        
+        wheel.style.background = `conic-gradient(${gradientParts.join(', ')})`;
+        document.getElementById('result-text').innerHTML = "العجلة جاهزة! حظاً موفقاً";
+        currentRotation = 0;
+        wheel.style.transform = `rotate(0deg)`;
+    }
+
+    function spinWheel() {
+        if (isSpinning) return;
+
+        const min = parseInt(document.getElementById('minRange').value);
+        const max = parseInt(document.getElementById('maxRange').value);
+        const count = max - min + 1;
+        const step = 360 / count;
+
+        isSpinning = true;
+        const resultText = document.getElementById('result-text');
+        resultText.innerHTML = "جار الاختيار";
+        resultText.style.color = "#7f8c8d";
+
+        const randomIndex = Math.floor(Math.random() * count);
+        const winningNumber = min + randomIndex;
+
+        const extraSpins = 5 * 360;
+        const stopAngle = (270 - (randomIndex * step) - (step / 2));
+        currentRotation = extraSpins + stopAngle;
+        
+        const wheel = document.getElementById('wheel');
+        wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+        setTimeout(() => {
+            resultText.innerHTML = `الرقم المختار هو: <div class="winner-number-box">${winningNumber}</div>`;
+            resultText.style.color = "var(--primary-dark)";
+            
+            wheel.style.transition = "transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28)";
+            wheel.style.transform = `rotate(${currentRotation - 3}deg)`;
+            
+            setTimeout(() => {
+                 wheel.style.transform = `rotate(${currentRotation}deg)`;
+                 isSpinning = false;
+                 setTimeout(() => { wheel.style.transition = "transform 5s cubic-bezier(0.2, 0.05, 0.1, 1)"; }, 400);
+            }, 400);
+
+        }, 5000);
+    }
+
+    window.onload = updateWheel;
+</script>
+
+</body>
+</html>
