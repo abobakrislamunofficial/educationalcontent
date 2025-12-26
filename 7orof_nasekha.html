@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إِنَّ وأخواتها - تدريب معدل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fdfbf7;
+            --text-color: #37474f;
+            --header-color: #00695c;
+            
+            /* ألوان الإعراب */
+            --ism-color: #c62828;      /* اسم إن (منصوب) - أحمر */
+            --khabar-color: #1565c0;   /* خبر إن (مرفوع) - أزرق */
+            --particle-color: #9c27b0; /* الناسخ - بنفسجي */
+            
+            /* UI */
+            --box-bg: #fff;
+            --btn-bg: #fff;
+            --btn-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --btn-hover: #00695c;
+        }
+
+        html { font-size: 2vh; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        #presentation-area {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Slide Structure --- */
+        .slide {
+            position: absolute;
+            width: 85%;
+            max-width: 1200px;
+            height: auto;
+            max-height: 90vh;
+            opacity: 0;
+            transform: translateY(2rem);
+            transition: all 0.5s ease;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+            z-index: 10;
+        }
+
+        .slide-header {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: var(--header-color);
+            border-bottom: 4px solid #b2dfdb;
+            padding-bottom: 0.5rem;
+            width: fit-content;
+        }
+
+        .content-scroll-area {
+            width: 100%;
+            overflow-y: auto;
+            padding-right: 1rem;
+            padding-bottom: 6rem;
+            max-height: 75vh;
+            scrollbar-width: thin;
+            scrollbar-color: #ccc transparent;
+        }
+
+        /* --- Steps Logic --- */
+        .step {
+            opacity: 0;
+            transform: translateY(1.5rem);
+            transition: all 0.4s ease-out;
+            margin-bottom: 1rem;
+        }
+        .step.visible { opacity: 1; transform: translateY(0); }
+
+        /* Interactive Words */
+        .word-target {
+            display: inline-block;
+            transition: all 0.4s ease;
+            border-bottom: 3px solid transparent;
+            padding: 0 3px;
+            cursor: pointer;
+        }
+        
+        .word-target.active-ism { color: var(--ism-color); font-weight: 900; border-bottom-color: var(--ism-color); }
+        .word-target.active-khabar { color: var(--khabar-color); font-weight: 900; border-bottom-color: var(--khabar-color); }
+        .word-target.active-particle { color: var(--particle-color); font-weight: 900; }
+
+        /* --- Components --- */
+        .rule-box {
+            background: #e0f2f1;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border-right: 6px solid var(--header-color);
+            font-size: 1.8rem;
+            line-height: 1.7;
+            color: var(--text-color);
+            margin-bottom: 2rem;
+        }
+
+        .example-row {
+            background: var(--box-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .sentence-text {
+            font-size: 2.2rem;
+            font-weight: 600;
+        }
+
+        .analysis-box {
+            font-size: 1.6rem;
+            background: #fafafa;
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.5rem;
+            color: #555;
+            border-right: 4px solid #ccc;
+            display: block;
+            width: fit-content;
+            margin-top: 0.5rem;
+        }
+        
+        .analysis-box.ism { border-color: var(--ism-color); color: var(--ism-color); background: #ffebee; }
+        .analysis-box.khabar { border-color: var(--khabar-color); color: var(--khabar-color); background: #e3f2fd; }
+
+        /* Section Separator for Training */
+        .section-separator {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--header-color);
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px dashed #b2dfdb;
+            padding-bottom: 0.5rem;
+        }
+
+        /* --- Training --- */
+        .training-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .training-text { font-size: 2rem; font-weight: 600; flex: 1.5; min-width: 250px; }
+        .training-answer {
+            font-size: 1.6rem;
+            background-color: var(--header-color);
+            color: #fff;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        /* Intro */
+        .intro-title { font-size: 5rem; font-weight: 900; color: var(--header-color); margin: 0; }
+        .intro-subtitle { font-size: 2rem; color: #546e7a; margin-top: 1rem; }
+
+        /* Navigation */
+        .nav-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: var(--btn-bg);
+            border: 1px solid #b2dfdb;
+            padding: 0.8rem 3rem;
+            border-radius: 2rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-color);
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+        .nav-btn:hover { background: var(--btn-hover); color: #fff; transform: translateY(-2px); }
+        .nav-btn:active { transform: translateY(0); }
+
+    </style>
+</head>
+<body>
+
+    <div id="presentation-area">
+
+        <div class="slide active" style="align-items: center; justify-content: center; text-align: center;">
+            <div class="intro-title">إِنَّ وأَنَّ</div>
+            <div class="step visible intro-subtitle">نواسخ الجملة الاسمية</div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-header">القاعدة</div>
+            <div class="content-scroll-area">
+                <div class="step rule-box">
+                    <strong>التعريف:</strong> حروف ناسخة تدخل على الجملة الاسمية.
+                </div>
+                <div class="step rule-box">
+                    <strong>العمل الإعرابي:</strong><br>
+                    1. <span style="color:var(--ism-color)">تنصب المبتدأ</span> (ويسمى اسمها).<br>
+                    2. <span style="color:var(--khabar-color)">ترفع الخبر</span> (ويسمى خبرها).
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-header">الأمثلة</div>
+            <div class="content-scroll-area">
+                
+                <div class="step example-row">
+                    <div class="sentence-text">
+                        <span class="word-target" data-type="active-particle">إِنَّ</span>
+                        <span class="word-target" data-type="active-ism">اللهَ</span>
+                        <span class="word-target" data-type="active-khabar">غَفُورٌ</span>.
+                    </div>
+                    <div class="step analysis-box ism"><strong>لفظ الجلالة:</strong> اسم إن منصوب وعلامة نصبه الفتحة.</div>
+                    <div class="step analysis-box khabar"><strong>غفور:</strong> خبر إن مرفوع وعلامة رفعه الضمة.</div>
+                </div>
+
+                <div class="step example-row">
+                    <div class="sentence-text">
+                        عَلِمْتُ
+                        <span class="word-target" data-type="active-particle">أَنَّ</span>
+                        <span class="word-target" data-type="active-ism">السياراتِ</span>
+                        <span class="word-target" data-type="active-khabar">سريعةٌ</span>.
+                    </div>
+                    <div class="step analysis-box ism"><strong>السياراتِ:</strong> اسم أن منصوب وعلامة نصبه الكسرة لأنه جمع مؤنث سالم.</div>
+                    <div class="step analysis-box khabar"><strong>سريعةٌ:</strong> خبر أن مرفوع وعلامة رفعه الضمة.</div>
+                </div>
+
+                <div class="step example-row">
+                    <div class="sentence-text">
+                        <span class="word-target" data-type="active-particle">إِنَّ</span>
+                        <span class="word-target" data-type="active-ism">المسافِرَيْنِ</span>
+                        <span class="word-target" data-type="active-khabar">عائدانِ</span>.
+                    </div>
+                    <div class="step analysis-box ism"><strong>المسافِرَيْنِ:</strong> اسم إن منصوب وعلامة نصبه الياء لأنه مثنى.</div>
+                    <div class="step analysis-box khabar"><strong>عائدانِ:</strong> خبر إن مرفوع وعلامة رفعه الألف لأنه مثنى.</div>
+                </div>
+
+                <div class="step example-row">
+                    <div class="sentence-text">
+                        <span class="word-target" data-type="active-particle">إِنَّ</span>
+                        <span class="word-target" data-type="active-ism">المسلمينَ</span>
+                        <span class="word-target" data-type="active-khabar">مُتَّحِدونَ</span>.
+                    </div>
+                    <div class="step analysis-box ism"><strong>المسلمينَ:</strong> اسم إن منصوب وعلامة نصبه الياء لأنه جمع مذكر سالم.</div>
+                    <div class="step analysis-box khabar"><strong>مُتَّحِدونَ:</strong> خبر إن مرفوع وعلامة رفعه الواو لأنه جمع مذكر سالم.</div>
+                </div>
+
+                <div class="step example-row">
+                    <div class="sentence-text">
+                        <span class="word-target" data-type="active-particle">إِنَّ</span>
+                        <span class="word-target" data-type="active-ism">أبا</span>ك
+                        <span class="word-target" data-type="active-khabar">ذو</span>
+                        خُلُقٍ.
+                    </div>
+                    <div class="step analysis-box ism"><strong>أبا:</strong> اسم إن منصوب وعلامة نصبه الألف لأنه من الأسماء الخمسة.</div>
+                    <div class="step analysis-box khabar"><strong>ذو:</strong> خبر إن مرفوع وعلامة رفعه الواو لأنه من الأسماء الخمسة.</div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-header">التدريب</div>
+            <div class="content-scroll-area">
+                
+                <div class="step section-separator">أولاً: حدد (اسم إن) وعلامة إعرابه</div>
+
+                <div class="step training-row">
+                    <div class="training-text">1. إِنَّ <span class="word-target" data-type="active-ism">سَعِيداً</span> فَقِيرٌ.</div>
+                    <div class="step training-answer">اسم إن منصوب بالفتحة</div>
+                </div>
+
+                <div class="step training-row">
+                    <div class="training-text">2. لَيْتَ <span class="word-target" data-type="active-ism">المُؤْمِناتِ</span> صَابِراتٌ.</div>
+                    <div class="step training-answer">اسم ليت منصوب بالكسرة (مؤنث سالم)</div>
+                </div>
+
+                <div class="step training-row">
+                    <div class="training-text">3. لَعَلَّ <span class="word-target" data-type="active-ism">أخاكَ</span> ناجِحٌ.</div>
+                    <div class="step training-answer">اسم لعل منصوب بالألف (أسماء خمسة)</div>
+                </div>
+
+                <div class="step section-separator">ثانياً: حدد (خبر إن) وعلامة إعرابه</div>
+
+                <div class="step training-row">
+                    <div class="training-text">1. إِنَّ المهندسَيْنِ <span class="word-target" data-type="active-khabar">بَارعانِ</span>.</div>
+                    <div class="step training-answer">خبر إن مرفوع بالألف (مثنى)</div>
+                </div>
+
+                <div class="step training-row">
+                    <div class="training-text">2. إِنَّ المعلمِينَ <span class="word-target" data-type="active-khabar">مُخْلِصُونَ</span>.</div>
+                    <div class="step training-answer">خبر إن مرفوع بالواو (مذكر سالم)</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-controls">
+        <button class="nav-btn" onclick="prevStep()">السابق</button>
+        <button class="nav-btn" onclick="nextStep()">التالي</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function nextStep() {
+            const currentSlide = slides[currentSlideIndex];
+            
+            // Logic: Reveal steps first, then activate words inside steps
+            const allInteractives = currentSlide.querySelectorAll('.step, .word-target');
+            let targetElement = null;
+
+            for (let el of allInteractives) {
+                // If hidden step -> Reveal
+                if (el.classList.contains('step') && !el.classList.contains('visible')) {
+                    targetElement = el;
+                    break;
+                }
+                // If inactive word (inside visible step) -> Activate
+                if (el.classList.contains('word-target')) {
+                    const dataType = el.getAttribute('data-type');
+                    if (!el.classList.contains(dataType)) {
+                        const parentStep = el.closest('.step');
+                        if (parentStep && parentStep.classList.contains('visible')) {
+                            targetElement = el;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (targetElement) {
+                if (targetElement.classList.contains('step')) {
+                    targetElement.classList.add('visible');
+                    setTimeout(() => {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                } else if (targetElement.classList.contains('word-target')) {
+                    const type = targetElement.getAttribute('data-type');
+                    targetElement.classList.add(type);
+                }
+            } else {
+                // Transition to next slide
+                if (currentSlideIndex < slides.length - 1) {
+                    currentSlide.classList.remove('active');
+                    setTimeout(() => {
+                        currentSlideIndex++;
+                        const nextSlide = slides[currentSlideIndex];
+                        nextSlide.classList.add('active');
+                    }, 400); 
+                }
+            }
+        }
+
+        function prevStep() {
+            const currentSlide = slides[currentSlideIndex];
+            // Reverse logic to hide/deactivate
+            const allInteractives = Array.from(currentSlide.querySelectorAll('.step.visible, .word-target')).reverse();
+            let targetElement = null;
+
+            for (let el of allInteractives) {
+                if (el.classList.contains('word-target')) {
+                    const type = el.getAttribute('data-type');
+                    if (el.classList.contains(type)) {
+                        targetElement = el;
+                        break;
+                    }
+                } else if (el.classList.contains('step')) {
+                    targetElement = el;
+                    break;
+                }
+            }
+
+            if (targetElement) {
+                if (targetElement.classList.contains('step')) {
+                    targetElement.classList.remove('visible');
+                } else if (targetElement.classList.contains('word-target')) {
+                    const type = targetElement.getAttribute('data-type');
+                    targetElement.classList.remove(type);
+                }
+            } else {
+                if (currentSlideIndex > 0) {
+                    currentSlide.classList.remove('active');
+                    setTimeout(() => {
+                        currentSlideIndex--;
+                        const prevSlide = slides[currentSlideIndex];
+                        prevSlide.classList.add('active');
+                        // Show all steps on return
+                        const steps = prevSlide.querySelectorAll('.step');
+                        steps.forEach(s => s.classList.add('visible'));
+                    }, 400);
+                }
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['Space', 'ArrowLeft', 'ArrowDown'].includes(e.code)) {
+                nextStep();
+            } else if (['ArrowRight', 'ArrowUp'].includes(e.code)) {
+                prevStep();
+            }
+        });
+    </script>
+</body>
+</html>
