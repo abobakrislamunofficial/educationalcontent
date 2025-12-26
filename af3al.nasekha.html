@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كان وأخواتها</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f5f7fa;
+            --text-color: #2c3e50;
+            --header-color: #2c3e50;
+            
+            /* ألوان الهوية */
+            --accent-color: #3498db;  /* أزرق فاتح */
+            --kana-color: #e91e63;    /* الناسخ */
+            --ism-color: #2980b9;     /* المرفوع */
+            --khabar-color: #c0392b;  /* المنصوب */
+            
+            /* ألوان التفاعل */
+            --success-bg: #d4edda;
+            --success-text: #155724;
+            --error-bg: #f8d7da;
+            --error-text: #721c24;
+            
+            /* UI Elements */
+            --card-bg: #ffffff;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 16px;
+        }
+
+        /* زيادة حجم الخط الأساسي لتحسين القراءة */
+        html { font-size: 2.2vh; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            user-select: none;
+            color: var(--text-color);
+        }
+
+        #presentation-area {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Slide Styles */
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 1100px;
+            height: 92vh;
+            opacity: 0;
+            transform: translateY(3rem) scale(0.98);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+            z-index: 10;
+        }
+
+        .content-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            padding-bottom: 8rem;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e0 transparent;
+        }
+
+        /* Typography */
+        .slide-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--header-color);
+            margin-bottom: 0.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+        }
+        
+        .section-header {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-color);
+            margin: 2rem 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .section-header::before {
+            content: '';
+            display: block;
+            width: 8px;
+            height: 35px;
+            background: var(--accent-color);
+            border-radius: 4px;
+        }
+
+        /* Cards & Boxes */
+        .info-card {
+            background: var(--card-bg);
+            padding: 1.5rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            line-height: 1.6;
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
+        }
+        
+        .step {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        .step.visible { opacity: 1; transform: translateY(0); }
+
+        /* Syntax Highlighting */
+        .hl-kana { color: var(--kana-color); font-weight: 900; background: rgba(233, 30, 99, 0.1); padding: 0 5px; border-radius: 4px; }
+        .hl-ism { color: var(--ism-color); font-weight: 900; }
+        .hl-khabar { color: var(--khabar-color); font-weight: 900; border-bottom: 3px solid var(--khabar-color); }
+
+        /* Comparison Table */
+        .compare-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        .arrow { font-size: 2rem; color: var(--accent-color); margin: 0 1rem; }
+
+        /* --- Interactive Quiz System --- */
+        .quiz-container {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .question-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border-right: 6px solid var(--accent-color);
+        }
+
+        .question-text {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #34495e;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            flex: 1 1 45%;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.7rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent-color);
+            background: #ebf5fb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Feedback States */
+        .quiz-option.correct {
+            background-color: var(--success-bg);
+            border-color: var(--success-text);
+            color: var(--success-text);
+            animation: pulse 0.4s;
+        }
+
+        .quiz-option.wrong {
+            background-color: var(--error-bg);
+            border-color: var(--error-text);
+            color: var(--error-text);
+            opacity: 0.6;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Navigation */
+        .nav-bar {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2rem;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem;
+            border-radius: 50px;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn {
+            background: var(--header-color);
+            color: #fff;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 40px;
+            font-family: inherit;
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(44, 62, 80, 0.4); }
+
+        /* Intro Screen */
+        .big-title { font-size: 6rem; font-weight: 900; color: var(--header-color); line-height: 1.2; }
+        .sub-title { font-size: 2.5rem; color: var(--accent-color); font-weight: 600; margin-top: 1rem; }
+
+        @media (max-width: 768px) {
+            html { font-size: 1.6vh; }
+            .compare-box { flex-direction: column; gap: 0.5rem; text-align: center; }
+            .arrow { transform: rotate(90deg); }
+            .quiz-option { flex: 1 1 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="presentation-area">
+
+        <div class="slide active" style="align-items: center; justify-content: center; text-align: center;">
+            <div class="big-title">كان وأخواتها</div>
+            <div class="step visible sub-title">الأفعال الناسخة</div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-title">القاعدة</div>
+            <div class="content-scroll-area">
+                
+                <div class="step info-card">
+                    <strong>التعريف:</strong> أفعال ناسخة تدخل على الجملة الاسمية.
+                </div>
+
+                <div class="step info-card">
+                    <strong>العمل الإعرابي:</strong>
+                    <ul>
+                        <li><span class="hl-ism">ترفع المبتدأ</span> (ويسمى اسمها).</li>
+                        <li><span class="hl-khabar">تنصب الخبر</span> (ويسمى خبرها).</li>
+                    </ul>
+                </div>
+
+                <div class="section-header">لاحظ التغيير في الأمثلة التالية:</div>
+
+                <div class="step compare-box">
+                    <div>الرجلُ نائمٌ</div>
+                    <div class="arrow">⬅</div>
+                    <div><span class="hl-kana">كان</span> <span class="hl-ism">الرجلُ</span> <span class="hl-khabar">نائماً</span></div>
+                </div>
+
+                <div class="step compare-box">
+                    <div>العنبُ حلوٌ</div>
+                    <div class="arrow">⬅</div>
+                    <div><span class="hl-kana">صار</span> <span class="hl-ism">العنبُ</span> <span class="hl-khabar">حلواً</span></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-title">تدريبات: حدد المطلوب:</div>
+            <div class="content-scroll-area quiz-container">
+
+                <div class="step question-card">
+                    <div class="question-text">1. عين خبر الفعل الناسخ: "كانت الأرضُ خضراءَ"</div>
+                    <div class="options-grid">
+                        <div class="quiz-option" onclick="check(this, false)">الأرضُ</div>
+                        <div class="quiz-option" onclick="check(this, true)">خضراءَ</div>
+                    </div>
+                </div>
+
+                <div class="step question-card">
+                    <div class="question-text">2. عين اسم الفعل الناسخ: "ما زالَ العدوُّ ناقماً"</div>
+                    <div class="options-grid">
+                        <div class="quiz-option" onclick="check(this, true)">العدوُّ</div>
+                        <div class="quiz-option" onclick="check(this, false)">ناقماً</div>
+                    </div>
+                </div>
+
+                <div class="step question-card">
+                    <div class="question-text">3. عين خبر الفعل الناسخ: "ليسَ المؤمنُ كاذباً"</div>
+                    <div class="options-grid">
+                        <div class="quiz-option" onclick="check(this, false)">المؤمنُ</div>
+                        <div class="quiz-option" onclick="check(this, true)">كاذباً</div>
+                    </div>
+                </div>
+
+                <div class="step question-card">
+                    <div class="question-text">4. الفعل (أضحى) يفيد التوقيت في:</div>
+                    <div class="options-grid">
+                        <div class="quiz-option" onclick="check(this, false)">المساء</div>
+                        <div class="quiz-option" onclick="check(this, true)">الضحى</div>
+                        <div class="quiz-option" onclick="check(this, false)">الصباح</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-title">تدريبات</div>
+            <div class="content-scroll-area quiz-container">
+
+                <div class="step question-card">
+                    <div class="question-text">5. أدخل (أصبح) على: "الحجاجُ قادمون"</div>
+                    <div class="options-grid">
+                        <div class="quiz-option" onclick="check(this, false)">أصبح الحجاجُ قادمون</div>
+                        <div class="quiz-option" onclick="check(this, true)">أصبح الحجاجُ قادمين</div>
+                    </div>
+                </div>
+
+                <div class="step question-card">
+                    <div class="question-text">6. احذف الفعل الناسخ: "ليس الجنودُ مستعدين"</div>
+                    <div class="options-grid">
+                        <div class="quiz-option" onclick="check(this, true)">الجنودُ مستعدون</div>
+                        <div class="quiz-option" onclick="check(this, false)">الجنودَ مستعدين</div>
+                    </div>
+                </div>
+
+                <div class="step question-card">
+                    <div class="question-text">7. صحِّح الخطأ: "صار التينُ (حلوٌ)"</div>
+                    <div class="options-grid">
+                        <div class="quiz-option" onclick="check(this, false)">حلوٍ</div>
+                        <div class="quiz-option" onclick="check(this, true)">حلواً</div>
+                    </div>
+                </div>
+
+                <div class="step question-card">
+                    <div class="question-text">8. "ما زالت السماء صافية". (ما زال) تفيد:</div>
+                    <div class="options-grid">
+                        <div class="quiz-option" onclick="check(this, true)">الاستمرار</div>
+                        <div class="quiz-option" onclick="check(this, false)">النفي</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="nav-bar">
+        <button class="nav-btn" onclick="prevStep()">السابق</button>
+        <button class="nav-btn" onclick="nextStep()">التالي</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function nextStep() {
+            const currentSlide = slides[currentSlideIndex];
+            const hiddenSteps = currentSlide.querySelectorAll('.step:not(.visible)');
+
+            if (hiddenSteps.length > 0) {
+                // Show multiple steps at once for quizzes to avoid too many clicks
+                const limit = currentSlide.querySelector('.quiz-container') ? 2 : 1; 
+                for(let i=0; i<limit && i<hiddenSteps.length; i++) {
+                    hiddenSteps[i].classList.add('visible');
+                    setTimeout(() => {
+                        hiddenSteps[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 150);
+                }
+            } else {
+                if (currentSlideIndex < slides.length - 1) {
+                    currentSlide.classList.remove('active');
+                    setTimeout(() => {
+                        currentSlideIndex++;
+                        const nextSlide = slides[currentSlideIndex];
+                        nextSlide.classList.add('active');
+                    }, 400); 
+                }
+            }
+        }
+
+        function prevStep() {
+            const currentSlide = slides[currentSlideIndex];
+            const visibleSteps = Array.from(currentSlide.querySelectorAll('.step.visible'));
+
+            if (visibleSteps.length > 0) {
+                visibleSteps[visibleSteps.length - 1].classList.remove('visible');
+            } else {
+                if (currentSlideIndex > 0) {
+                    currentSlide.classList.remove('active');
+                    setTimeout(() => {
+                        currentSlideIndex--;
+                        const prevSlide = slides[currentSlideIndex];
+                        prevSlide.classList.add('active');
+                        const steps = prevSlide.querySelectorAll('.step');
+                        steps.forEach(s => s.classList.add('visible'));
+                    }, 400);
+                }
+            }
+        }
+
+        function check(el, isCorrect) {
+            const parent = el.parentElement;
+            if (parent.classList.contains('locked')) return;
+            parent.classList.add('locked');
+
+            if (isCorrect) {
+                el.classList.add('correct');
+            } else {
+                el.classList.add('wrong');
+                // Auto highlight correct
+                const siblings = parent.querySelectorAll('.quiz-option');
+                siblings.forEach(sib => {
+                    if (sib.getAttribute('onclick').includes('true')) {
+                        sib.classList.add('correct');
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (['Space', 'ArrowLeft', 'ArrowDown'].includes(e.code)) nextStep();
+            if (['ArrowRight', 'ArrowUp'].includes(e.code)) prevStep();
+        });
+    </script>
+</body>
+</html>
